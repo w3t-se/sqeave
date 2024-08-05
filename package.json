@@ -1,0 +1,42 @@
+{
+  "name": "sqeave",
+  "version": "0.0.1",
+  "description": "A squint-cljs based solid-js framework for building SPAs borrowing ideas from Fulcro",
+  "author": "",
+  "license": "",
+  "repository": "https://github.com/w3t_ab/sqeave",
+  "type": "module",
+  "files": [
+    "dist",
+    "src/main/comp.cljs",
+    "src/main/comp.cljc",
+    "src/main/utils.cljs",
+    "src/main/transact.cljs",
+    "src/main/normad.cljs",
+    "index.js",
+    "comp.js",
+    "utils.js",
+    "transact.js",
+    "normad.js"
+  ],
+  "scripts": {},
+  "dependencies": {
+    "solid-js": "^1.8.18",
+    "squint-cljs": "^0.7.100"
+  },
+  "devDependencies": {
+    "vite": "latest"
+  },
+  "keywords": [
+    "vite",
+    "vite-plugin",
+    "cljs",
+    "clojurescript",
+    "squint-cljs"
+  ],
+  "exports": {".": "./index.js",
+              "./comp": "./comp.js",
+              "./normad": "./normad.js",
+              "./utils": "./utils.js",
+              "./transact": "./transact.js"}
+}

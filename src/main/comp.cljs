@@ -1,9 +1,9 @@
 (ns comp
   (:require ["solid-js" :as solid]
-            ["./normad.cljs" :as n]
-            ["./transact.cljs" :as t]
+            ["./normad.mjs" :as n]
+            ["./transact.mjs" :as t]
             ;["./composedb/util.cljs" :as cu]
-            ["./utils.cljs" :as u]
+            ["./utils.mjs" :as u]
             [squint.core :refer [defclass]]
             #_["./comp_macro.mjs" :as m])
   #_(:require-macros [comp :refer [defc]]))

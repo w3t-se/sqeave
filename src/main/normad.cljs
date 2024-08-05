@@ -1,5 +1,5 @@
 (ns normad
-  (:require ["./utils.cljs" :as u]
+  (:require ["./utils.mjs" :as u]
             ["solid-js/store" :refer [reconcile]]))
 
 (defn ident? [data]

@@ -11,7 +11,7 @@
     [ident-key (get data ident-key)]))
 
 (defn get-ns [k]
-  (first (str/split (first k) "/")))
+  (l/trim (first (str/split (first k) "/"))))
 
 (defn remove-ident [ident v]
   (filterv (fn [y] (not (= (second y)
@@ -107,6 +107,24 @@
   "Remove the browser's localStorage value for the given `key`"
   [key]
   (.removeItem (.-localStorage js/window) key))
+
+(defn set-session-item!
+  "Set `key' in browser's localStorage to `val`."
+  [key val]
+  (.setItem (.-sessionStorage js/window) key (js/JSON.stringify val)))
+
+(defn get-session-item
+  "Returns value of `key' from browser's localStorage."xxxx
+  [key]
+  (try
+    (js/JSON.parse (.getItem (.-sessionStorage js/window) key))
+    (catch js/Error e (println (str "could net get item: " key " ") e) nil)))
+
+(defn remove-session-item!
+  "Remove the browser's localStorage value for the given `key`"
+  [key]
+  (.removeItem (.-sessionStorage js/window) key))
+
 
 ;; const timeZone = 'America/New_York';
 ;; const zonedDate = utcToZonedTime(now, timeZone);

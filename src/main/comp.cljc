@@ -63,6 +63,7 @@
                             ['local 'setLocal] (list `createSignal local-map)]
                       (list 'set! 'this#.-ctx 'ctx)
                       (list 'set! 'this#.local 'local)
+                      (list 'set! 'this#.data 'data)
                       (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))
                       (if local-map
                         (list 'let ['local-map-k (vec (keys local-map))
