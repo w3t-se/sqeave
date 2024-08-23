@@ -114,7 +114,7 @@
   (.setItem (.-sessionStorage js/window) key (js/JSON.stringify val)))
 
 (defn get-session-item
-  "Returns value of `key' from browser's localStorage."xxxx
+  "Returns value of `key' from browser's localStorage."
   [key]
   (try
     (js/JSON.parse (.getItem (.-sessionStorage js/window) key))
