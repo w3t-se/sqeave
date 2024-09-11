@@ -65,10 +65,11 @@
 (defn remove-ident! [{:keys [store setStore] :as ctx} path ident {:keys [check-session?] :or {check-session? true}}]
   (wrap-session ctx check-session?
                 (fn []
-                  (apply setStore (conj path (fn [x]
-                                               (when (or (vector? x) (object? x))
-                                                 (println "restx: " ident x)
-                                                 (u/remove-ident ident x))))))))
+                  (apply setStore (conj path (fn [x] (try
+                                                       (u/remove-ident ident x)
+                                                       (catch js/Error e
+                                                         (println e)
+                                                         x))))))))
 
 (defn add! [{:keys [store setStore] :as ctx} value {:keys [append replace after check-session?] :or {append false replace false after
                                                                                                      false check-session? true} :as params}]

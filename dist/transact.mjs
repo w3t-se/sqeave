@@ -109,14 +109,14 @@ const map__27 = p__21;
 const check_session_QMARK_8 = squint_core.get(map__27, "check-session?", true);
 return wrap_session(ctx4, check_session_QMARK_8, (function () {
 return squint_core.apply(setStore6, squint_core.conj(path, (function (x) {
-if (squint_core.truth_((() => {
-const or__24281__auto__9 = squint_core.vector_QMARK_(x);
-if (squint_core.truth_(or__24281__auto__9)) {
-return or__24281__auto__9;} else {
-return squint_core.object_QMARK_(x);}
-})())) {
-squint_core.println("restx: ", ident, x);
+return (() => {
+try{
 return u.remove_ident(ident, x);}
+catch(e9){
+squint_core.println(e9);
+return x;}
+
+})();
 })));
 }));
 };
