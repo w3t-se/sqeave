@@ -4,8 +4,8 @@ import * as u from './utils.mjs';
 var alert_error = function (ctx, error) {
 return n.add(ctx, ({ "component/id": "alert", "title": "Error", "visible?": true, "type": "error", "interval": 4000, "message": squint_core.str(error) }), ({  }));
 };
-var get_viewer_user = function (p__14) {
-const map__12 = p__14;
+var get_viewer_user = function (p__15) {
+const map__12 = p__15;
 const ctx3 = map__12;
 const store4 = squint_core.get(map__12, "store");
 const setStore5 = squint_core.get(map__12, "setStore");
@@ -24,8 +24,8 @@ return !((acc == null));} else {
 return and__24299__auto__3;}} else {
 return and__24299__auto__2;}
 };
-var check_session = function (p__15) {
-const map__12 = p__15;
+var check_session = function (p__16) {
+const map__12 = p__16;
 const ctx3 = map__12;
 const store4 = squint_core.get(map__12, "store");
 const setStore5 = squint_core.get(map__12, "setStore");
@@ -44,12 +44,12 @@ return squint_core.println(e1);}
 
 })();
 };
-var set_field_BANG_ = function (p__16, path, value, p__17) {
-const map__13 = p__16;
+var set_field_BANG_ = function (p__17, path, value, p__18) {
+const map__13 = p__17;
 const ctx4 = map__13;
 const store5 = squint_core.get(map__13, "store");
 const setStore6 = squint_core.get(map__13, "setStore");
-const map__27 = p__17;
+const map__27 = p__18;
 const check_session_QMARK_8 = squint_core.get(map__27, "check-session?", true);
 return wrap_session(ctx4, check_session_QMARK_8, (function () {
 return setStore6(squint_core.first(path), (function (x) {
@@ -57,12 +57,12 @@ return squint_core.assoc_in(x, squint_core.rest(path), value);
 }));
 }));
 };
-var add_ident_BANG_ = function (p__18, ident, p__19) {
-const map__13 = p__18;
+var add_ident_BANG_ = function (p__19, ident, p__20) {
+const map__13 = p__19;
 const ctx4 = map__13;
 const store5 = squint_core.get(map__13, "store");
 const setStore6 = squint_core.get(map__13, "setStore");
-const map__27 = p__19;
+const map__27 = p__20;
 const append8 = squint_core.get(map__27, "append", false);
 const replace9 = squint_core.get(map__27, "replace", false);
 const check_session_QMARK_10 = squint_core.get(map__27, "check-session?", true);
@@ -100,12 +100,12 @@ return squint_core.assoc(x, "uuid/paths", squint_core.conj(p15, path12));
 }));}}
 }));
 };
-var remove_ident_BANG_ = function (p__20, path, ident, p__21) {
-const map__13 = p__20;
+var remove_ident_BANG_ = function (p__21, path, ident, p__22) {
+const map__13 = p__21;
 const ctx4 = map__13;
 const store5 = squint_core.get(map__13, "store");
 const setStore6 = squint_core.get(map__13, "setStore");
-const map__27 = p__21;
+const map__27 = p__22;
 const check_session_QMARK_8 = squint_core.get(map__27, "check-session?", true);
 return wrap_session(ctx4, check_session_QMARK_8, (function () {
 return squint_core.apply(setStore6, squint_core.conj(path, (function (x) {
@@ -120,12 +120,12 @@ return x;}
 })));
 }));
 };
-var add_BANG_ = function (p__22, value, p__23) {
-const map__13 = p__22;
+var add_BANG_ = function (p__23, value, p__24) {
+const map__13 = p__23;
 const ctx4 = map__13;
 const store5 = squint_core.get(map__13, "store");
 const setStore6 = squint_core.get(map__13, "setStore");
-const map__27 = p__23;
+const map__27 = p__24;
 const params8 = map__27;
 const append9 = squint_core.get(map__27, "append", false);
 const replace10 = squint_core.get(map__27, "replace", false);
@@ -147,8 +147,8 @@ return after11();}
 var remove_entity_BANG_ = function () {
 return null;
 };
-var swap_uuids_BANG_ = function (p__24, ident, stream_id) {
-const map__12 = p__24;
+var swap_uuids_BANG_ = function (p__25, ident, stream_id) {
+const map__12 = p__25;
 const ctx3 = map__12;
 const store4 = squint_core.get(map__12, "store");
 const setStore5 = squint_core.get(map__12, "setStore");

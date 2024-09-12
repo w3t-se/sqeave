@@ -42,9 +42,10 @@
   #_(-new [this] this.new)
   (render [this ident]))
 
-(defn comp-factory [comp-class ctx]
-  (let [c (new comp-class ctx)]
-    #(c.render %)))
+(defn comp-factory [{:keys [cla body] :as comp} ctx]
+  (fn [] )
+  #_(let [c (new cla ctx)]
+     (.render c body %)))
 
 (defn new-data [this]
   (this.new-data))

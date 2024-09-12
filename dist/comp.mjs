@@ -67,10 +67,13 @@ render(ident) {
 const this$ = this;
 const self__ = this;return null;
 }};
-var comp_factory = function (comp_class, ctx) {
-const c1 = new comp_class(ctx);
-return function (_PERCENT_1) {
-return c1.render(_PERCENT_1);
+var comp_factory = function (p__6, ctx) {
+const map__12 = p__6;
+const comp3 = map__12;
+const cla4 = squint_core.get(map__12, "cla");
+const body5 = squint_core.get(map__12, "body");
+return function () {
+return null;
 };
 };
 var new_data = function (this$) {
