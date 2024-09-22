@@ -37,8 +37,8 @@
     ;; (mapv (fn [v] (println " v " v) (setStore (first v) (reconcile (second v) {:merge true}))) res)
 
     (if-not (first data)
-      (setStore (reconcile (merge-with merge res @acc)))
-      (reduce-kv (fn [m k v] (println "set: " k " " v ) (setStore k #(merge-with merge % v #_{:key k :merge true})))
+      (do (println "merge-data: " (merge-with merge res @acc)) (setStore (reconcile (merge-with merge res @acc))))
+      (reduce-kv (fn [m k v] (println "set: " k " " v) (setStore k #(merge-with merge % v #_{:key k :merge true})))
                  {}
                  (if-not (vector? res)
                    (merge  @acc res)

@@ -44,17 +44,31 @@ return squint_core.println(e1);}
 
 })();
 };
-var set_field_BANG_ = function (p__17, path, value, p__18) {
+var set_field_BANG_ = function (p__17, value, p__18) {
 const map__13 = p__17;
 const ctx4 = map__13;
 const store5 = squint_core.get(map__13, "store");
 const setStore6 = squint_core.get(map__13, "setStore");
 const map__27 = p__18;
-const check_session_QMARK_8 = squint_core.get(map__27, "check-session?", true);
-return wrap_session(ctx4, check_session_QMARK_8, (function () {
-return setStore6(squint_core.first(path), (function (x) {
-return squint_core.assoc_in(x, squint_core.rest(path), value);
+const param8 = map__27;
+const append9 = squint_core.get(map__27, "append", false);
+const replace10 = squint_core.get(map__27, "replace", false);
+const check_session_QMARK_11 = squint_core.get(map__27, "check-session?", true);
+return wrap_session(ctx4, check_session_QMARK_11, (function () {
+const path12 = (() => {
+const or__24281__auto__13 = append9;
+if (squint_core.truth_(or__24281__auto__13)) {
+return or__24281__auto__13;} else {
+return replace10;}
+})();
+const action14 = (squint_core.truth_(append9)) ? ((function (_PERCENT_1) {
+return squint_core.conj(_PERCENT_1, value);
+})) : ((function () {
+return squint_core.identity(value);
 }));
+return squint_core.apply(setStore6, squint_core.conj(path12, (function (x) {
+return action14(x);
+})));
 }));
 };
 var add_ident_BANG_ = function (p__19, ident, p__20) {
@@ -63,42 +77,11 @@ const ctx4 = map__13;
 const store5 = squint_core.get(map__13, "store");
 const setStore6 = squint_core.get(map__13, "setStore");
 const map__27 = p__20;
-const append8 = squint_core.get(map__27, "append", false);
-const replace9 = squint_core.get(map__27, "replace", false);
-const check_session_QMARK_10 = squint_core.get(map__27, "check-session?", true);
-return wrap_session(ctx4, check_session_QMARK_10, (function () {
-if (squint_core.truth_((() => {
-const or__24281__auto__11 = append8;
-if (squint_core.truth_(or__24281__auto__11)) {
-return or__24281__auto__11;} else {
-return replace9;}
-})())) {
-const path12 = (() => {
-const or__24281__auto__13 = append8;
-if (squint_core.truth_(or__24281__auto__13)) {
-return or__24281__auto__13;} else {
-return replace9;}
-})();
-const action14 = (squint_core.truth_(append8)) ? ((function (_PERCENT_1) {
-return squint_core.update_in(_PERCENT_1, squint_core.vec(squint_core.rest(path12)), squint_core.conj, ident);
-})) : ((function (_PERCENT_1) {
-return squint_core.assoc_in(_PERCENT_1, squint_core.vec(squint_core.rest(path12)), ident);
-}));
-setStore6(squint_core.first(path12), (function (x) {
-return action14(x);
-}));
-if (squint_core.truth_(u.uuid_QMARK_(squint_core.second(ident)))) {
-squint_core.println("uuid:", ident);
-return setStore6(squint_core.first(ident), squint_core.second(ident), (function (x) {
-const p15 = (() => {
-const or__24281__auto__16 = squint_core.get(x, "uuid/paths");
-if (squint_core.truth_(or__24281__auto__16)) {
-return or__24281__auto__16;} else {
-return [];}
-})();
-return squint_core.assoc(x, "uuid/paths", squint_core.conj(p15, path12));
-}));}}
-}));
+const param8 = map__27;
+const append9 = squint_core.get(map__27, "append", false);
+const replace10 = squint_core.get(map__27, "replace", false);
+const check_session_QMARK_11 = squint_core.get(map__27, "check-session?", true);
+return set_field_BANG_(ctx4, ident, param8);
 };
 var remove_ident_BANG_ = function (p__21, path, ident, p__22) {
 const map__13 = p__21;

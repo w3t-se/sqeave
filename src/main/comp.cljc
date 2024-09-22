@@ -64,15 +64,15 @@
                                                     (list 'set! 'this#.ident 'ident)
                                                     (list `createMemo (list 'fn []
                                                                             (list 'println "memo: " ntmp " ident: " (list 'ident) " query: " query)
-                                                                            (list 'println "data: " (list `pull 'store (list 'ident) query))
                                                                             (list 'let ['data (list `pull 'store (list 'ident) query)
                                                                                         #_(list 'if n
                                                                                                 (list `pull 'store (list 'ident) query)
                                                                                                 (list `pull 'store 'store query) ; multiple query entries pull from root
                                                                                                 )]
+                                                                                  (list 'println "data: " `data)
                                                                                   (list 'merge or-map (list 'or 'data {}))))))
                                               (list 'fn [] 'props))
-                                  val-vec (mapv #(list 'fn [] (list % (list 'data))) (mapv keywordify val-vec))
+                                  val-vec (mapv #(list `createMemo (list 'fn [] (list % (list 'data)))) (mapv keywordify val-vec))
 
                                   ['local 'setLocal] (list `createSignal local-map)]
                             (list 'set! 'this#.-ctx 'ctx)
@@ -91,7 +91,7 @@
           #_(list 'def name {:cla (symbol name) :body (symbol (str name "Fn"))})
 
           #_(list 'defn (symbol (str name "new")) ['props] (list 'let ['c (list new (str name "class"))]
-                                                               (list .render 'c (symbol (str name "fn")) 'props))))))
+                                                                 (list .render 'c (symbol (str name "fn")) 'props))))))
 
 #_(defmacro defm [name binding & action-forms]
   )

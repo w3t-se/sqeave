@@ -74,6 +74,7 @@ return store9;}
 squint_core.println("rr: ", res11);
 squint_core.println("rr:acc ", squint_core.deref(acc));
 if (squint_core.not(squint_core.first(data))) {
+squint_core.println("merge-data: ", squint_core.merge_with(squint_core.merge, res11, squint_core.deref(acc)));
 setStore10(reconcile(squint_core.merge_with(squint_core.merge, res11, squint_core.deref(acc))))} else {
 squint_core.reduce_kv((function (m, k, v) {
 squint_core.println("set: ", k, " ", v);

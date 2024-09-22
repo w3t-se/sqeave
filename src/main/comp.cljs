@@ -12,9 +12,9 @@
 
 (defn set!
   ([this ident field event]
-   (t/set-field! this.-ctx (conj ident field) (or (u/e->v event) event)))
+   (t/set-field! this.-ctx (or (u/e->v event) event) {:replace (conj ident field)}))
   ([this field event]
-   (t/set-field! this.-ctx (conj (this.ident) field) (or (u/e->v event) event))))
+   (t/set-field! this.-ctx (or (u/e->v event) event) {:replace (conj (this.ident) field)})))
 
 (defn viewer-ident [this]
   (t/viewer-ident this.-ctx))

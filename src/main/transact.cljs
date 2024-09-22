@@ -40,27 +40,23 @@
       (alert-error ctx e)
       (println e))))
 
-(defn set-field! [{:keys [store setStore] :as ctx} path value {:keys [check-session?] :or {check-session? true}}]
-  (wrap-session ctx check-session?
-   #(setStore (first path)
-             (fn [x]
-               (assoc-in x (rest path) value)))))
-
-(defn add-ident! [{:keys [store setStore] :as ctx} ident {:keys [append replace check-session?] :or {append false replace false check-session? true}}]
+(defn set-field! [{:keys [store setStore] :as ctx} value {:keys [append replace check-session?] :or {append false replace false check-session? true}  :as param}]
   (wrap-session ctx check-session?
                 (fn []
-                  (if (or append replace)
-                    (let [path (or append replace)
-                          action (if append
-                                   #(update-in % (vec (rest path)) conj ident)
-                                   #(assoc-in % (vec (rest path)) ident))]
-                      (setStore (first path) (fn [x] (action x)))
-                      (when (u/uuid? (second ident))
+                  (let [path (or append replace)
+                        action (if append
+                                 #(conj % value)
+                                 #(identity value))]
+                    (apply setStore (conj path (fn [x] (action x))))
+                    #_(when (u/uuid? (second ident))
                         (println "uuid:" ident)
                         (setStore (first ident) (second ident)
                                   (fn [x]
                                     (let [p (or (:uuid/paths x) [])]
-                                      (assoc x :uuid/paths (conj p path)))))))))))
+                                      (assoc x :uuid/paths (conj p path))))))))))
+
+(defn add-ident! [{:keys [store setStore] :as ctx} ident {:keys [append replace check-session?] :or {append false replace false check-session? true} :as param}]
+  (set-field! ctx ident param))
 
 (defn remove-ident! [{:keys [store setStore] :as ctx} path ident {:keys [check-session?] :or {check-session? true}}]
   (wrap-session ctx check-session?

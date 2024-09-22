@@ -17,20 +17,20 @@ default:
 throw new Error(squint_core.str("Invalid arity: ", squint_core.alength(arguments)))}
 });
 f2.cljs$core$IFn$_invoke$arity$4 = (function (this$, ident, field, event) {
-return t.set_field_BANG_(this$._ctx, squint_core.conj(ident, field), (() => {
+return t.set_field_BANG_(this$._ctx, (() => {
 const or__24281__auto__3 = u.e__GT_v(event);
 if (squint_core.truth_(or__24281__auto__3)) {
 return or__24281__auto__3;} else {
 return event;}
-})());
+})(), ({ "replace": squint_core.conj(ident, field) }));
 });
 f2.cljs$core$IFn$_invoke$arity$3 = (function (this$, field, event) {
-return t.set_field_BANG_(this$._ctx, squint_core.conj(this$.ident(), field), (() => {
+return t.set_field_BANG_(this$._ctx, (() => {
 const or__24281__auto__4 = u.e__GT_v(event);
 if (squint_core.truth_(or__24281__auto__4)) {
 return or__24281__auto__4;} else {
 return event;}
-})());
+})(), ({ "replace": squint_core.conj(this$.ident(), field) }));
 });
 f2.cljs$lang$maxFixedArity = 4;
 return f2;
