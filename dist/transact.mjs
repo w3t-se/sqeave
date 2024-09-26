@@ -53,7 +53,7 @@ const map__27 = p__18;
 const param8 = map__27;
 const append9 = squint_core.get(map__27, "append", false);
 const replace10 = squint_core.get(map__27, "replace", false);
-const check_session_QMARK_11 = squint_core.get(map__27, "check-session?", true);
+const check_session_QMARK_11 = squint_core.get(map__27, "check-session?", false);
 return wrap_session(ctx4, check_session_QMARK_11, (function () {
 const path12 = (() => {
 const or__24281__auto__13 = append9;
@@ -80,7 +80,7 @@ const map__27 = p__20;
 const param8 = map__27;
 const append9 = squint_core.get(map__27, "append", false);
 const replace10 = squint_core.get(map__27, "replace", false);
-const check_session_QMARK_11 = squint_core.get(map__27, "check-session?", true);
+const check_session_QMARK_11 = squint_core.get(map__27, "check-session?", false);
 return set_field_BANG_(ctx4, ident, param8);
 };
 var remove_ident_BANG_ = function (p__21, path, ident, p__22) {
@@ -89,7 +89,7 @@ const ctx4 = map__13;
 const store5 = squint_core.get(map__13, "store");
 const setStore6 = squint_core.get(map__13, "setStore");
 const map__27 = p__22;
-const check_session_QMARK_8 = squint_core.get(map__27, "check-session?", true);
+const check_session_QMARK_8 = squint_core.get(map__27, "check-session?", false);
 return wrap_session(ctx4, check_session_QMARK_8, (function () {
 return squint_core.apply(setStore6, squint_core.conj(path, (function (x) {
 return (() => {
@@ -113,7 +113,7 @@ const params8 = map__27;
 const append9 = squint_core.get(map__27, "append", false);
 const replace10 = squint_core.get(map__27, "replace", false);
 const after11 = squint_core.get(map__27, "after", false);
-const check_session_QMARK_12 = squint_core.get(map__27, "check-session?", true);
+const check_session_QMARK_12 = squint_core.get(map__27, "check-session?", false);
 return wrap_session(ctx4, check_session_QMARK_12, (function () {
 const res13 = n.add(ctx4, value);
 if (squint_core.truth_((() => {

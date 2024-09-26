@@ -40,7 +40,7 @@
       (alert-error ctx e)
       (println e))))
 
-(defn set-field! [{:keys [store setStore] :as ctx} value {:keys [append replace check-session?] :or {append false replace false check-session? true}  :as param}]
+(defn set-field! [{:keys [store setStore] :as ctx} value {:keys [append replace check-session?] :or {append false replace false check-session? false}  :as param}]
   (wrap-session ctx check-session?
                 (fn []
                   (let [path (or append replace)
@@ -55,10 +55,10 @@
                                     (let [p (or (:uuid/paths x) [])]
                                       (assoc x :uuid/paths (conj p path))))))))))
 
-(defn add-ident! [{:keys [store setStore] :as ctx} ident {:keys [append replace check-session?] :or {append false replace false check-session? true} :as param}]
+(defn add-ident! [{:keys [store setStore] :as ctx} ident {:keys [append replace check-session?] :or {append false replace false check-session? false} :as param}]
   (set-field! ctx ident param))
 
-(defn remove-ident! [{:keys [store setStore] :as ctx} path ident {:keys [check-session?] :or {check-session? true}}]
+(defn remove-ident! [{:keys [store setStore] :as ctx} path ident {:keys [check-session?] :or {check-session? false}}]
   (wrap-session ctx check-session?
                 (fn []
                   (apply setStore (conj path (fn [x] (try
@@ -68,7 +68,7 @@
                                                          x))))))))
 
 (defn add! [{:keys [store setStore] :as ctx} value {:keys [append replace after check-session?] :or {append false replace false after
-                                                                                                     false check-session? true} :as params}]
+                                                                                                     false check-session? false} :as params}]
   (wrap-session ctx check-session?
                 #(let [res (n/add ctx value)]
                    (if (or append replace)
