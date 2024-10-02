@@ -45,7 +45,9 @@
                 (fn []
                   (let [path (or append replace)
                         action (if append
-                                 #(conj % value)
+                                 (if replace
+                                   #(u/distinct-second-elements (conj % value))
+                                   #(conj % value))
                                  #(identity value))]
                     (apply setStore (conj path (fn [x] (action x))))
                     #_(when (u/uuid? (second ident))

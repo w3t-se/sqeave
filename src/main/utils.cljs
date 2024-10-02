@@ -125,6 +125,15 @@
   [key]
   (.removeItem (.-sessionStorage js/window) key))
 
+(defn distinct-second-elements [coll]
+  (vec (let [seen (atom #{})] ;; Use a volatile set to track seen second elements
+         (filter
+          (fn [[_ second]]
+            (if (contains? @seen second)
+              false
+              (do (swap! seen conj second) true)))
+          coll))))
+
 
 ;; const timeZone = 'America/New_York';
 ;; const zonedDate = utcToZonedTime(now, timeZone);

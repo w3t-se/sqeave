@@ -166,5 +166,19 @@ return null;}
 var remove_session_item_BANG_ = function (key) {
 return window.sessionStorage.removeItem(key);
 };
+var distinct_second_elements = function (coll) {
+return squint_core.vec((() => {
+const seen1 = squint_core.atom(new Set([]));
+return squint_core.filter((function (p__26) {
+const vec__25 = p__26;
+const _6 = squint_core.nth(vec__25, 0, null);
+const second7 = squint_core.nth(vec__25, 1, null);
+if (squint_core.truth_(squint_core.contains_QMARK_(squint_core.deref(seen1), second7))) {
+return false;} else {
+squint_core.swap_BANG_(seen1, squint_core.conj, second7);
+return true;}
+}), coll);
+})());
+};
 
-export { e__GT_v, string_QMARK_, remove_ident, kebab_case, stream_id_QMARK_, remove_item_BANG_, add_ns, get_item, ident_QMARK_, set_item_BANG_, random_evm, drop_false, pascal_case, copy_to_clipboard, uuid_QMARK_, remove_session_item_BANG_, uuid, distribute, object_QMARK_, nsd, remove_item, template, get_ident, remove_ns, trunc_id, get_session_item, camel_case, get_ns, set_session_item_BANG_ }
+export { e__GT_v, string_QMARK_, remove_ident, kebab_case, stream_id_QMARK_, remove_item_BANG_, distinct_second_elements, add_ns, get_item, ident_QMARK_, set_item_BANG_, random_evm, drop_false, pascal_case, copy_to_clipboard, uuid_QMARK_, remove_session_item_BANG_, uuid, distribute, object_QMARK_, nsd, remove_item, template, get_ident, remove_ns, trunc_id, get_session_item, camel_case, get_ns, set_session_item_BANG_ }

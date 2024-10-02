@@ -61,9 +61,11 @@ if (squint_core.truth_(or__24281__auto__13)) {
 return or__24281__auto__13;} else {
 return replace10;}
 })();
-const action14 = (squint_core.truth_(append9)) ? ((function (_PERCENT_1) {
+const action14 = (squint_core.truth_(append9)) ? ((squint_core.truth_(replace10)) ? ((function (_PERCENT_1) {
+return u.distinct_second_elements(squint_core.conj(_PERCENT_1, value));
+})) : ((function (_PERCENT_1) {
 return squint_core.conj(_PERCENT_1, value);
-})) : ((function () {
+}))) : ((function () {
 return squint_core.identity(value);
 }));
 return squint_core.apply(setStore6, squint_core.conj(path12, (function (x) {
