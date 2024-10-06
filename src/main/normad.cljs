@@ -82,8 +82,12 @@
          (vector? query)) (pull store entity (first query))
 
     (map? query) (let [nk (first (keys query))
-                       data (get entity nk)]
-                   {nk (pull store data (vals query))})
+                       sub-query (get query nk)]
+                   (when-let [data (get entity nk)]
+                     #_(println "-------------:" nk ": " data sub-query)
+                     {nk (if (ident? data)
+                           (pull store data sub-query)
+                           (mapv #(pull store % sub-query) data))}))
 
     :else (get entity query)))
 
