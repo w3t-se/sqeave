@@ -24,8 +24,9 @@
   ],
   "scripts": {},
   "dependencies": {
-    "solid-js": "^1.8.18",
-    "squint-cljs": "^0.7.100"
+    "lodash": "^4.17.21",
+    "solid-js": "^1.9.3",
+    "squint-cljs": "^0.7.111"
   },
   "devDependencies": {
     "vite": "latest"
