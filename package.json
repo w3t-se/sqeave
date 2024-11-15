@@ -1,10 +1,13 @@
 {
-  "name": "sqeave",
+  "name": "@w3t-ab/sqeave",
   "version": "0.0.1",
   "description": "A squint-cljs based solid-js framework for building SPAs borrowing ideas from Fulcro",
-  "author": "",
-  "license": "",
-  "repository": "https://github.com/w3t_ab/sqeave",
+  "author": "W3T AB",
+  "license": "EPL",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/w3t_ab/sqeave.git"
+  },
   "type": "module",
   "files": [
     "dist",
@@ -34,9 +37,16 @@
     "clojurescript",
     "squint-cljs"
   ],
-  "exports": {".": "./index.js",
-              "./comp": "./comp.js",
-              "./normad": "./normad.js",
-              "./utils": "./utils.js",
-              "./transact": "./transact.js"}
+  "exports": {
+    ".": "./index.js",
+    "./comp": "./comp.js",
+    "./normad": "./normad.js",
+    "./utils": "./utils.js",
+    "./transact": "./transact.js"
+  },
+  "main": "index.js",
+  "bugs": {
+    "url": "https://github.com/w3t_ab/sqeave/issues"
+  },
+  "homepage": "https://github.com/w3t_ab/sqeave#readme"
 }
