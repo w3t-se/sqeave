@@ -69,7 +69,7 @@
                                                                                                 (list `pull 'store (list 'ident) query)
                                                                                                 (list `pull 'store 'store query) ; multiple query entries pull from root
                                                                                                 )]
-                                                                                  (list 'println "data: " `data)
+                                                                                  (list 'println "data: " 'data)
                                                                                   (list 'merge or-map (list 'or 'data {}))))))
                                               (list 'fn [] 'props))
                                   val-vec (mapv #(list `createMemo (list 'fn [] (list % (list 'data)))) (mapv keywordify val-vec))
