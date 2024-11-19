@@ -1,0 +1,27 @@
+{
+  "name": "template",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@w3t-ab/sqeave": "^0.0.2",
+    "@w3t-ab/vite-plugin-squint": "github:w3t-se/vite-plugin-squint#7a0b232bdd889ac604ebb88d4d9be08239dae632",
+    "squint-cljs": "^0.8.123",
+    "vite": "^5.4.11",
+    "vite-plugin-solid": "^2.10.2"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "squint-cljs@0.8.123": "patches/squint-cljs@0.8.123.patch"
+    }
+  },
+  "dependencies": {
+    "solid-js": "^1.9.3"
+  }
+}
