@@ -2,13 +2,15 @@
   (:require ["solid-js" :as solid]
             ["./normad.mjs" :as n]
             ["./transact.mjs" :as t]
-            ;["./composedb/util.cljs" :as cu]
             ["./utils.mjs" :as u]
-            [squint.core :refer [defclass]]
-            #_["./comp_macro.mjs" :as m])
-  #_(:require-macros [comp :refer [defc]]))
+            [squint.core :refer [defclass]]))
 
 (def remotes (atom {}))
+
+(def AppContext nil)
+
+(defn init! [ctx]
+  (set! AppContext ctx))
 
 (defn set!
   ([this ident field event]
@@ -66,10 +68,9 @@
     (when remove
       (t/remove-ident! this.-ctx (:from mutate-map) remove))))
 
-(def default Comp)
 (def useContext solid/useContext)
 (def pull n/pull)
 (def createMemo solid/createMemo)
 (def createSignal solid/createSignal)
-(def ident? u/ident?)
-(def uuid u/uuid)
+#_(def ident? u/ident?)
+#_(def uuid u/uuid)

@@ -7,7 +7,7 @@
   (= (js/typeof o) "object"))
 
 (defn get-ident [data]
-  (if-let [ident-key (first (filter #(re-find #"/id$" %) (keys data)))]
+  (when-let [ident-key (first (filter #(re-find #"/id$" %) (keys data)))]
     [ident-key (get data ident-key)]))
 
 (defn get-ns [k]

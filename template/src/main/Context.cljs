@@ -1,4 +1,4 @@
-(ns state
-  (:require ["solid-js" :refer [createContext  createSignal]]))
+(ns Context
+  (:require ["solid-js" :refer [createContext]]))
 
 (def AppContext (createContext))
