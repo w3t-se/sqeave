@@ -18,8 +18,8 @@ importers:
         version: 1.9.3
     devDependencies:
       '@w3t-ab/sqeave':
-        specifier: ^0.0.3
-        version: 0.0.3
+        specifier: ^0.0.4
+        version: 0.0.4
       '@w3t-ab/vite-plugin-squint':
         specifier: github:w3t-se/vite-plugin-squint#7a0b232bdd889ac604ebb88d4d9be08239dae632
         version: https://codeload.github.com/w3t-se/vite-plugin-squint/tar.gz/7a0b232bdd889ac604ebb88d4d9be08239dae632(vite@5.4.11)
@@ -377,8 +377,8 @@ packages:
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
 
-  '@w3t-ab/sqeave@0.0.3':
-    resolution: {integrity: sha512-dW+GwHHA3SNfnLY4sFW1GmqASEZ6nVTI4o7v+mf/THJLb6if6fWDqX6itrysS2nMfXH1pvmuBtylV7LtMEEGXA==}
+  '@w3t-ab/sqeave@0.0.4':
+    resolution: {integrity: sha512-6lWLRDvsaSWwwA+wIIym73ECVo/3obHjm7OB/PPRjtqR4AX2mhQkDmjrXjLVvidLNj3dykMU8uY4DghfcMK5dA==}
 
   '@w3t-ab/vite-plugin-squint@https://codeload.github.com/w3t-se/vite-plugin-squint/tar.gz/7a0b232bdd889ac604ebb88d4d9be08239dae632':
     resolution: {tarball: https://codeload.github.com/w3t-se/vite-plugin-squint/tar.gz/7a0b232bdd889ac604ebb88d4d9be08239dae632}
@@ -882,7 +882,7 @@ snapshots:
 
   '@types/estree@1.0.6': {}
 
-  '@w3t-ab/sqeave@0.0.3':
+  '@w3t-ab/sqeave@0.0.4':
     dependencies:
       lodash: 4.17.21
       solid-js: 1.9.3
