@@ -1,17 +1,18 @@
 (ns index
-  (:require ["solid-js/web" :refer [render]]
-            ["solid-js/store" :refer [createStore]]
+  (:require ["solid-js" :refer [createContext]]
+            ["solid-js/web" :refer [render]]
             ["@w3t-ab/sqeave" :as sqeave]
-            ["./Context.cljs" :refer [AppContext]]
-            ["./main.cljs" :refer [Main]])
+            ["./main.cljs" :refer [Main MainClass]])
   (:require-macros [sqeave :refer [defc]]))
 
-(sqeave/init! AppContext)
+(def AppContext (createContext))
 
-(defc Root [this {:keys []}]
-  (let [[store setStore] (createStore {:click/id {0 {:click/id 0
-                                                     :click/count 0}}})]
-    #jsx [AppContext.Provider {:value {:store store :setStore setStore}}
-          [Main {:& {:ident (fn [] [:click/id 0])}}]]))
+(defc Root [this {:keys [count] :or {count 0} :ctx (sqeave/init-ctx! AppContext)}]
+  #jsx [AppContext.Provider {:value this.-ctx}
+        [:button {:onClick #(sqeave/set! this :count (inc (count)))} "Plus"]
+        [:p {} "Count: " (count)]
+        #_[Main {:ident [:main/id 0]}]])
 
-(render Root (js/document.getElementById "root"))
+(let [e (js/document.getElementById "root")]
+  (set! (aget e :innerHTML) "")
+  (render Root e))

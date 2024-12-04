@@ -1,5 +1,6 @@
 (ns comp
-  (:require ["solid-js" :as solid]
+  (:require ["solid-js" :as solid :refer [createContext]]
+            ["solid-js/store" :refer [createStore]]
             ["./normad.mjs" :as n]
             ["./transact.mjs" :as t]
             ["./utils.mjs" :as u]
@@ -9,14 +10,11 @@
 
 (def AppContext nil)
 
-(defn init! [ctx]
-  (set! AppContext ctx))
-
-(defn set!
-  ([this ident field event]
-   (t/set-field! this.-ctx (or (u/e->v event) event) {:replace (conj ident field)}))
-  ([this field event]
-   (t/set-field! this.-ctx (or (u/e->v event) event) {:replace (conj (this.ident) field)})))
+(defn init-ctx! [ctx]
+  (let [[store setStore] (createStore {} #_(this.new-data))]
+    (set! AppContext ctx)
+    (when js/import.meta.env.DEV (set! (.-store js/window) store))
+    {:store store :setStore setStore}))
 
 (defn viewer-ident [this]
   (t/viewer-ident this.-ctx))
@@ -68,9 +66,14 @@
     (when remove
       (t/remove-ident! this.-ctx (:from mutate-map) remove))))
 
+(defn set!
+  ([this ident field event]
+   (t/set-field! this.-ctx (or (u/e->v event) event) {:replace (conj ident field)}))
+  ([this field event]
+   (t/set-field! this.-ctx (or (u/e->v event) event) {:replace (conj (this.ident) field)})))
+
+
 (def useContext solid/useContext)
 (def pull n/pull)
 (def createMemo solid/createMemo)
 (def createSignal solid/createSignal)
-#_(def ident? u/ident?)
-#_(def uuid u/uuid)

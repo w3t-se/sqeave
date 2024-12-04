@@ -15,7 +15,7 @@
         val-vec (mapv #(if (map? %) (first (keys %)) %) params)
         val-vec (mapv strip-ns val-vec)
 
-        keywordify (fn [x] (keyword (str (if n (str n "/")) x)))
+        keywordify (fn [x] (keyword (str (when n (str n "/")) x)))
 
         or-map (let [m (-> bindings second :or)]
                  (zipmap (mapv keywordify (keys m)) (vals m)))
@@ -25,7 +25,9 @@
 
         query (mapv #(if (map? %)
                        {(keywordify (first (keys %))) (first (vals %))}
-                       (keywordify %)) params)]
+                       (keywordify %)) params)
+
+        binding-ctx (:ctx (second bindings))]
 
     (list 'do
           (list 'defn (symbol (str name "Fn")) [{:keys (conj val-vec 'this 'props 'ctx)}] body)
@@ -47,30 +49,34 @@
                       #_(list 'set! 'this#.render 'this#.constructor.render))
 
                 'Object
-                (list (with-meta 'new-data {:static true}) ['_ '& 'data] (list 'let ['v (list 'vals or-map)
-                                                                                     'k (list 'keys or-map)]
-                                                                               (list 'merge or-map (list 'or (list 'first 'data) {}))))
+                (list (with-meta 'new-data {:static true}) ['_ 'data] (list 'merge or-map 'data))
 
                 (list 'render ['this# 'body 'props]
                       (list 'let [(first bindings) 'this#
                                   'a (list 'println "render: " ntmp " props: " 'props)
-                                  'ctx (list 'sqeave/useContext 'this#.ctx)
+                                  'a (list 'println "b-ctx: " binding-ctx)
+                                  'ctx (list 'or binding-ctx (list `useContext 'this#.ctx))
+                                  #_(list 'if-not (list 'nil? (list 'get 'this#.ctx :defaultValue))
+                                          (list `useContext 'this#.ctx)
+                                          binding-ctx)
+                                  'a (list 'println "ctx:" 'ctx)
                                   'ident (list 'get 'props :ident)
                                   'ident (list 'if-not (list 'fn? 'ident) (list 'fn [] 'ident) 'ident)
-                                  'a (list 'println ntmp ": p " 'props " i: " (list 'ident))
+                                  'ident (list 'if (list nil? (list 'ident)) (list 'fn [] []) 'ident)
+                                  'a (list 'println ntmp ": p " 'props " i: " (list 'ident) " q: " query " ctx:" 'ctx)
+                                  'a (list 'set! 'this#.ident 'ident)
                                   {:keys ['store 'setStore]} 'ctx
-                                  'data (list 'if (list 'sqeave/ident? (list 'ident))
+                                  'a (list 'sqeave/add! 'ctx (list 'this#.new-data))
+                                  'data (list 'if (list 'or (list 'and (list 'vector? (list 'ident)) (list '= (list 'count (list 'ident)) 0))
+                                                        (list 'sqeave/ident? (list 'ident)))
                                               (list 'do
-                                                    (list 'set! 'this#.ident 'ident)
+                                                    (list 'println "ok: " (list 'ident))
                                                     (list 'sqeave/createMemo (list 'fn []
-                                                                                 (list 'println "memo: " ntmp " ident: " (list 'ident) " query: " query)
-                                                                                 (list 'let ['data (list 'sqeave/pull 'store (list 'ident) query)
-                                                                                             #_(list 'if n
-                                                                                                     (list `pull 'store (list 'ident) query)
-                                                                                                     (list `pull 'store 'store query) ; multiple query entries pull from root
-                                                                                                     )]
-                                                                                       (list 'println "data: " 'data)
-                                                                                       (list 'merge or-map (list 'or 'data {}))))))
+                                                                                   (list 'println "memo: " ntmp " ident: " (list 'ident) " query: " query)
+                                                                                   (list 'let ['data (list 'sqeave/pull 'store (list 'if (list 'empty? (list 'ident))
+                                                                                                                                     'store (list 'ident)) query)]
+                                                                                         (list 'println "data: " 'data)
+                                                                                         (list 'merge or-map 'data)))))
                                               (list 'fn [] 'props))
                                   val-vec (mapv #(list 'sqeave/createMemo (list 'fn [] (list % (list 'data)))) (mapv keywordify val-vec))
 
@@ -89,6 +95,7 @@
                                                    'children] body))))
 
           (list 'defn name ['props] (list 'let ['c (list 'new (symbol (str name "Class")) 'sqeave/AppContext)]
+                                          #_(list 'if (list :pre (list 'second bindings)))
                                           (list '.render 'c (symbol (str name "Fn")) 'props)))
 
           #_(list 'def-factory (symbol (str "Ui" name)) (symbol name) 'sqeave/AppContext (symbol (str name "Fn")))

@@ -17,31 +17,47 @@ Why squint-cljs and not ClojureScript? The main plus is that we want to have mor
 ``` shell
 $ mkdir -p sqeave-app/src/main && cd sqeave-app
 $ npm init esnext -y
-$ npm install @w3t-ab/sqeave vite vite-plugin-solid git+https://github.com/brandonstubbs/vite-plugin-squint.git
+$ npm install @w3t-ab/sqeave @w3t-ab/vite-plugin-squint vite vite-plugin-solid
 ```
-add a src/main/App.cljs file with a basic root component:
+
+add a src/main/index.cljs file with a basic root component:
 ``` clojure
-(ns app
-  (:require ["solid-js" :refer [createContext  createSignal]]
+(ns index
+  (:require ["solid-js" :refer [createContext]]
+            ["solid-js/web" :refer [render]]
             ["solid-js/store" :refer [createStore]]
-            ["sqeave/comp" :as comp]))
-            
-(def AppContext (createContext))
+            ["@w3t-ab/sqeave" :as sqeave]
+            ["./Context.cljs" :refer [AppContext]]
+            ["./main.cljs" :refer [Main]])
+  (:require-macros [sqeave :refer [defc]]))
+
+(sqeave/init! (createContext))
 
 (defc Root [this {:keys []}]
-  (let [store [store setStore] (createStore {})]
-    #jsx [AppContext.Provider {:value ctx}
-           [:div "Hello"]]))
-           
-(def-factory UiRoot Root AppContext RootFn)
+  (let [[store setStore] (createStore {:click/id {0 {:click/id 0
+                                                     :click/count 0}}})]
+    #jsx [AppContext.Provider {:value {:store store :setStore setStore}}
+          [Main {:& {:ident (fn [] [:click/id 0])}}]]))
 
-(render UiRoot (js/document.getElementById "root"))
+(render Root (js/document.getElementById "root"))
 ```
 the Root Component is described below.
 
+Add a src/main/main.cljs component:
+```clojure
+(ns main
+  (:require ["@w3t-ab/sqeave" :as sqeave])
+  (:require-macros [sqeave :refer [defc]]))
+
+(defc Main [this {:click/keys [id count] :or {id (sqeave/uuid) count 0}}]
+  #jsx [:div {} "Hello Sqeave: "
+        [:button {:onClick #(sqeave/set! this :click/count (inc (count)))} "Plus"]
+        [:p {} "Count: " (count)]])
+```
+
 Add an src/main/index.jsx file:
 ``` jsx
-export * from "./root.cljs";
+export * from "./index.cljs";
 ```
 Add an entry index.html file to the project root directory:
 

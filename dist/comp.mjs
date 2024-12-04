@@ -1,45 +1,22 @@
 import * as squint_core from 'squint-cljs/core.js';
 import * as solid from 'solid-js';
+import { createContext } from 'solid-js';
+import { createStore } from 'solid-js/store';
 import * as n from './normad.mjs';
 import * as t from './transact.mjs';
 import * as u from './utils.mjs';
 var remotes = squint_core.atom(({  }));
 var AppContext = null;
-var init_BANG_ = function (ctx) {
-return AppContext = ctx;
-;
+var init_ctx_BANG_ = function (ctx) {
+const vec__14 = createStore(({  }));
+const store5 = squint_core.nth(vec__14, 0, null);
+const setStore6 = squint_core.nth(vec__14, 1, null);
+AppContext = ctx;
+if (squint_core.truth_(import.meta.env.DEV)) {
+window.store = store5;
 };
-var set_BANG_ = (() => {
-const f1 = (function (var_args) {
-const G__41 = arguments.length;
-switch (G__41) {case 4:
-return f1.cljs$core$IFn$_invoke$arity$4((arguments[0]), (arguments[1]), (arguments[2]), (arguments[3]));
-break;
-case 3:
-return f1.cljs$core$IFn$_invoke$arity$3((arguments[0]), (arguments[1]), (arguments[2]));
-break;
-default:
-throw new Error(squint_core.str("Invalid arity: ", squint_core.alength(arguments)))}
-});
-f1.cljs$core$IFn$_invoke$arity$4 = (function (this$, ident, field, event) {
-return t.set_field_BANG_(this$._ctx, (() => {
-const or__24212__auto__3 = u.e__GT_v(event);
-if (squint_core.truth_(or__24212__auto__3)) {
-return or__24212__auto__3;} else {
-return event;}
-})(), ({ "replace": squint_core.conj(ident, field) }));
-});
-f1.cljs$core$IFn$_invoke$arity$3 = (function (this$, field, event) {
-return t.set_field_BANG_(this$._ctx, (() => {
-const or__24212__auto__4 = u.e__GT_v(event);
-if (squint_core.truth_(or__24212__auto__4)) {
-return or__24212__auto__4;} else {
-return event;}
-})(), ({ "replace": squint_core.conj(this$.ident(), field) }));
-});
-f1.cljs$lang$maxFixedArity = 4;
-return f1;
-})();
+return ({ "store": store5, "setStore": setStore6 });
+};
 var viewer_ident = function (this$) {
 return t.viewer_ident(this$._ctx);
 };
@@ -73,8 +50,8 @@ const this$ = this;
 const self__ = this;return null;
 }};
 var Comp = Comp$;
-var comp_factory = function (p__5, ctx) {
-const map__12 = p__5;
+var comp_factory = function (p__1, ctx) {
+const map__12 = p__1;
 const comp3 = map__12;
 const cla4 = squint_core.get(map__12, "cla");
 const body5 = squint_core.get(map__12, "body");
@@ -117,9 +94,40 @@ t.add_BANG_(this$._ctx, ((add2) === ("new")) ? (this$.new_data()) : (add2), opts
 if (squint_core.truth_(remove5)) {
 return t.remove_ident_BANG_(this$._ctx, squint_core.get(mutate_map, "from"), remove5);}
 };
+var set_BANG_ = (() => {
+const f2 = (function (var_args) {
+const G__51 = arguments.length;
+switch (G__51) {case 4:
+return f2.cljs$core$IFn$_invoke$arity$4((arguments[0]), (arguments[1]), (arguments[2]), (arguments[3]));
+break;
+case 3:
+return f2.cljs$core$IFn$_invoke$arity$3((arguments[0]), (arguments[1]), (arguments[2]));
+break;
+default:
+throw new Error(squint_core.str("Invalid arity: ", squint_core.alength(arguments)))}
+});
+f2.cljs$core$IFn$_invoke$arity$4 = (function (this$, ident, field, event) {
+return t.set_field_BANG_(this$._ctx, (() => {
+const or__24212__auto__3 = u.e__GT_v(event);
+if (squint_core.truth_(or__24212__auto__3)) {
+return or__24212__auto__3;} else {
+return event;}
+})(), ({ "replace": squint_core.conj(ident, field) }));
+});
+f2.cljs$core$IFn$_invoke$arity$3 = (function (this$, field, event) {
+return t.set_field_BANG_(this$._ctx, (() => {
+const or__24212__auto__4 = u.e__GT_v(event);
+if (squint_core.truth_(or__24212__auto__4)) {
+return or__24212__auto__4;} else {
+return event;}
+})(), ({ "replace": squint_core.conj(this$.ident(), field) }));
+});
+f2.cljs$lang$maxFixedArity = 4;
+return f2;
+})();
 var useContext = solid.useContext;
 var pull = n.pull;
 var createMemo = solid.createMemo;
 var createSignal = solid.createSignal;
 
-export { Comp, createMemo, new_data, set_BANG_, AppContext, createSignal, pull, remotes, init_BANG_, useContext, viewer_ident, comp_factory, mutate_BANG_, viewer_QMARK_ }
+export { Comp, createMemo, new_data, set_BANG_, AppContext, createSignal, init_ctx_BANG_, pull, remotes, useContext, viewer_ident, comp_factory, mutate_BANG_, viewer_QMARK_ }
