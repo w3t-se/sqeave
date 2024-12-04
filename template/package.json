@@ -10,7 +10,7 @@
   "license": "EPL",
   "description": "",
   "devDependencies": {
-    "@w3t-ab/sqeave": "file:../",
+    "@w3t-ab/sqeave": "^0.0.6",
     "@w3t-ab/vite-plugin-squint": "^0.0.5",
     "squint-cljs": "^0.8.128",
     "vite": "^6.0.2",
