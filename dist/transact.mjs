@@ -1,6 +1,7 @@
 import * as squint_core from 'squint-cljs/core.js';
 import * as n from './normad.mjs';
 import * as u from './utils.mjs';
+import * as log from 'loglevel';
 var alert_error = function (ctx, error) {
 return n.add(ctx, ({ "component/id": "alert", "title": "Error", "visible?": true, "type": "error", "interval": 4000, "message": squint_core.str(error) }), ({  }));
 };
@@ -40,7 +41,7 @@ check_session(ctx)};
 return f();}
 catch(e1){
 alert_error(ctx, e1);
-return squint_core.println(e1);}
+return log.error(e1);}
 
 })();
 };
@@ -98,7 +99,7 @@ return (() => {
 try{
 return u.remove_ident(ident, x);}
 catch(e9){
-squint_core.println(e9);
+log.error(e9);
 return x;}
 
 })();
@@ -145,7 +146,7 @@ const paths10 = squint_core.get(obj8, "uuid/paths");
 setStore5(squint_core.first(ident), (function (x) {
 return squint_core.assoc(x, stream_id, new_obj9);
 }));
-squint_core.println("path: ", paths10);
+log.debug("path: ", paths10);
 return squint_core.mapv((function (_PERCENT_1) {
 return squint_core.apply(setStore5, squint_core.conj(_PERCENT_1, (function (x) {
 if (squint_core.truth_(u.ident_QMARK_(x))) {

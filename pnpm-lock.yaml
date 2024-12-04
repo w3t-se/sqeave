@@ -11,13 +11,16 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      loglevel:
+        specifier: ^1.9.2
+        version: 1.9.2
       solid-js:
         specifier: ^1.9.3
         version: 1.9.3
+    devDependencies:
       squint-cljs:
         specifier: ^0.8.128
         version: 0.8.128
-    devDependencies:
       vite:
         specifier: ^6.0.2
         version: 6.0.2
@@ -281,6 +284,10 @@ packages:
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
+  loglevel@1.9.2:
+    resolution: {integrity: sha512-HgMmCqIJSAKqo68l0rS2AanEWfkxaZ5wNiEFb5ggm08lDs9Xl2KxBlX3PTcaD2chBM1gXAYf491/M2Rv8Jwayg==}
+    engines: {node: '>= 0.6.0'}
+
   nanoid@3.3.8:
     resolution: {integrity: sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -530,6 +537,8 @@ snapshots:
     optional: true
 
   lodash@4.17.21: {}
+
+  loglevel@1.9.2: {}
 
   nanoid@3.3.8: {}
 

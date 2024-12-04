@@ -40,7 +40,7 @@
                 (list 'field 'local)
                 (list 'field 'set-local!)
 
-                (list 'constructor ['this# 'ctx] (list 'println "constructor: " ntmp " ctx: " 'ctx)
+                (list 'constructor ['this# 'ctx] (list 'sqeave/debug "constructor: " ntmp " ctx: " 'ctx)
                       (list 'super 'ctx)
 
                       (list 'set! 'this#.render 'this#.constructor.prototype.render)
@@ -53,29 +53,23 @@
 
                 (list 'render ['this# 'body 'props]
                       (list 'let [(first bindings) 'this#
-                                  'a (list 'println "render: " ntmp " props: " 'props)
-                                  'a (list 'println "b-ctx: " binding-ctx " this.-ctx: " 'this#.-ctx)
+                                  'a (list 'sqeave/debug "render: " ntmp " props: " 'props)
                                   'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
-                                  #_(list 'if-not (list 'nil? (list 'get 'this#.ctx :defaultValue))
-                                          (list `useContext 'this#.ctx)
-                                          binding-ctx)
-                                  'a (list 'println "ctx:" 'ctx)
                                   'ident (list 'get 'props :ident)
                                   'ident (list 'if-not (list 'fn? 'ident) (list 'fn [] 'ident) 'ident)
                                   'ident (list 'if (list nil? (list 'ident)) (list 'fn [] []) 'ident)
-                                  'a (list 'println ntmp ": p " 'props " i: " (list 'ident) " q: " query " ctx:" 'ctx)
+                                  'a (list 'sqeave/debug ntmp ": p " 'props " i: " (list 'ident) " q: " query " ctx:" 'ctx)
                                   'a (list 'set! 'this#.ident 'ident)
                                   {:keys ['store 'setStore]} 'ctx
                                   'a (list 'sqeave/add! 'ctx (list 'this#.new-data))
                                   'data (list 'if (list 'or (list 'and (list 'vector? (list 'ident)) (list '= (list 'count (list 'ident)) 0))
                                                         (list 'sqeave/ident? (list 'ident)))
                                               (list 'do
-                                                    (list 'println "ok: " (list 'ident))
                                                     (list 'sqeave/createMemo (list 'fn []
-                                                                                   (list 'println "memo: " ntmp " ident: " (list 'ident) " query: " query)
+                                                                                   (list 'sqeave/debug "memo: " ntmp " ident: " (list 'ident) " query: " query)
                                                                                    (list 'let ['data (list 'sqeave/pull 'store (list 'if (list 'empty? (list 'ident))
                                                                                                                                      'store (list 'ident)) query)]
-                                                                                         (list 'println "data: " 'data)
+                                                                                         (list 'sqeave/debug "data: " 'data)
                                                                                          (list 'merge or-map 'data)))))
                                               (list 'fn [] 'props))
                                   val-vec (mapv #(list 'sqeave/createMemo (list 'fn [] (list % (list 'data)))) (mapv keywordify val-vec))
@@ -95,15 +89,4 @@
                                                    'children] body))))
 
           (list 'defn name ['props] (list 'let ['c (list 'new (symbol (str name "Class")) 'sqeave/AppContext)]
-                                          #_(list 'if (list :pre (list 'second bindings)))
-                                          (list '.render 'c (symbol (str name "Fn")) 'props)))
-
-          #_(list 'def-factory (symbol (str "Ui" name)) (symbol name) 'sqeave/AppContext (symbol (str name "Fn")))
-
-          #_(list 'def name {:cla (symbol name) :body (symbol (str name "Fn"))})
-
-          #_(list 'defn (symbol (str name "new")) ['props] (list 'let ['c (list new (str name "class"))]
-                                                                 (list .render 'c (symbol (str name "fn")) 'props))))))
-
-#_(defmacro defm [name binding & action-forms]
-  )
+                                          (list '.render 'c (symbol (str name "Fn")) 'props))))))

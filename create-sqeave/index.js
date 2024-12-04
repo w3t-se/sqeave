@@ -3,10 +3,21 @@ const fs = require("fs");
 const path = require("path");
 const { execSync } = require("child_process");
 
-const templateDir = path.join(__dirname, "template");
-const targetDir = process.cwd();
+// Parse arguments
+const args = process.argv.slice(2);
+const dirIndex = args.indexOf("--dir");
+const folderName = dirIndex !== -1 && args[dirIndex + 1] ? args[dirIndex + 1] : "sqeave-app";
 
-console.log("Creating a new Sqeave project...");
+// Resolve target directory
+const templateDir = path.join(__dirname, "template");
+const targetDir = path.resolve(process.cwd(), folderName);
+
+console.log(`Creating a new Sqeave project in '${folderName}'...`);
+
+// Create the target folder if it doesn't exist
+if (!fs.existsSync(targetDir)) {
+  fs.mkdirSync(targetDir, { recursive: true });
+}
 
 // Copy all files from the template to the target directory
 fs.readdirSync(templateDir).forEach((file) => {
@@ -20,6 +31,9 @@ fs.readdirSync(templateDir).forEach((file) => {
     fs.copyFileSync(sourcePath, targetPath);
   }
 });
+
+// Change working directory to the target directory
+process.chdir(targetDir);
 
 // Optionally install dependencies
 console.log("Installing dependencies...");

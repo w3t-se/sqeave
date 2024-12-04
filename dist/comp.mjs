@@ -5,16 +5,18 @@ import { createStore } from 'solid-js/store';
 import * as n from './normad.mjs';
 import * as t from './transact.mjs';
 import * as u from './utils.mjs';
+import * as log from 'loglevel';
 var remotes = squint_core.atom(({  }));
 var AppContext = null;
 var init_ctx_BANG_ = function (ctx) {
+log.setLevel("info");
 const vec__14 = createStore(({  }));
 const store5 = squint_core.nth(vec__14, 0, null);
 const setStore6 = squint_core.nth(vec__14, 1, null);
 AppContext = ctx;
 if (squint_core.truth_(import.meta.env.DEV)) {
 window.store = store5;
-};
+log.setLevel("debug")};
 return ({ "store": store5, "setStore": setStore6 });
 };
 var viewer_ident = function (this$) {
@@ -90,7 +92,7 @@ return or__24212__auto__9;} else {
 return mutate_map;}
 })(), "replace") });
 if (squint_core.truth_(add2)) {
-squint_core.println("running add with data: ", this$.new_data());
+log.debug("running add with data: ", this$.new_data());
 t.add_BANG_(this$.ctx, ((add2) === ("new")) ? (this$.new_data()) : (add2), opts7)};
 if (squint_core.truth_(remove5)) {
 return t.remove_ident_BANG_(this$.ctx, squint_core.get(mutate_map, "from"), remove5);}
@@ -130,5 +132,6 @@ var useContext = solid.useContext;
 var pull = n.pull;
 var createMemo = solid.createMemo;
 var createSignal = solid.createSignal;
+var debug = log.debug;
 
-export { Comp, createMemo, new_data, set_BANG_, AppContext, createSignal, init_ctx_BANG_, pull, remotes, useContext, viewer_ident, comp_factory, mutate_BANG_, viewer_QMARK_ }
+export { Comp, createMemo, new_data, set_BANG_, AppContext, createSignal, debug, init_ctx_BANG_, pull, remotes, useContext, viewer_ident, comp_factory, mutate_BANG_, viewer_QMARK_ }

@@ -2,6 +2,7 @@ import * as squint_core from 'squint-cljs/core.js';
 import * as string from 'squint-cljs/src/squint/string.js';
 import * as l from 'lodash';
 import { camelCase, startCase, kebabCase } from 'lodash';
+import * as log from 'loglevel';
 import * as str from 'squint-cljs/src/squint/string.js';
 var object_QMARK_ = function (o) {
 return (typeof o) === ("object");
@@ -142,7 +143,7 @@ return (() => {
 try{
 return JSON.parse(window.localStorage.getItem(key));}
 catch(e1){
-squint_core.println(squint_core.str("could net get item: ", key, " "), e1);
+log.error(squint_core.str("could net get item: ", key, " "), e1);
 return null;}
 
 })();
@@ -158,7 +159,7 @@ return (() => {
 try{
 return JSON.parse(window.sessionStorage.getItem(key));}
 catch(e1){
-squint_core.println(squint_core.str("could net get item: ", key, " "), e1);
+log.error(squint_core.str("could net get item: ", key, " "), e1);
 return null;}
 
 })();

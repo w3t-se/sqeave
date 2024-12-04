@@ -1,5 +1,6 @@
 import * as squint_core from 'squint-cljs/core.js';
 import * as u from './utils.mjs';
+import * as log from 'loglevel';
 import { reconcile } from 'solid-js/store';
 var ident_QMARK_ = function (data) {
 if (squint_core.truth_(squint_core.vector_QMARK_(data))) {
@@ -71,13 +72,13 @@ if (squint_core.truth_(or__24212__auto__12)) {
 return or__24212__auto__12;} else {
 return store9;}
 })(), acc);
-squint_core.println("rr: ", res11);
-squint_core.println("rr:acc ", squint_core.deref(acc));
+log.debug("rr: ", res11);
+log.debug("rr:acc ", squint_core.deref(acc));
 if (squint_core.not(squint_core.first(data))) {
-squint_core.println("merge-data: ", squint_core.merge_with(squint_core.merge, res11, squint_core.deref(acc)));
+log.debug("merge-data: ", squint_core.merge_with(squint_core.merge, res11, squint_core.deref(acc)));
 setStore10(reconcile(squint_core.merge_with(squint_core.merge, res11, squint_core.deref(acc))))} else {
 squint_core.reduce_kv((function (m, k, v) {
-squint_core.println("set: ", k, " ", v);
+log.debug("set: ", k, " ", v);
 return setStore10(k, (function (_PERCENT_1) {
 return squint_core.merge_with(squint_core.merge, _PERCENT_1, v);
 }));
