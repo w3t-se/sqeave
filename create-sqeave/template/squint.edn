@@ -1,0 +1,4 @@
+{:paths ["src/main" "node_modules/@w3t-ab/sqeave/src/main/w3t-ab/sqeave"]
+ :output-dir "dist"}
+
+

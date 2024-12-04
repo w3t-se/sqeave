@@ -1,0 +1,17 @@
+{
+  "name": "@w3t-ab/create-sqeave",
+  "version": "1.0.0",
+  "description": "A custom template initializer for Sqeave projects",
+  "main": "index.js",
+  "bin": {
+    "create-sqeave": "./index.js"
+  },
+  "keywords": ["template", "npm", "create", "init", "sqeave"],
+  "author": "W3T AB",
+  "license": "MIT",
+  "files": [
+    "template",
+    "index.js"
+  ],
+  "dependencies": {}
+}
