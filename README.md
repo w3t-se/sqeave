@@ -12,7 +12,12 @@ Why squint-cljs and not ClojureScript? The main plus is that we want to have mor
 > :warning: This project is in alpha stage.
 > Use at your own risk.
 
-## Quickstart
+## Template Quickstart
+``` shell
+mkdir sqeave-app && cd sqeave-app && pnpm create @w3t-ab/sqeave
+```
+
+## Non-template Quickstart
 ``` shell
 mkdir -p sqeave-app/src/main && cd sqeave-app
 pnpm init esnext -y

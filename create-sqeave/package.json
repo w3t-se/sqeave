@@ -1,6 +1,6 @@
 {
   "name": "@w3t-ab/create-sqeave",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A custom template initializer for Sqeave projects",
   "main": "index.js",
   "bin": {
