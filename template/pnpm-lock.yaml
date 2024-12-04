@@ -13,14 +13,14 @@ importers:
         version: 1.9.3
     devDependencies:
       '@w3t-ab/sqeave':
-        specifier: ^0.0.6
-        version: 0.0.6
+        specifier: ^0.0.7
+        version: 0.0.7
       '@w3t-ab/vite-plugin-squint':
         specifier: ^0.0.5
         version: 0.0.5(vite@6.0.2)
       squint-cljs:
-        specifier: ^0.8.128
-        version: 0.8.128
+        specifier: ^0.8.129
+        version: 0.8.129
       vite:
         specifier: ^6.0.2
         version: 6.0.2
@@ -378,8 +378,8 @@ packages:
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
 
-  '@w3t-ab/sqeave@0.0.6':
-    resolution: {integrity: sha512-FcPSFgYFCEyjUOwiW5k3jtYNeSVc9yUFMmFyNoTau7LsppnnAMno4LbFetz2XKg2KL7ou64L/8odcSHNbKTpxg==}
+  '@w3t-ab/sqeave@0.0.7':
+    resolution: {integrity: sha512-rpqFuoW75cjheU3WLQabzIg+q+NGUA5FQkovy3qngFToaJp97rjLj0hrLRvBDMdFCizCyemw/frJTmJp8mSJ7g==}
 
   '@w3t-ab/vite-plugin-squint@0.0.5':
     resolution: {integrity: sha512-Yahui0aRkfDvz0eQSnQRiSHwfKXCrE9f22bCC0omzYHQBS7rQt9CtQr+zLkkiUQbjd7T/Rl2vHOv5ZtNGr1cqg==}
@@ -538,8 +538,8 @@ packages:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
 
-  squint-cljs@0.8.128:
-    resolution: {integrity: sha512-+5MQORcOpGEPE4gDWafrwSpdlsxfWHYMyQEwrF9jdy5g12TmkKe9qe/OVoFLc6325P/jKeof/xjnbiXGHjfr7A==}
+  squint-cljs@0.8.129:
+    resolution: {integrity: sha512-cgTKzOorBX2wuli+6BNnioPYslAqyGP+C4W5W/B2ddlBXCTUPfc9nCrxkz5hP1vOt6bPJNZDdKjcXkfRlO62/g==}
     hasBin: true
 
   update-browserslist-db@1.1.1:
@@ -894,11 +894,11 @@ snapshots:
 
   '@types/estree@1.0.6': {}
 
-  '@w3t-ab/sqeave@0.0.6':
+  '@w3t-ab/sqeave@0.0.7':
     dependencies:
       lodash: 4.17.21
       solid-js: 1.9.3
-      squint-cljs: 0.8.128
+      squint-cljs: 0.8.129
 
   '@w3t-ab/vite-plugin-squint@0.0.5(vite@6.0.2)':
     dependencies:
@@ -1069,7 +1069,7 @@ snapshots:
 
   source-map-js@1.2.1: {}
 
-  squint-cljs@0.8.128:
+  squint-cljs@0.8.129:
     dependencies:
       chokidar: 4.0.1
 
