@@ -40,7 +40,7 @@
                 (list 'field 'local)
                 (list 'field 'set-local!)
 
-                (list 'constructor ['this# 'ctx] (list 'println "constructor: " ntmp)
+                (list 'constructor ['this# 'ctx] (list 'println "constructor: " ntmp " ctx: " 'ctx)
                       (list 'super 'ctx)
 
                       (list 'set! 'this#.render 'this#.constructor.prototype.render)
@@ -54,8 +54,8 @@
                 (list 'render ['this# 'body 'props]
                       (list 'let [(first bindings) 'this#
                                   'a (list 'println "render: " ntmp " props: " 'props)
-                                  'a (list 'println "b-ctx: " binding-ctx)
-                                  'ctx (list 'or binding-ctx (list `useContext 'this#.ctx))
+                                  'a (list 'println "b-ctx: " binding-ctx " this.-ctx: " 'this#.-ctx)
+                                  'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
                                   #_(list 'if-not (list 'nil? (list 'get 'this#.ctx :defaultValue))
                                           (list `useContext 'this#.ctx)
                                           binding-ctx)
@@ -81,7 +81,7 @@
                                   val-vec (mapv #(list 'sqeave/createMemo (list 'fn [] (list % (list 'data)))) (mapv keywordify val-vec))
 
                                   ['local 'setLocal] (list 'sqeave/createSignal local-map)]
-                            (list 'set! 'this#.-ctx 'ctx)
+                            (list 'set! 'this#.ctx 'ctx)
                             (list 'set! 'this#.local 'local)
                             (list 'set! 'this#.data 'data)
                             (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))

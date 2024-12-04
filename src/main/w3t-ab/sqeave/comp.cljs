@@ -11,25 +11,26 @@
 (def AppContext nil)
 
 (defn init-ctx! [ctx]
-  (let [[store setStore] (createStore {} #_(this.new-data))]
+  (let [[store setStore] (createStore {})]
     (set! AppContext ctx)
     (when js/import.meta.env.DEV (set! (.-store js/window) store))
     {:store store :setStore setStore}))
 
 (defn viewer-ident [this]
-  (t/viewer-ident this.-ctx))
+  (t/viewer-ident this.ctx))
 
 (defn viewer? [this acc-id]
-  (t/viewer? this.-ctx acc-id))
+  (t/viewer? this.ctx acc-id))
 
 (defclass Comp
+  (field -ctx)
   (field ctx)
   (^:static field query)
   (field -data)
   (field ident)
 
   (constructor [this ctx-in]
-               (set! ctx ctx-in))
+               (set! -ctx ctx-in))
 
   Object
   (^:static get-query [_] 1)
@@ -62,15 +63,15 @@
         (cu/execute-gql-query (:query remote) (:vals remote))))
     (when add
       (println "running add with data: " (this.new-data))
-      (t/add! this.-ctx (if (= add :new) (this.new-data) add) opts))
+      (t/add! this.ctx (if (= add :new) (this.new-data) add) opts))
     (when remove
-      (t/remove-ident! this.-ctx (:from mutate-map) remove))))
+      (t/remove-ident! this.ctx (:from mutate-map) remove))))
 
 (defn set!
   ([this ident field event]
-   (t/set-field! this.-ctx (or (u/e->v event) event) {:replace (conj ident field)}))
+   (t/set-field! this.ctx (or (u/e->v event) event) {:replace (conj ident field)}))
   ([this field event]
-   (t/set-field! this.-ctx (or (u/e->v event) event) {:replace (conj (this.ident) field)})))
+   (t/set-field! this.ctx (or (u/e->v event) event) {:replace (conj (this.ident) field)})))
 
 
 (def useContext solid/useContext)
