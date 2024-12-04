@@ -13,11 +13,10 @@ Why squint-cljs and not ClojureScript? The main plus is that we want to have mor
 > Use at your own risk.
 
 ## Quickstart
-
 ``` shell
-$ mkdir -p sqeave-app/src/main && cd sqeave-app
-$ npm init esnext -y
-$ npm install @w3t-ab/sqeave @w3t-ab/vite-plugin-squint vite vite-plugin-solid
+mkdir -p sqeave-app/src/main && cd sqeave-app
+pnpm init esnext -y
+pnpm install @w3t-ab/sqeave @w3t-ab/vite-plugin-squint vite vite-plugin-solid
 ```
 
 add a src/main/index.cljs file with a basic root component:
@@ -25,21 +24,19 @@ add a src/main/index.cljs file with a basic root component:
 (ns index
   (:require ["solid-js" :refer [createContext]]
             ["solid-js/web" :refer [render]]
-            ["solid-js/store" :refer [createStore]]
             ["@w3t-ab/sqeave" :as sqeave]
-            ["./Context.cljs" :refer [AppContext]]
             ["./main.cljs" :refer [Main]])
   (:require-macros [sqeave :refer [defc]]))
 
-(sqeave/init! (createContext))
+(def AppContext (createContext))
 
-(defc Root [this {:keys []}]
-  (let [[store setStore] (createStore {:click/id {0 {:click/id 0
-                                                     :click/count 0}}})]
-    #jsx [AppContext.Provider {:value {:store store :setStore setStore}}
-          [Main {:& {:ident (fn [] [:click/id 0])}}]]))
+(defc Root [this {:keys [] :or {} :ctx (sqeave/init-ctx! AppContext)}]
+  #jsx [AppContext.Provider {:value this.-ctx}
+        [Main {:ident [:main/id 0]}]])
 
-(render Root (js/document.getElementById "root"))
+(let [e (js/document.getElementById "root")]
+  (set! (aget e :innerHTML) "")
+  (render Root e))
 ```
 the Root Component is described below.
 
@@ -55,17 +52,15 @@ Add a src/main/main.cljs component:
         [:p {} "Count: " (count)]])
 ```
 
-Add an src/main/index.jsx file:
-``` jsx
-export * from "./index.cljs";
-```
 Add an entry index.html file to the project root directory:
 
 ```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script type="module" src="src/main/index.jsx"></script>
+  <script type="module">
+    export * from "./src/main/index.cljs";
+  </script>
 </head>
 <body>
   <div id="root"></div>
@@ -74,7 +69,7 @@ Add an entry index.html file to the project root directory:
 ```
 add a vite.config.js to the root project directory:
 
-``` javascript
+```javascript
 import { defineConfig } from 'vite';
 import squint from "vite-plugin-squint"
 import solid from 'vite-plugin-solid';
@@ -87,14 +82,20 @@ export default defineConfig({
     target: 'esnext',
   },
 })
+```
 
+and finally a squint.edn file:
+
+```clojure
+{:paths ["src/main" "node_modules/@w3t-ab/sqeave/src/main/w3t-ab/sqeave" "resources"]
+ :output-dir "dist"}
 ```
 Now run:
 
-``` shell
-$ npm run vite
+```shell
+pnpx vite
 ```
-this opens up a vite dev server at `localhost:3000`. Edit the Root render function to see hot-reload in action.
+this opens up a vite dev server at `localhost:5173`. Edit the Root or Main render functions to see hot-reloading in action.
 
 ## Components
 A simple component is defined using the defc macro as:
@@ -130,8 +131,16 @@ There are some helper functions in the `sqeave/transact` namespace to support up
 
 You can also access component (`this`) based versions of the transact functions available in the `sqeave/comp` namespace directly for conveniance:
 
-- `set!` mutate a field on 
-- `mutate!` 
-- `new-data` create a new data map adhering to the `:or`-map in the Components `defc` signature: `(defc Simple [this {:simple/keys [id title] :or {id (comp/uuid) :tite "Default" }}] ...`
+- `set!` mutate a field on the current component
+- `mutate!` a slightly more declarative API for adding and/or removing data in different places
+- `new-data` create a new data map adhering to the `:or`-map in the Components `defc` signature: `(defc Simple [this {:simple/keys [id title] :or {id (comp/uuid) :tite "Default" }}] ...` yields {:simple/id *uuid* :simple/title "Default"}}
 
+## Production
+```shell
+pnpx vite build
+```
 
+## Preview
+```shell
+pnpx vite preview
+```

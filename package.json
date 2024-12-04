@@ -1,7 +1,7 @@
 {
   "name": "@w3t-ab/sqeave",
-  "version": "0.0.6",
-  "description": "A squint-cljs based solid-js framework for building SPAs borrowing ideas from Fulcro",
+  "version": "0.0.7",
+  "description": "A squint-cljs based solid-js framework for building SPAs borrowing ideas from Fulcro.",
   "author": "W3T AB",
   "license": "EPL",
   "repository": {
@@ -12,11 +12,7 @@
   "module": "index.mjs",
   "files": [
     "dist",
-    "src/main/w3t-se/sqeave/comp.cljs",
-    "src/main/w3t-se/sqeave/sqeave.cljc",
-    "src/main/w3t-se/sqeave/utils.cljs",
-    "src/main/w3t-se/sqeave/transact.cljs",
-    "src/main/w3t-se/sqeave/normad.cljs",
+    "src/main/w3t-ab/sqeave/sqeave.cljc",
     "index.mjs",
     "comp.js",
     "utils.js",

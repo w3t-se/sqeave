@@ -7,7 +7,7 @@
 
 (def AppContext (createContext))
 
-(defc Root [this {:keys [count] :or {count 0} :ctx (sqeave/init-ctx! AppContext)}]
+(defc Root [this {:keys [] :or {} :ctx (sqeave/init-ctx! AppContext)}]
   #jsx [AppContext.Provider {:value this.-ctx}
         [Main {:ident [:main/id 0]}]])
 
