@@ -119,3 +119,15 @@
 (defn swap-uuids! [{:keys [store setStore] :as ctx} old-uuid new-id]
   (setStore (fn [state]
               (update-uuid-in-map state old-uuid new-id))))
+
+(defn unwrap-proxy [data]
+  (cond
+    (array? data) (vec (map unwrap-proxy data))
+
+    (vector? data) (mapv unwrap-proxy data)
+
+    (map? data) (into {} (map (fn [[k v]] [k (unwrap-proxy v)]) data))
+
+    (object? data) (into {} (map (fn [[k v]] [k (unwrap-proxy v)]) data))
+
+    :else data))

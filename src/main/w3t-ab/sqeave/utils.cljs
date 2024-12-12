@@ -135,6 +135,8 @@
               (do (swap! seen conj second) true)))
           coll))))
 
+(defn is-uuid? [val]
+  (re-matches #"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" val))
 
 ;; const timeZone = 'America/New_York';
 ;; const zonedDate = utcToZonedTime(now, timeZone);

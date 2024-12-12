@@ -8,11 +8,11 @@ var object_QMARK_ = function (o) {
 return (typeof o) === ("object");
 };
 var get_ident = function (data) {
-const temp__23807__auto__1 = squint_core.first(squint_core.filter((function (_PERCENT_1) {
+const temp__23868__auto__1 = squint_core.first(squint_core.filter((function (_PERCENT_1) {
 return squint_core.re_find(/\/id$/, _PERCENT_1);
 }), squint_core.keys(data)));
-if (squint_core.truth_(temp__23807__auto__1)) {
-const ident_key2 = temp__23807__auto__1;
+if (squint_core.truth_(temp__23868__auto__1)) {
+const ident_key2 = temp__23868__auto__1;
 return [ident_key2, squint_core.get(data, ident_key2)];}
 };
 var get_ns = function (k) {
@@ -24,22 +24,22 @@ return !((squint_core.second(y)) === (squint_core.second(ident)));
 }), v);
 };
 var ident_QMARK_ = function (x) {
-const and__24235__auto__1 = squint_core.vector_QMARK_(x);
-if (squint_core.truth_(and__24235__auto__1)) {
-const and__24235__auto__2 = squint_core.string_QMARK_(squint_core.first(x));
-if (squint_core.truth_(and__24235__auto__2)) {
-const and__24235__auto__3 = (2) === (squint_core.count(x));
-if (and__24235__auto__3) {
-const or__24212__auto__4 = squint_core.string_QMARK_(squint_core.second(x));
-if (squint_core.truth_(or__24212__auto__4)) {
-return or__24212__auto__4;} else {
-const or__24212__auto__5 = squint_core.number_QMARK_(squint_core.second(x));
-if (squint_core.truth_(or__24212__auto__5)) {
-return or__24212__auto__5;} else {
+const and__24206__auto__1 = squint_core.vector_QMARK_(x);
+if (squint_core.truth_(and__24206__auto__1)) {
+const and__24206__auto__2 = squint_core.string_QMARK_(squint_core.first(x));
+if (squint_core.truth_(and__24206__auto__2)) {
+const and__24206__auto__3 = (2) === (squint_core.count(x));
+if (and__24206__auto__3) {
+const or__24190__auto__4 = squint_core.string_QMARK_(squint_core.second(x));
+if (squint_core.truth_(or__24190__auto__4)) {
+return or__24190__auto__4;} else {
+const or__24190__auto__5 = squint_core.number_QMARK_(squint_core.second(x));
+if (squint_core.truth_(or__24190__auto__5)) {
+return or__24190__auto__5;} else {
 return (void 0 === squint_core.second(x));}}} else {
-return and__24235__auto__3;}} else {
-return and__24235__auto__2;}} else {
-return and__24235__auto__1;}
+return and__24206__auto__3;}} else {
+return and__24206__auto__2;}} else {
+return and__24206__auto__1;}
 };
 var string_QMARK_ = function (thing) {
 return (typeof thing) === ("string");
@@ -73,9 +73,9 @@ var remove_ns = function (thing) {
 if (squint_core.truth_(squint_core.vector_QMARK_(thing))) {
 return squint_core.mapv(remove_ns, thing);} else {
 if (squint_core.truth_(string_QMARK_(thing))) {
-const or__24212__auto__1 = squint_core.second(string.split(thing, "/"));
-if (squint_core.truth_(or__24212__auto__1)) {
-return or__24212__auto__1;} else {
+const or__24190__auto__1 = squint_core.second(string.split(thing, "/"));
+if (squint_core.truth_(or__24190__auto__1)) {
+return or__24190__auto__1;} else {
 return thing;}} else {
 if (squint_core.truth_(squint_core.map_QMARK_(thing))) {
 return squint_core.zipmap(squint_core.mapv(remove_ns, squint_core.keys(thing)), remove_ns(squint_core.vals(thing)));} else {
@@ -89,10 +89,10 @@ return string.join("0x", crypto.randomBytes(32).toString("hex"));
 };
 var drop_false = function (m) {
 return squint_core.into(({  }), squint_core.filterv((function (x) {
-const and__24235__auto__1 = squint_core.not(squint_core.false_QMARK_(squint_core.second(x)));
-if (and__24235__auto__1) {
+const and__24206__auto__1 = squint_core.not(squint_core.false_QMARK_(squint_core.second(x)));
+if (and__24206__auto__1) {
 return !((squint_core.second(x) == null));} else {
-return and__24235__auto__1;}
+return and__24206__auto__1;}
 }), m));
 };
 var trunc_id = function (s) {
@@ -104,9 +104,9 @@ return f(squint_core.mapv((function (_PERCENT_1) {
 return distribute(f, _PERCENT_1);
 }), m));} else {
 if (squint_core.truth_((() => {
-const or__24212__auto__1 = squint_core.map_QMARK_(m);
-if (squint_core.truth_(or__24212__auto__1)) {
-return or__24212__auto__1;} else {
+const or__24190__auto__1 = squint_core.map_QMARK_(m);
+if (squint_core.truth_(or__24190__auto__1)) {
+return or__24190__auto__1;} else {
 return object_QMARK_(m);}
 })())) {
 return f(squint_core.zipmap(squint_core.keys(m), squint_core.mapv((function (_PERCENT_1) {
@@ -170,8 +170,8 @@ return window.sessionStorage.removeItem(key);
 var distinct_second_elements = function (coll) {
 return squint_core.vec((() => {
 const seen1 = squint_core.atom(new Set([]));
-return squint_core.filter((function (p__25) {
-const vec__25 = p__25;
+return squint_core.filter((function (p__27) {
+const vec__25 = p__27;
 const _6 = squint_core.nth(vec__25, 0, null);
 const second7 = squint_core.nth(vec__25, 1, null);
 if (squint_core.truth_(squint_core.contains_QMARK_(squint_core.deref(seen1), second7))) {
@@ -181,5 +181,8 @@ return true;}
 }), coll);
 })());
 };
+var is_uuid_QMARK_ = function (val) {
+return squint_core.re_matches(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/, val);
+};
 
-export { e__GT_v, string_QMARK_, remove_ident, kebab_case, stream_id_QMARK_, remove_item_BANG_, distinct_second_elements, add_ns, get_item, ident_QMARK_, set_item_BANG_, random_evm, drop_false, pascal_case, copy_to_clipboard, uuid_QMARK_, remove_session_item_BANG_, uuid, distribute, object_QMARK_, nsd, remove_item, template, get_ident, remove_ns, trunc_id, get_session_item, camel_case, get_ns, set_session_item_BANG_ }
+export { e__GT_v, string_QMARK_, is_uuid_QMARK_, remove_ident, kebab_case, stream_id_QMARK_, remove_item_BANG_, distinct_second_elements, add_ns, get_item, ident_QMARK_, set_item_BANG_, random_evm, drop_false, pascal_case, copy_to_clipboard, uuid_QMARK_, remove_session_item_BANG_, uuid, distribute, object_QMARK_, nsd, remove_item, template, get_ident, remove_ns, trunc_id, get_session_item, camel_case, get_ns, set_session_item_BANG_ }

@@ -68,27 +68,27 @@ return this$.new_data();
 var mutate_BANG_ = function (this$, mutate_map) {
 const local1 = squint_core.get(mutate_map, "local");
 const add2 = (() => {
-const or__24212__auto__3 = squint_core.get(local1, "add");
-if (squint_core.truth_(or__24212__auto__3)) {
-return or__24212__auto__3;} else {
+const or__24190__auto__3 = squint_core.get(local1, "add");
+if (squint_core.truth_(or__24190__auto__3)) {
+return or__24190__auto__3;} else {
 return squint_core.get(mutate_map, "add");}
 })();
 const remote4 = squint_core.get(mutate_map, "remote");
 const remove5 = (() => {
-const or__24212__auto__6 = squint_core.get(local1, "remove");
-if (squint_core.truth_(or__24212__auto__6)) {
-return or__24212__auto__6;} else {
+const or__24190__auto__6 = squint_core.get(local1, "remove");
+if (squint_core.truth_(or__24190__auto__6)) {
+return or__24190__auto__6;} else {
 return squint_core.get(mutate_map, "remove");}
 })();
 const opts7 = ({ "append": squint_core.get((() => {
-const or__24212__auto__8 = local1;
-if (squint_core.truth_(or__24212__auto__8)) {
-return or__24212__auto__8;} else {
+const or__24190__auto__8 = local1;
+if (squint_core.truth_(or__24190__auto__8)) {
+return or__24190__auto__8;} else {
 return mutate_map;}
 })(), "append"), "replace": squint_core.get((() => {
-const or__24212__auto__9 = local1;
-if (squint_core.truth_(or__24212__auto__9)) {
-return or__24212__auto__9;} else {
+const or__24190__auto__9 = local1;
+if (squint_core.truth_(or__24190__auto__9)) {
+return or__24190__auto__9;} else {
 return mutate_map;}
 })(), "replace") });
 if (squint_core.truth_(add2)) {
@@ -111,17 +111,17 @@ throw new Error(squint_core.str("Invalid arity: ", squint_core.alength(arguments
 });
 f2.cljs$core$IFn$_invoke$arity$4 = (function (this$, ident, field, event) {
 return t.set_field_BANG_(this$.ctx, (() => {
-const or__24212__auto__3 = u.e__GT_v(event);
-if (squint_core.truth_(or__24212__auto__3)) {
-return or__24212__auto__3;} else {
+const or__24190__auto__3 = u.e__GT_v(event);
+if (squint_core.truth_(or__24190__auto__3)) {
+return or__24190__auto__3;} else {
 return event;}
 })(), ({ "replace": squint_core.conj(ident, field) }));
 });
 f2.cljs$core$IFn$_invoke$arity$3 = (function (this$, field, event) {
 return t.set_field_BANG_(this$.ctx, (() => {
-const or__24212__auto__4 = u.e__GT_v(event);
-if (squint_core.truth_(or__24212__auto__4)) {
-return or__24212__auto__4;} else {
+const or__24190__auto__4 = u.e__GT_v(event);
+if (squint_core.truth_(or__24190__auto__4)) {
+return or__24190__auto__4;} else {
 return event;}
 })(), ({ "replace": squint_core.conj(this$.ident(), field) }));
 });

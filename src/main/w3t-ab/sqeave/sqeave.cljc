@@ -70,7 +70,7 @@
                                                                                    (list 'let ['data (list 'sqeave/pull 'store (list 'if (list 'empty? (list 'ident))
                                                                                                                                      'store (list 'ident)) query)]
                                                                                          (list 'sqeave/debug "data: " 'data)
-                                                                                         (list 'merge or-map 'data)))))
+                                                                                         'data))))
                                               (list 'fn [] 'props))
                                   val-vec (mapv #(list 'sqeave/createMemo (list 'fn [] (list % (list 'data)))) (mapv keywordify val-vec))
 
