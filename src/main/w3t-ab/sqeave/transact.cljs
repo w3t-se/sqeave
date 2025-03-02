@@ -1,7 +1,7 @@
 (ns transact
   (:require ["./normad.mjs" :as n]
             ["./utils.mjs" :as u]
-            ["loglevel" :as log]))
+            ["consola/browser" :refer [consola]]))
 
 #_(defn rec-add [path value]
   (loop [p (first path)
@@ -39,7 +39,7 @@
     (f)
     (catch js/Error e
       (alert-error ctx e)
-      (log/error e))))
+      (consola.error e))))
 
 (defn set-field! [{:keys [store setStore] :as ctx} value {:keys [append replace check-session?] :or {append false replace false check-session? false}  :as param}]
   (wrap-session ctx check-session?
@@ -52,7 +52,7 @@
                                  #(identity value))]
                     (apply setStore (conj path (fn [x] (action x))))
                     #_(when (u/uuid? (second ident))
-                        (log/debug "uuid:" ident)
+                        (consola.debug "uuid:" ident)
                         (setStore (first ident) (second ident)
                                   (fn [x]
                                     (let [p (or (:uuid/paths x) [])]
@@ -67,7 +67,7 @@
                   (apply setStore (conj path (fn [x] (try
                                                        (u/remove-ident ident x)
                                                        (catch js/Error e
-                                                         (log/error e)
+                                                         (consola.error e)
                                                          x))))))))
 
 (defn add! [{:keys [store setStore] :as ctx} value {:keys [append replace after check-session?] :or {append false replace false after
@@ -89,7 +89,7 @@
         paths (get obj :uuid/paths)]
     (setStore (first ident) (fn [x]
                               (assoc x stream-id new-obj)))
-    (log/debug "path: " paths)
+    (consola.debug "path: " paths)
     (mapv #(apply setStore (conj % (fn [x]
                                      (if (u/ident? x)
                                        new-ident

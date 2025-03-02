@@ -89,4 +89,5 @@
                                                    'children] body))))
 
           (list 'defn name ['props] (list 'let ['c (list 'new (symbol (str name "Class")) 'sqeave/AppContext)]
-                                          (list '.render-helper 'c (symbol (str name "Fn")) 'props))))))
+                                          (list '.render-helper 'c
+                                                (list '.render 'c (symbol (str name "Fn")) 'props)))))))

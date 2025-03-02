@@ -21,8 +21,8 @@
   ],
   "scripts": {},
   "dependencies": {
+    "consola": "^3.4.0",
     "lodash-es": "^4.17.21",
-    "loglevel": "^1.9.2",
     "solid-js": "^1.9.5"
   },
   "devDependencies": {
@@ -37,6 +37,9 @@
     "squint-cljs"
   ],
   "exports": {
+    "solid": {
+      "import": "./index.mjs"
+    },
     ".": "./index.mjs",
     "./comp": "./comp.js",
     "./normad": "./normad.js",

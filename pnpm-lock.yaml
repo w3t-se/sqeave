@@ -8,12 +8,12 @@ importers:
 
   .:
     dependencies:
+      consola:
+        specifier: ^3.4.0
+        version: 3.4.0
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
-      loglevel:
-        specifier: ^1.9.2
-        version: 1.9.2
       solid-js:
         specifier: ^1.9.5
         version: 1.9.5
@@ -279,6 +279,10 @@ packages:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
 
+  consola@3.4.0:
+    resolution: {integrity: sha512-EiPU8G6dQG0GFHNR8ljnZFki/8a+cQwEQ+7wpxdChl02Q8HXlwEZWD5lqAF8vC2sEC3Tehr8hy7vErz88LHyUA==}
+    engines: {node: ^14.18.0 || >=16.10.0}
+
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
@@ -294,10 +298,6 @@ packages:
 
   lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
-
-  loglevel@1.9.2:
-    resolution: {integrity: sha512-HgMmCqIJSAKqo68l0rS2AanEWfkxaZ5wNiEFb5ggm08lDs9Xl2KxBlX3PTcaD2chBM1gXAYf491/M2Rv8Jwayg==}
-    engines: {node: '>= 0.6.0'}
 
   nanoid@3.3.8:
     resolution: {integrity: sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w==}
@@ -521,6 +521,8 @@ snapshots:
     dependencies:
       readdirp: 4.1.2
 
+  consola@3.4.0: {}
+
   csstype@3.1.3: {}
 
   esbuild@0.25.0:
@@ -555,8 +557,6 @@ snapshots:
     optional: true
 
   lodash-es@4.17.21: {}
-
-  loglevel@1.9.2: {}
 
   nanoid@3.3.8: {}
 

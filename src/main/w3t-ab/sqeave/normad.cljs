@@ -1,6 +1,6 @@
 (ns normad
   (:require ["./utils.mjs" :as u]
-            ["loglevel" :as log]
+            ["consola/browser" :refer [consola]]
             ["solid-js/store" :refer [reconcile]]))
 
 (defn ident? [data]
@@ -20,7 +20,7 @@
                        new-val (zipmap (keys item) (mapv #(traverse-and-transform % setStore) (vals item)))]
                    (if (ident? ident)
                      (do
-                       #_(log/debug "try add: " ident " " new-val)
+                       #_(consola.debug "try add: " ident " " new-val)
                        (swap! setStore #(update-in % ident (fn [v] (merge v new-val))))
                        ident)
                      new-val))
@@ -31,15 +31,15 @@
 
 (defn add [{:keys [store setStore] :as ctx} & data]
   (let [res (traverse-and-transform (or (first data) store) acc)]
-    (log/debug "rr: " res)
-    (log/debug "rr:acc " @acc)
+    (consola.debug "rr: " res)
+    (consola.debug "rr:acc " @acc)
 
-    ;; (mapv (fn [v] (log/debug " v " v) (setStore (first v) (reconcile (second v) {:merge true}))) @acc)
-    ;; (mapv (fn [v] (log/debug " v " v) (setStore (first v) (reconcile (second v) {:merge true}))) res)
+    ;; (mapv (fn [v] (consola.debug " v " v) (setStore (first v) (reconcile (second v) {:merge true}))) @acc)
+    ;; (mapv (fn [v] (consola.debug " v " v) (setStore (first v) (reconcile (second v) {:merge true}))) res)
 
     (if-not (first data)
-      (do (log/debug "merge-data: " (merge-with merge res @acc)) (setStore (reconcile (merge-with merge res @acc))))
-      (reduce-kv (fn [m k v] (log/debug "set: " k " " v) (log/debug "set2: " (merge-with merge (get store k) v #_{:key k :merge true}) ) (setStore k #(merge-with merge % v #_{:key k :merge true})))
+      (do (consola.debug "merge-data: " (merge-with merge res @acc)) (setStore (reconcile (merge-with merge res @acc))))
+      (reduce-kv (fn [m k v] (consola.debug "set: " k " " v) (consola.debug "set2: " (merge-with merge (get store k) v #_{:key k :merge true}) ) (setStore k #(merge-with merge % v #_{:key k :merge true})))
                  {}
                  (if-not (vector? res)
                    (merge  @acc res)
@@ -61,7 +61,7 @@
           #_(merge res @acc)))
     (reset! acc {})
     #_(js/chrome.runtime.sendMessage {:action "updateData" :data store})
-    #_(log/debug "store" store)
+    #_(consola.debug "store" store)
     res))
 
 (defn pull [store entity query]
@@ -85,7 +85,7 @@
     (map? query) (let [nk (first (keys query))
                        sub-query (get query nk)]
                    (when-let [data (get entity nk)]
-                     #_(log/debug "-------------:" nk ": " data sub-query)
+                     #_(consola.debug "-------------:" nk ": " data sub-query)
                      {nk (if (ident? data)
                            (pull store data sub-query)
                            (mapv #(pull store % sub-query) data))}))

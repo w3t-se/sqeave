@@ -4,7 +4,7 @@
             ["./normad.mjs" :as n]
             ["./transact.mjs" :as t]
             ["./utils.mjs" :as u]
-            ["loglevel" :as log]
+            ["consola/browser" :refer [consola]]
             [squint.core :refer [defclass]]))
 
 (def remotes (atom {}))
@@ -12,12 +12,12 @@
 (def AppContext nil)
 
 (defn init-ctx! [ctx]
-  (log/setLevel "info")
+  #_(set! consola.level "info")
   (let [[store setStore] (createStore {})]
     (set! AppContext ctx)
     (when js/import.meta.env.DEV
       (set! (.-store js/window) store)
-      (log/setLevel "debug"))
+      (set! (.-level consola) 4))
     {:store store :setStore setStore}))
 
 (defn viewer-ident [this]
@@ -42,11 +42,12 @@
   (data [_] -data)
   (-query [this] this.query)
   (render [this body props])
-  (render-helper [this body props]
+  (render-helper [this children]
                  #jsx [solid/ErrorBoundary {:fallback (fn [err reset]
+                                                        (consola.error err)
                                                         #jsx [:div {:onClick (fn [e] (reset))}
                                                               (str (:message err))])}
-                       (render this body props)]))
+                       children]))
 
 (defn comp-factory [{:keys [cla body] :as comp} ctx]
   (fn [] )
@@ -67,7 +68,7 @@
       (if (:query remote)
         (cu/execute-gql-query (:query remote) (:vals remote))))
     (when add
-      (log/debug "running add with data: " (this.new-data))
+      (consola.debug "running add with data: " (this.new-data))
       (t/add! this.ctx (if (= add :new) (this.new-data) add) opts))
     (when remove
       (t/remove-ident! this.ctx (:from mutate-map) remove))))
@@ -83,4 +84,4 @@
 (def pull n/pull)
 (def createMemo solid/createMemo)
 (def createSignal solid/createSignal)
-(def debug log/debug)
+(def debug consola.debug)
