@@ -1,6 +1,6 @@
 {
   "name": "@w3t-ab/sqeave",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A squint-cljs based solid-js framework for building SPAs borrowing ideas from Fulcro.",
   "author": "W3T AB",
   "license": "EPL",

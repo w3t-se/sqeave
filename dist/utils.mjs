@@ -1,6 +1,7 @@
 import * as squint_core from 'squint-cljs/core.js';
 import * as string from 'squint-cljs/src/squint/string.js';
-import * as l from 'lodash';
+import * as l from 'lodash-es';
+import { trim, camelCase, kebabCase, startCase } from 'lodash-es';
 import { consola } from 'consola/browser';
 var object_QMARK_ = function (o) {
 return (typeof o) === ("object");
@@ -14,7 +15,7 @@ const ident_key2 = temp__23739__auto__1;
 return [ident_key2, squint_core.get(data, ident_key2)];}
 };
 var get_ns = function (k) {
-return l.trim(squint_core.first(string.split(squint_core.first(k), "/")));
+return trim(squint_core.first(string.split(squint_core.first(k), "/")));
 };
 var remove_ident = function (ident, v) {
 return squint_core.filterv((function (y) {

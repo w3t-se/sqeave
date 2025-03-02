@@ -1,6 +1,6 @@
 (ns utils
   (:require [squint.string :as string]
-            ["lodash" :as l]
+            ["lodash-es" :as l :refer [trim camelCase kebabCase startCase]]
             ["consola/browser" :refer [consola]]))
 
 (defn object? [o]
@@ -11,7 +11,7 @@
     [ident-key (get data ident-key)]))
 
 (defn get-ns [k]
-  (l/trim (first (string/split (first k) "/"))))
+  (trim (first (string/split (first k) "/"))))
 
 (defn remove-ident [ident v]
   (filterv (fn [y] (not (= (second y)
