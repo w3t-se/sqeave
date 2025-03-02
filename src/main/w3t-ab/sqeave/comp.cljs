@@ -1,5 +1,5 @@
 (ns comp
-  (:require ["solid-js" :as solid :refer [createContext]]
+  (:require ["solid-js" :as solid :refer [createContext ErrorBoundary]]
             ["solid-js/store" :refer [createStore]]
             ["./normad.mjs" :as n]
             ["./transact.mjs" :as t]
@@ -41,7 +41,12 @@
 
   (data [_] -data)
   (-query [this] this.query)
-  (render [this ident]))
+  (render [this body props])
+  (render-helper [this body props]
+                 #jsx [solid/ErrorBoundary {:fallback (fn [err reset]
+                                                        #jsx [:div {:onClick (fn [e] (reset))}
+                                                              (str (:message err))])}
+                       (render this body props)]))
 
 (defn comp-factory [{:keys [cla body] :as comp} ctx]
   (fn [] )

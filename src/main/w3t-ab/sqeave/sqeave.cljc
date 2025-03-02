@@ -53,15 +53,15 @@
 
                 (list 'render ['this# 'body 'props]
                       (list 'let [(first bindings) 'this#
-                                  'a (list 'sqeave/debug "render: " ntmp " props: " 'props)
+                                  '_ (list 'sqeave/debug "render: " ntmp " props: " 'props)
                                   'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
                                   'ident (list 'get 'props :ident)
                                   'ident (list 'if-not (list 'fn? 'ident) (list 'fn [] 'ident) 'ident)
                                   'ident (list 'if (list nil? (list 'ident)) (list 'fn [] []) 'ident)
-                                  'a (list 'sqeave/debug ntmp ": p " 'props " i: " (list 'ident) " q: " query " ctx:" 'ctx)
-                                  'a (list 'set! 'this#.ident 'ident)
+                                  '_ (list 'sqeave/debug ntmp ": p " 'props " i: " (list 'ident) " q: " query " ctx:" 'ctx)
+                                  '_ (list 'set! 'this#.ident 'ident)
                                   {:keys ['store 'setStore]} 'ctx
-                                  'a (list 'sqeave/add! 'ctx (list 'this#.new-data))
+                                  '_ (list 'sqeave/add! 'ctx (list 'this#.new-data))
                                   'data (list 'if (list 'or (list 'and (list 'vector? (list 'ident)) (list '= (list 'count (list 'ident)) 0))
                                                         (list 'sqeave/ident? (list 'ident)))
                                               (list 'do
@@ -89,4 +89,4 @@
                                                    'children] body))))
 
           (list 'defn name ['props] (list 'let ['c (list 'new (symbol (str name "Class")) 'sqeave/AppContext)]
-                                          (list '.render 'c (symbol (str name "Fn")) 'props))))))
+                                          (list '.render-helper 'c (symbol (str name "Fn")) 'props))))))

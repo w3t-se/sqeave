@@ -1,8 +1,7 @@
 (ns utils
   (:require [squint.string :as string]
-            ["lodash" :as l :refer [camelCase startCase kebabCase]]
-            ["loglevel" :as log]
-            [squint.string :as str]))
+            ["lodash" :as l]
+            ["loglevel" :as log]))
 
 (defn object? [o]
   (= (js/typeof o) "object"))
@@ -12,7 +11,7 @@
     [ident-key (get data ident-key)]))
 
 (defn get-ns [k]
-  (l/trim (first (str/split (first k) "/"))))
+  (l/trim (first (string/split (first k) "/"))))
 
 (defn remove-ident [ident v]
   (filterv (fn [y] (not (= (second y)
@@ -43,11 +42,11 @@
 
 (defn uuid [] (js/crypto.randomUUID))
 
-(def camel-case camelCase)
-(def kebab-case kebabCase)
+(def camel-case l/camelCase)
+(def kebab-case l/kebabCase)
 
 (defn pascal-case [s]
-  (startCase (camelCase s)))
+  (l/startCase (l/camelCase s)))
 
 (defn e->v [e]
   (-> e :target :value))

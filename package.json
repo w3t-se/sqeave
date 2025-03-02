@@ -21,13 +21,13 @@
   ],
   "scripts": {},
   "dependencies": {
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "loglevel": "^1.9.2",
-    "solid-js": "^1.9.3"
+    "solid-js": "^1.9.5"
   },
   "devDependencies": {
-    "squint-cljs": "^0.8.129",
-    "vite": "^6.0.3"
+    "squint-cljs": "^0.8.137",
+    "vite": "^6.2.0"
   },
   "keywords": [
     "vite",

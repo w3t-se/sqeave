@@ -39,7 +39,7 @@
 
     (if-not (first data)
       (do (log/debug "merge-data: " (merge-with merge res @acc)) (setStore (reconcile (merge-with merge res @acc))))
-      (reduce-kv (fn [m k v] (log/debug "set: " k " " v) (setStore k #(merge-with merge % v #_{:key k :merge true})))
+      (reduce-kv (fn [m k v] (log/debug "set: " k " " v) (log/debug "set2: " (merge-with merge (get store k) v #_{:key k :merge true}) ) (setStore k #(merge-with merge % v #_{:key k :merge true})))
                  {}
                  (if-not (vector? res)
                    (merge  @acc res)
