@@ -1,1 +1,1 @@
-export * from './dist/comp.jsx'
+export * from './dist/comp.mjs'

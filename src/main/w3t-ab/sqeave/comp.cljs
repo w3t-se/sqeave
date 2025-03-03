@@ -1,15 +1,18 @@
 (ns comp
-  (:require ["solid-js" :as solid :refer [createContext ErrorBoundary]]
+  (:require ["solid-js" :as solid]
+            ["solid-js/web" :as solid-web]
             ["solid-js/store" :refer [createStore]]
             ["./normad.mjs" :as n]
             ["./transact.mjs" :as t]
             ["./utils.mjs" :as u]
-            ["consola/browser" :refer [consola]]
+            ["consola/browser" :as cb]
             [squint.core :refer [defclass]]))
 
 (def remotes (atom {}))
 
 (def AppContext nil)
+
+(def ComponentRegistry (atom {}))
 
 (defn init-ctx! [ctx]
   #_(set! consola.level "info")
@@ -17,7 +20,7 @@
     (set! AppContext ctx)
     (when js/import.meta.env.DEV
       (set! (.-store js/window) store)
-      (set! (.-level consola) 4))
+      (set! (.-level cb/consola) 4))
     {:store store :setStore setStore}))
 
 (defn viewer-ident [this]
@@ -41,13 +44,7 @@
 
   (data [_] -data)
   (-query [this] this.query)
-  (render [this body props])
-  (render-helper [this children]
-                 #jsx [solid/ErrorBoundary {:fallback (fn [err reset]
-                                                        (consola.error err)
-                                                        #jsx [:div {:onClick (fn [e] (reset))}
-                                                              (str (:message err))])}
-                       children]))
+  (render [this body props]))
 
 (defn comp-factory [{:keys [cla body] :as comp} ctx]
   (fn [] )
@@ -68,7 +65,7 @@
       (if (:query remote)
         (cu/execute-gql-query (:query remote) (:vals remote))))
     (when add
-      (consola.debug "running add with data: " (this.new-data))
+      (cb/consola.debug "running add with data: " (this.new-data))
       (t/add! this.ctx (if (= add :new) (this.new-data) add) opts))
     (when remove
       (t/remove-ident! this.ctx (:from mutate-map) remove))))
@@ -79,9 +76,13 @@
   ([this field event]
    (t/set-field! this.ctx (or (u/e->v event) event) {:replace (conj (this.ident) field)})))
 
-
 (def useContext solid/useContext)
 (def pull n/pull)
 (def createMemo solid/createMemo)
 (def createSignal solid/createSignal)
-(def debug consola.debug)
+(def onMount solid/onMount)
+(def debug cb/consola.debug)
+(def ErrorBoundary solid/ErrorBoundary)
+(def createComponent solid-web/createComponent)
+(def warn cb/consola.warn)
+(def consola cb/consola)

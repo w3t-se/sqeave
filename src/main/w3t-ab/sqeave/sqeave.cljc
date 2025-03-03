@@ -30,7 +30,18 @@
         binding-ctx (:ctx (second bindings))]
 
     (list 'do
-          (list 'defn (symbol (str name "Fn")) [{:keys (conj val-vec 'this 'props 'ctx)}] body)
+          (list 'defn (symbol (str name "Fn")) [{:keys (conj val-vec 'this 'props 'ctx)}]
+                (list 'squint-compiler-jsx
+                      ['sqeave/ErrorBoundary {:fallback (list 'fn ['err 'reset]
+                                                              (list 'sqeave/warn 'err)
+                                                              (list 'sqeave/onMount (list 'fn []
+                                                                                          `(when (some? (.-hot js/import.meta))
+                                                                                             (.accept (.-hot js/import.meta)
+                                                                                                      (fn []
+                                                                                                        ~(list 'reset)
+                                                                                                        (sqeave/debug "🔄 Hot Reload detected!"))))))
+                                                              (list 'str (list 'js/JSON.stringify 'err)))}
+                       body]))
 
           (list 'defclass (symbol (str name "Class"))
                 (list 'extends 'sqeave/Comp)
@@ -46,12 +57,14 @@
                       (list 'set! 'this#.render 'this#.constructor.prototype.render)
                       (list 'set! 'this#.new-data 'this#.constructor.new-data)
 
+                      #_(list 'set! 'this#.render-helper 'this#.constructor.render-helper)
+
                       #_(list 'set! 'this#.render 'this#.constructor.render))
 
                 'Object
                 (list (with-meta 'new-data {:static true}) ['_ 'data] (list 'merge or-map 'data))
 
-                (list 'render ['this# 'body 'props]
+                (list 'first-render ['this# 'props]
                       (list 'let [(first bindings) 'this#
                                   '_ (list 'sqeave/debug "render: " ntmp " props: " 'props)
                                   'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
@@ -72,22 +85,34 @@
                                                                                          (list 'sqeave/debug "data: " 'data)
                                                                                          'data))))
                                               (list 'fn [] 'props))
-                                  val-vec (mapv #(list 'sqeave/createMemo (list 'fn [] (list % (list 'data)))) (mapv keywordify val-vec))
 
                                   ['local 'setLocal] (list 'sqeave/createSignal local-map)]
                             (list 'set! 'this#.ctx 'ctx)
                             (list 'set! 'this#.local 'local)
                             (list 'set! 'this#.data 'data)
-                            (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))
+                            (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))))
+
+                (list 'render ['this# 'body 'props]
+                      (list 'let [(first bindings) 'this#
+                                  val-vec (mapv #(list 'sqeave/createMemo (list 'fn [] (list % (list 'this#.data)))) (mapv keywordify val-vec))]
+                            (list 'sqeave/debug "this:" (zipmap (mapv keyword (conj val-vec 'this 'props 'ctx)) (conj val-vec 'this# 'props 'this#.ctx)))
                             (if local-map
                               (list 'let ['local-map-k (vec (keys local-map))
-                                          'local-map-k (mapv #(list 'fn [] (list % (list 'local))) (keys local-map))]
-                                    (list 'body (zipmap (mapv keyword (conj val-vec 'this 'props 'ctx)) (conj val-vec 'this# 'props 'ctx))))
-                              (list 'body (zipmap (mapv keyword (conj val-vec 'this 'props 'ctx)) (conj val-vec 'this# 'props 'ctx))))
-                            #_(list 'if 'children [:<>
-                                                   body
-                                                   'children] body))))
+                                          'local-map-k (mapv #(list 'fn [] (list % (list 'this#.local))) (keys local-map))]
+                                    (list 'body (zipmap (mapv keyword (conj val-vec 'this 'props 'ctx)) (conj val-vec 'this# 'props 'this#.ctx))))
+                              (list 'body (zipmap (mapv keyword (conj val-vec 'this 'props 'ctx)) (conj val-vec 'this# 'props 'this#.ctx)))))))
 
-          (list 'defn name ['props] (list 'let ['c (list 'new (symbol (str name "Class")) 'sqeave/AppContext)]
-                                          (list '.render-helper 'c
-                                                (list '.render 'c (symbol (str name "Fn")) 'props)))))))
+          (list 'defn (symbol (str name "Factory")) ['props]
+                (list 'let ['c (list 'new (symbol (str name "Class")) 'sqeave/AppContext)
+                            ;'v {:this 'c :ctx 'c.ctx :props 'props}
+                            ]
+                      (list 'if (list 'get 'props :ident)
+                            (list 'swap! 'sqeave/ComponentRegistry 'assoc (list 'second (list 'get 'props :ident)) 'c))
+                      (list '.first-render 'c 'props)
+                      (list '.render 'c (symbol (str name "Fn")) 'props)))
+
+          (list 'defn name ['props]
+                (list 'if (list 'contains? 'sqeave/ComponentRegistry (list 'second (list 'get 'props :ident)))
+                      (list 'let ['c (list 'get 'sqeave/ComponentRegistry (list 'second (list 'get 'props :ident)))]
+                            (list '.render 'c (symbol (str name "Fn")) 'props))
+                      (list (symbol (str name "Factory")) 'props))))))
