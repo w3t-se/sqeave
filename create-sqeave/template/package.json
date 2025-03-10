@@ -10,13 +10,13 @@
   "license": "EPL",
   "description": "",
   "devDependencies": {
-    "@w3t-ab/sqeave": "^0.0.9",
+    "@w3t-ab/sqeave": "file:../..",
     "@w3t-ab/vite-plugin-squint": "^0.0.5",
-    "squint-cljs": "^0.8.129",
-    "vite": "^6.0.2",
-    "vite-plugin-solid": "^2.11.0"
+    "squint-cljs": "^0.8.137",
+    "vite": "^6.2.0",
+    "vite-plugin-solid": "^2.11.6"
   },
   "dependencies": {
-    "solid-js": "^1.9.3"
+    "solid-js": "^1.9.5"
   }
 }

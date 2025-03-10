@@ -12,16 +12,18 @@
 
 (def AppContext nil)
 
-(def ComponentRegistry (atom {}))
+#_(def ComponentRegistry (atom {}))
 
 (defn init-ctx! [ctx]
   #_(set! consola.level "info")
-  (let [[store setStore] (createStore {})]
+  (let [[store setStore] (createStore {})
+        [registry setRegistry] (createStore {})]
     (set! AppContext ctx)
     (when js/import.meta.env.DEV
       (set! (.-store js/window) store)
+      (set! (.-comps js/window) registry)
       (set! (.-level cb/consola) 4))
-    {:store store :setStore setStore}))
+    {:store store :setStore setStore :registry registry :setRegistry setRegistry}))
 
 (defn viewer-ident [this]
   (t/viewer-ident this.ctx))
@@ -36,8 +38,9 @@
   (field -data)
   (field ident)
 
-  (constructor [this ctx-in]
-               (set! -ctx ctx-in))
+  (constructor [this ctx-in ident-in]
+               (set! -ctx ctx-in)
+               (set! ident ident-in))
 
   Object
   (^:static get-query [_] 1)
@@ -72,9 +75,17 @@
 
 (defn set!
   ([this ident field event]
+   (cb/consola.debug "this: " this)
    (t/set-field! this.ctx (or (u/e->v event) event) {:replace (conj ident field)}))
   ([this field event]
-   (t/set-field! this.ctx (or (u/e->v event) event) {:replace (conj (this.ident) field)})))
+   (cb/consola.debug "this: " this)
+   (cb/consola.debug "event: "  (or (u/e->v event) event))
+   (cb/consola.debug "replace: " (conj this.ident field))
+   (t/set-field! this.ctx (or (u/e->v event) event) {:replace (conj this.ident field)})))
+
+(defn remove-nil [my-map]
+  (into {} (filter (fn [[k v]] (not (nil? v))) my-map))
+  #_(select-keys my-map (keys (filter (comp some? my-map) (keys my-map)))))
 
 (def useContext solid/useContext)
 (def pull n/pull)
@@ -84,5 +95,9 @@
 (def debug cb/consola.debug)
 (def ErrorBoundary solid/ErrorBoundary)
 (def createComponent solid-web/createComponent)
+(def onCleanup solid/onCleanup)
 (def warn cb/consola.warn)
 (def consola cb/consola)
+(def getOwner solid/getOwner)
+(def runWithOwner solid/runWithOwner)
+(def remove-nil remove-nil)

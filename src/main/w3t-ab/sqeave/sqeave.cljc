@@ -17,6 +17,8 @@
 
         keywordify (fn [x] (keyword (str (when n (str n "/")) x)))
 
+        val-keys (mapv keyword val-vec)
+
         or-map (let [m (-> bindings second :or)]
                  (zipmap (mapv keywordify (keys m)) (vals m)))
 
@@ -31,16 +33,25 @@
 
     (list 'do
           (list 'defn (symbol (str name "Fn")) [{:keys (conj val-vec 'this 'props 'ctx)}]
+
                 (list 'squint-compiler-jsx
                       ['sqeave/ErrorBoundary {:fallback (list 'fn ['err 'reset]
                                                               (list 'sqeave/warn 'err)
                                                               (list 'sqeave/onMount (list 'fn []
-                                                                                          `(when (some? (.-hot js/import.meta))
-                                                                                             (.accept (.-hot js/import.meta)
-                                                                                                      (fn []
-                                                                                                        ~(list 'reset)
-                                                                                                        (sqeave/debug "🔄 Hot Reload detected!"))))))
-                                                              (list 'str (list 'js/JSON.stringify 'err)))}
+                                                                                          #_`(when (some? (.-hot js/import.meta))
+                                                                                               (.accept (.-hot js/import.meta)
+                                                                                                        (fn []
+                                                                                                          ~(list 'reset)
+                                                                                                          (sqeave/debug "🔄 Hot Reload detected!"))))))
+                                                              (list 'squint-compiler-jsx
+                                                                    [:div {:onClick (list 'fn ['e] (list 'reset))}
+                                                                     (list :message 'err)]))}
+                       (list 'sqeave/onMount (list 'fn []
+                                                   (list 'sqeave/debug "I was mounted: " (list 'this.data) ": " (str name "Fn") " " 'this.ident)
+                                                   (list 'sqeave/debug "owner1:" (list 'sqeave/getOwner))))
+                       (list 'sqeave/onCleanup (list 'fn []
+                                                     #_(list 'setRegistry (list 'update 'registry (str name "Class") 'dissoc (list 'second 'this.ident)))
+                                                     (list 'sqeave/debug "I was cleaned up: " (str name "Fn") " " 'this.ident " " (list 'sqeave/getOwner))))
                        body]))
 
           (list 'defclass (symbol (str name "Class"))
@@ -51,68 +62,115 @@
                 (list 'field 'local)
                 (list 'field 'set-local!)
 
-                (list 'constructor ['this# 'ctx] (list 'sqeave/debug "constructor: " ntmp " ctx: " 'ctx)
-                      (list 'super 'ctx)
-
+                (list 'constructor ['this# 'ctx 'ident] (list 'sqeave/debug "constructor: " ntmp " ctx: " 'ctx " ident: " 'ident)
+                      (list 'super 'ctx 'ident)
+                      (list 'set! 'this#.ident 'ident)
                       (list 'set! 'this#.render 'this#.constructor.prototype.render)
-                      (list 'set! 'this#.new-data 'this#.constructor.new-data)
-
-                      #_(list 'set! 'this#.render-helper 'this#.constructor.render-helper)
-
-                      #_(list 'set! 'this#.render 'this#.constructor.render))
+                      (list 'set! 'this#.new-data 'this#.constructor.new-data))
 
                 'Object
                 (list (with-meta 'new-data {:static true}) ['_ 'data] (list 'merge or-map 'data))
 
                 (list 'first-render ['this# 'props]
-                      (list 'let [(first bindings) 'this#
+                      (list 'let [;(first bindings) 'this#
                                   '_ (list 'sqeave/debug "render: " ntmp " props: " 'props)
                                   'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
-                                  'ident (list 'get 'props :ident)
-                                  'ident (list 'if-not (list 'fn? 'ident) (list 'fn [] 'ident) 'ident)
-                                  'ident (list 'if (list nil? (list 'ident)) (list 'fn [] []) 'ident)
-                                  '_ (list 'sqeave/debug ntmp ": p " 'props " i: " (list 'ident) " q: " query " ctx:" 'ctx)
-                                  '_ (list 'set! 'this#.ident 'ident)
-                                  {:keys ['store 'setStore]} 'ctx
-                                  '_ (list 'sqeave/add! 'ctx (list 'this#.new-data))
-                                  'data (list 'if (list 'or (list 'and (list 'vector? (list 'ident)) (list '= (list 'count (list 'ident)) 0))
-                                                        (list 'sqeave/ident? (list 'ident)))
-                                              (list 'do
-                                                    (list 'sqeave/createMemo (list 'fn []
-                                                                                   (list 'sqeave/debug "memo: " ntmp " ident: " (list 'ident) " query: " query)
-                                                                                   (list 'let ['data (list 'sqeave/pull 'store (list 'if (list 'empty? (list 'ident))
-                                                                                                                                     'store (list 'ident)) query)]
-                                                                                         (list 'sqeave/debug "data: " 'data)
-                                                                                         'data))))
-                                              (list 'fn [] 'props))
 
+                                  '_ (list 'sqeave/debug ntmp ": p " 'props " i: " 'this#.ident " q: " query " ctx:" 'ctx)
+                                  ;['force 'setForce] (list 'sqeave/createSignal false)
+                                        ;'_ (list 'set! 'this#.ident 'ident)
+                                  {:keys ['store 'setStore]} 'ctx
+
+                                  'data (list 'if-not (list 'empty? query)
+                                              (list 'let ['data (list 'sqeave/createMemo (list 'fn []
+                                                                                               #_(list 'force)
+                                                                                               (list 'sqeave/debug "memo: " ntmp " ident: " 'this#.ident " query: " query)
+                                                                                               (list 'let ['data (list 'sqeave/pull (list 'get 'ctx :store) (list 'if (list 'empty? 'this#.ident)
+                                                                                                                                                                  (list 'get-in 'this# [:ctx :store]) 'this#.ident) query)]
+                                                                                                     (list 'sqeave/debug "memo: " ntmp " ident: " 'this#.ident "data: " 'data)
+                                                                                                     'data)))]
+
+                                                    (list 'sqeave/debug "nn:" (list 'data) ":" (list 'sqeave/remove-nil (list 'data)))
+                                                    (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'merge (list 'sqeave/remove-nil (list 'data))
+                                                                                                        (list 'if-not (list 'nil? (list 'second 'this#.ident))
+                                                                                                          {(list 'first 'this#.ident) (list 'second 'this#.ident)}))))
+                                                    'data)
+                                              (list 'fn [] 'props))
+                                  'val-v (list 'mapv (list 'fn ['x] (list 'sqeave/createMemo (list 'fn [] (list 'get (list 'data) 'x)))) (mapv keywordify val-vec))
+                                  val-vec 'val-v
                                   ['local 'setLocal] (list 'sqeave/createSignal local-map)]
+
                             (list 'set! 'this#.ctx 'ctx)
+                            #_(list 'set! 'this#.force 'force)
+                            #_(list 'set! 'this#.setForce 'setForce)
                             (list 'set! 'this#.local 'local)
                             (list 'set! 'this#.data 'data)
+                            (list 'set! 'this#.val-vec 'val-v)
                             (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))))
 
                 (list 'render ['this# 'body 'props]
-                      (list 'let [(first bindings) 'this#
-                                  val-vec (mapv #(list 'sqeave/createMemo (list 'fn [] (list % (list 'this#.data)))) (mapv keywordify val-vec))]
-                            (list 'sqeave/debug "this:" (zipmap (mapv keyword (conj val-vec 'this 'props 'ctx)) (conj val-vec 'this# 'props 'this#.ctx)))
-                            (if local-map
-                              (list 'let ['local-map-k (vec (keys local-map))
-                                          'local-map-k (mapv #(list 'fn [] (list % (list 'this#.local))) (keys local-map))]
-                                    (list 'body (zipmap (mapv keyword (conj val-vec 'this 'props 'ctx)) (conj val-vec 'this# 'props 'this#.ctx))))
-                              (list 'body (zipmap (mapv keyword (conj val-vec 'this 'props 'ctx)) (conj val-vec 'this# 'props 'this#.ctx)))))))
+                      #_(list 'this#.setForce (list 'not (list 'this#.force)))
+                      #_(list  'this#.val-vec val-keys)
+                      (list 'sqeave/debug "this:d" (list 'this#.data))
+                      (list 'let ['local-map-k (vec (keys local-map))
+                                  'local-map-k (mapv #(list 'fn [] (list % (list 'this#.local))) (keys local-map))]
+                            (list 'body (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj 'this#.val-vec 'this# 'props 'this#.ctx))))))
 
-          (list 'defn (symbol (str name "Factory")) ['props]
-                (list 'let ['c (list 'new (symbol (str name "Class")) 'sqeave/AppContext)
-                            ;'v {:this 'c :ctx 'c.ctx :props 'props}
+          (list 'defn (symbol (str name "Factory")) ['ident 'props]
+                (list 'let ['ctx (list 'or binding-ctx (list `useContext 'sqeave/AppContext))
+                            'setRegistry (list 'get 'ctx :setRegistry)
+                            'registry (list 'get 'ctx :registry)
+                            ;'owner (list 'if-not binding-ctx (list 'sqeave/getOwner))
                             ]
-                      (list 'if (list 'get 'props :ident)
-                            (list 'swap! 'sqeave/ComponentRegistry 'assoc (list 'second (list 'get 'props :ident)) 'c))
-                      (list '.first-render 'c 'props)
-                      (list '.render 'c (symbol (str name "Fn")) 'props)))
+                      #_(list 'swap! 'sqeave/ComponentRegistry 'assoc-in [(str name "Class") (list 'second 'ident)] 'c)
+
+                      #_(when (.-hot js/import.meta)
+                          (.accept (.-hot js/import.meta) (fn []
+                                                            (list '.render 'c (symbol (str name "Fn")) 'props))))
+
+                      (list 'let ['c (list 'new (symbol (str name "Class")) 'sqeave/AppContext 'ident)]
+                            #_(list 'set! 'this#.owner 'owner)
+                            (list 'setRegistry (list 'fn [] (list 'assoc-in 'registry [(str name "Class") (list 'second 'ident)] 'c)))
+                            (list '.first-render 'c 'props)
+                            (list '.render 'c (symbol (str name "Fn")) 'props)
+                            #_(list 'let ['c (list 'get-in 'registry #_(list 'deref 'sqeave/ComponentRegistry) [(list 'str name "Class") (list 'second 'ident)])]
+                                    (list '.render 'c (symbol (str name "Fn")) 'props)))))
+
+          #_(list 'defn name ['props]
+                  `(let [ident (get props :ident)
+                         ident (if (fn? ident) (ident) ident)]
+                     (sqeave/debug "idnet: " ident)
+                     (when-not (deref sqeave/HOT_LOADED)
+                       (if-let [c (get-in (deref sqeave/ComponentRegistry)
+                                          [(str ~name "Class") (second ident)])]
+                         (do (sqeave/debug "class: " c) (.render c ~(symbol (str name "Fn")) props))
+                         (~(symbol (str name "Factory")) ident props)))))
+
+          #_(defonce ~(symbol "HOT_LOADED") (atom false))
+
+          #_(when (.-hot js/import.meta)
+              (.accept (.-hot js/import.meta) (fn []
+                                                (println "hot")
+                                                (reset! ~(symbol "HOT_LOADED") true))))
 
           (list 'defn name ['props]
-                (list 'if (list 'contains? 'sqeave/ComponentRegistry (list 'second (list 'get 'props :ident)))
-                      (list 'let ['c (list 'get 'sqeave/ComponentRegistry (list 'second (list 'get 'props :ident)))]
-                            (list '.render 'c (symbol (str name "Fn")) 'props))
-                      (list (symbol (str name "Factory")) 'props))))))
+                (list 'let ['ident (list 'get 'props :ident)
+                            'ident (list 'if-not (list 'fn? 'ident) 'ident (list 'ident))
+                            'ctx (list 'or binding-ctx (list `useContext 'sqeave/AppContext))
+                            '_ (list 'println 'ctx)
+                            'registry (list 'get 'ctx :registry)
+                            'owner (list 'if-not binding-ctx (list 'sqeave/getOwner))]
+                      (list 'sqeave/debug "idnet: " 'ident " owner: " 'owner)
+
+                      (list (symbol (str name "Factory")) 'ident 'props)
+
+                      ;; use if comp registry
+                      #_(list 'if-let ['c (list 'get-in 'registry [(str name "Class") (list 'second 'ident)])]
+                              (list 'do
+                                    (list 'aset 'c :ctx 'ctx)
+                                    (list 'sqeave/debug "class: " 'c)
+                                    (list 'sqeave/runWithOwner 'owner
+                                          (list 'fn [] (list '.render 'c (symbol (str name "Fn")) 'props))))
+                              (list (symbol (str name "Factory")) 'ident 'props)))))))
+
+;list 's/runWithOwner 'owner

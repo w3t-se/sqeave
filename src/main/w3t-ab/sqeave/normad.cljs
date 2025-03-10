@@ -1,7 +1,8 @@
 (ns normad
   (:require ["./utils.mjs" :as u]
             ["consola/browser" :refer [consola]]
-            ["solid-js/store" :refer [reconcile]]))
+            ["solid-js/store" :refer [reconcile]]
+            ["solid-js" :refer [batch]]))
 
 (defn ident? [data]
   (if (vector? data)
@@ -30,7 +31,7 @@
 (def acc (atom {}))
 
 (defn add [{:keys [store setStore] :as ctx} & data]
-  (let [res (traverse-and-transform (or (first data) store) acc)]
+  (let [res (batch #(traverse-and-transform (or (first data) store) acc))]
     (consola.debug "rr: " res)
     (consola.debug "rr:acc " @acc)
 
@@ -39,7 +40,7 @@
 
     (if-not (first data)
       (do (consola.debug "merge-data: " (merge-with merge res @acc)) (setStore (reconcile (merge-with merge res @acc))))
-      (reduce-kv (fn [m k v] (consola.debug "set: " k " " v) (consola.debug "set2: " (merge-with merge (get store k) v #_{:key k :merge true}) ) (setStore k #(merge-with merge % v #_{:key k :merge true})))
+      (reduce-kv (fn [m k v] (consola.debug "set: " k " " v) #_(consola.debug "set2: " (merge-with merge (get store k) v #_{:key k :merge true})) (setStore k #(merge-with merge % v #_{:key k :merge true})))
                  {}
                  (if-not (vector? res)
                    (merge  @acc res)

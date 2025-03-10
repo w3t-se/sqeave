@@ -1,5 +1,6 @@
 import * as squint_core from 'squint-cljs/core.js';
 import * as string from 'squint-cljs/src/squint/string.js';
+import * as solid from 'solid-js';
 import * as l from 'lodash-es';
 import { trim, camelCase, kebabCase, startCase } from 'lodash-es';
 import { consola } from 'consola/browser';
@@ -58,7 +59,7 @@ return (_PERCENT_1) !== (item);
 }), v));
 };
 var uuid = function () {
-return crypto.randomUUID();
+return solid.createUniqueId();
 };
 var camel_case = l.camelCase;
 var kebab_case = l.kebabCase;
@@ -169,8 +170,8 @@ return window.sessionStorage.removeItem(key);
 var distinct_second_elements = function (coll) {
 return squint_core.vec((() => {
 const seen1 = squint_core.atom(new Set([]));
-return squint_core.filter((function (p__27) {
-const vec__25 = p__27;
+return squint_core.filter((function (p__28) {
+const vec__25 = p__28;
 const _6 = squint_core.nth(vec__25, 0, null);
 const second7 = squint_core.nth(vec__25, 1, null);
 if (squint_core.truth_(squint_core.contains_QMARK_(squint_core.deref(seen1), second7))) {

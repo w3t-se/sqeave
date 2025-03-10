@@ -2,6 +2,7 @@ import * as squint_core from 'squint-cljs/core.js';
 import * as u from './utils.mjs';
 import { consola } from 'consola/browser';
 import { reconcile } from 'solid-js/store';
+import { batch } from 'solid-js';
 var ident_QMARK_ = function (data) {
 if (squint_core.truth_(squint_core.vector_QMARK_(data))) {
 if (squint_core.truth_(squint_core.string_QMARK_(squint_core.first(data)))) {
@@ -45,33 +46,35 @@ return null;}}}
 };
 var acc = squint_core.atom(({  }));
 var add = (() => {
-const f6 = (function (var_args) {
-const args71 = [];
+const f7 = (function (var_args) {
+const args81 = [];
 const len__24850__auto__2 = arguments.length;
-let i83 = 0;
+let i93 = 0;
 while(true){
-if ((i83) < (len__24850__auto__2)) {
-args71.push((arguments[i83]));
-let G__4 = (i83 + 1);
-i83 = G__4;
+if ((i93) < (len__24850__auto__2)) {
+args81.push((arguments[i93]));
+let G__4 = (i93 + 1);
+i93 = G__4;
 continue;
 };break;
 }
 ;
-const argseq__25251__auto__5 = (((1) < (args71.length)) ? (args71.slice(1)) : (null));
-return f6.cljs$core$IFn$_invoke$arity$variadic((arguments[0]), argseq__25251__auto__5);
+const argseq__25251__auto__5 = (((1) < (args81.length)) ? (args81.slice(1)) : (null));
+return f7.cljs$core$IFn$_invoke$arity$variadic((arguments[0]), argseq__25251__auto__5);
 });
-f6.cljs$core$IFn$_invoke$arity$variadic = (function (p__11, data) {
-const map__67 = p__11;
+f7.cljs$core$IFn$_invoke$arity$variadic = (function (p__12, data) {
+const map__67 = p__12;
 const ctx8 = map__67;
 const store9 = squint_core.get(map__67, "store");
 const setStore10 = squint_core.get(map__67, "setStore");
-const res11 = traverse_and_transform((() => {
+const res11 = batch((function () {
+return traverse_and_transform((() => {
 const or__24193__auto__12 = squint_core.first(data);
 if (squint_core.truth_(or__24193__auto__12)) {
 return or__24193__auto__12;} else {
 return store9;}
 })(), acc);
+}));
 consola.debug("rr: ", res11);
 consola.debug("rr:acc ", squint_core.deref(acc));
 if (squint_core.not(squint_core.first(data))) {
@@ -79,7 +82,6 @@ consola.debug("merge-data: ", squint_core.merge_with(squint_core.merge, res11, s
 setStore10(reconcile(squint_core.merge_with(squint_core.merge, res11, squint_core.deref(acc))))} else {
 squint_core.reduce_kv((function (m, k, v) {
 consola.debug("set: ", k, " ", v);
-consola.debug("set2: ", squint_core.merge_with(squint_core.merge, squint_core.get(store9, k), v));
 return setStore10(k, (function (_PERCENT_1) {
 return squint_core.merge_with(squint_core.merge, _PERCENT_1, v);
 }));
@@ -87,14 +89,14 @@ return squint_core.merge_with(squint_core.merge, _PERCENT_1, v);
 squint_core.reset_BANG_(acc, ({  }));
 return res11;
 });
-f6.cljs$lang$maxFixedArity = 1;
-f6.cljs$lang$applyTo = (function (seq9) {
-const G__1013 = squint_core.first(seq9);
-const seq914 = squint_core.next(seq9);
+f7.cljs$lang$maxFixedArity = 1;
+f7.cljs$lang$applyTo = (function (seq10) {
+const G__1113 = squint_core.first(seq10);
+const seq1014 = squint_core.next(seq10);
 const self__24952__auto__15 = this;
-return self__24952__auto__15.cljs$core$IFn$_invoke$arity$variadic(G__1013, seq914);
+return self__24952__auto__15.cljs$core$IFn$_invoke$arity$variadic(G__1113, seq1014);
 });
-return f6;
+return f7;
 })();
 var pull = function (store, entity, query) {
 if (squint_core.truth_(ident_QMARK_(entity))) {
@@ -138,11 +140,11 @@ const sub_query7 = squint_core.get(query, nk6);
 const temp__23739__auto__8 = squint_core.get(entity, nk6);
 if (squint_core.truth_(temp__23739__auto__8)) {
 const data9 = temp__23739__auto__8;
-const G__1210 = ({  });
-(G__1210[nk6] = ((squint_core.truth_(ident_QMARK_(data9))) ? (pull(store, data9, sub_query7)) : (squint_core.mapv((function (_PERCENT_1) {
+const G__1310 = ({  });
+(G__1310[nk6] = ((squint_core.truth_(ident_QMARK_(data9))) ? (pull(store, data9, sub_query7)) : (squint_core.mapv((function (_PERCENT_1) {
 return pull(store, _PERCENT_1, sub_query7);
 }), data9))));
-return G__1210;}} else {
+return G__1310;}} else {
 if ("else") {
 return squint_core.get(entity, query);} else {
 return null;}}}}}}
@@ -180,8 +182,8 @@ return squint_core.assoc(acc, k, v);} else {
 return null;}}}}}
 }), ({  }), m);
 };
-var swap_uuids_BANG_ = function (p__13, old_uuid, new_id) {
-const map__12 = p__13;
+var swap_uuids_BANG_ = function (p__14, old_uuid, new_id) {
+const map__12 = p__14;
 const ctx3 = map__12;
 const store4 = squint_core.get(map__12, "store");
 const setStore5 = squint_core.get(map__12, "setStore");
@@ -195,15 +197,15 @@ return squint_core.vec(squint_core.map(unwrap_proxy, data));} else {
 if (squint_core.truth_(squint_core.vector_QMARK_(data))) {
 return squint_core.mapv(unwrap_proxy, data);} else {
 if (squint_core.truth_(squint_core.map_QMARK_(data))) {
-return squint_core.into(({  }), squint_core.map((function (p__14) {
-const vec__14 = p__14;
+return squint_core.into(({  }), squint_core.map((function (p__15) {
+const vec__14 = p__15;
 const k5 = squint_core.nth(vec__14, 0, null);
 const v6 = squint_core.nth(vec__14, 1, null);
 return [k5, unwrap_proxy(v6)];
 }), data));} else {
 if (squint_core.truth_(squint_core.object_QMARK_(data))) {
-return squint_core.into(({  }), squint_core.map((function (p__15) {
-const vec__710 = p__15;
+return squint_core.into(({  }), squint_core.map((function (p__16) {
+const vec__710 = p__16;
 const k11 = squint_core.nth(vec__710, 0, null);
 const v12 = squint_core.nth(vec__710, 1, null);
 return [k11, unwrap_proxy(v12)];

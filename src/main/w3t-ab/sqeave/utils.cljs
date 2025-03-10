@@ -1,5 +1,6 @@
 (ns utils
   (:require [squint.string :as string]
+            ["solid-js" :as solid]
             ["lodash-es" :as l :refer [trim camelCase kebabCase startCase]]
             ["consola/browser" :refer [consola]]))
 
@@ -40,7 +41,7 @@
 (defn remove-item [v item]
   (vec (filter #(not= % item) v)))
 
-(defn uuid [] (js/crypto.randomUUID))
+(defn uuid [] (solid/createUniqueId) #_(js/crypto.randomUUID))
 
 (def camel-case l/camelCase)
 (def kebab-case l/kebabCase)
