@@ -41,7 +41,7 @@
 (defn remove-item [v item]
   (vec (filter #(not= % item) v)))
 
-(defn uuid [] (solid/createUniqueId) #_(js/crypto.randomUUID))
+(defn uuid [] (js/crypto.randomUUID) #_(solid/createUniqueId))
 
 (def camel-case l/camelCase)
 (def kebab-case l/kebabCase)
