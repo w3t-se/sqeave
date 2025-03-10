@@ -81,19 +81,25 @@
                                         ;'_ (list 'set! 'this#.ident 'ident)
                                   {:keys ['store 'setStore]} 'ctx
 
+                                  'data (list 'sqeave/remove-nil (list 'sqeave/pull (list 'get 'ctx :store) (list 'if (list 'empty? 'this#.ident)
+                                                                                                                  (list 'get 'ctx :store) 'this#.ident)
+                                                                       query))
+
+                                  '_ (list 'when (list 'empty? 'data)
+                                           (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
+                                                                                               {(list 'first 'this#.ident) (list 'second 'this#.ident)}))))
+
                                   'data (list 'if-not (list 'empty? query)
                                               (list 'let ['data (list 'sqeave/createMemo (list 'fn []
                                                                                                #_(list 'force)
                                                                                                (list 'sqeave/debug "memo: " ntmp " ident: " 'this#.ident " query: " query)
                                                                                                (list 'let ['data (list 'sqeave/pull (list 'get 'ctx :store) (list 'if (list 'empty? 'this#.ident)
-                                                                                                                                                                  (list 'get-in 'this# [:ctx :store]) 'this#.ident) query)]
+                                                                                                                                                                  (list 'get 'ctx :store) 'this#.ident) query)]
                                                                                                      (list 'sqeave/debug "memo: " ntmp " ident: " 'this#.ident "data: " 'data)
                                                                                                      'data)))]
 
-                                                    (list 'sqeave/debug "nn:" (list 'data) ":" (list 'sqeave/remove-nil (list 'data)))
-                                                    (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'merge (list 'sqeave/remove-nil (list 'data))
-                                                                                                        (list 'if-not (list 'nil? (list 'second 'this#.ident))
-                                                                                                          {(list 'first 'this#.ident) (list 'second 'this#.ident)}))))
+                                                    #_(list 'sqeave/debug "nn:" (list 'data) ":" (list 'sqeave/remove-nil (list 'data)))
+
                                                     'data)
                                               (list 'fn [] 'props))
                                   'val-v (list 'mapv (list 'fn ['x] (list 'sqeave/createMemo (list 'fn [] (list 'get (list 'data) 'x)))) (mapv keywordify val-vec))
@@ -157,10 +163,11 @@
                 (list 'let ['ident (list 'get 'props :ident)
                             'ident (list 'if-not (list 'fn? 'ident) 'ident (list 'ident))
                             'ctx (list 'or binding-ctx (list `useContext 'sqeave/AppContext))
-                            '_ (list 'println 'ctx)
+                            ;'_ (list 'println 'ctx)
                             'registry (list 'get 'ctx :registry)
-                            'owner (list 'if-not binding-ctx (list 'sqeave/getOwner))]
-                      (list 'sqeave/debug "idnet: " 'ident " owner: " 'owner)
+                            ;'owner (list 'if-not binding-ctx (list 'sqeave/getOwner))
+                            ]
+                      #_(list 'sqeave/debug "idnet: " 'ident " owner: " 'owner)
 
                       (list (symbol (str name "Factory")) 'ident 'props)
 
