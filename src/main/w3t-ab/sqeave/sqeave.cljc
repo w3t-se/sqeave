@@ -46,12 +46,12 @@
                                                               (list 'squint-compiler-jsx
                                                                     [:div {:onClick (list 'fn ['e] (list 'reset))}
                                                                      (list :message 'err)]))}
-                       (list 'sqeave/onMount (list 'fn []
-                                                   (list 'sqeave/debug "I was mounted: " (list 'this.data) ": " (str name "Fn") " " 'this.ident)
-                                                   (list 'sqeave/debug "owner1:" (list 'sqeave/getOwner))))
-                       (list 'sqeave/onCleanup (list 'fn []
-                                                     #_(list 'setRegistry (list 'update 'registry (str name "Class") 'dissoc (list 'second 'this.ident)))
-                                                     (list 'sqeave/debug "I was cleaned up: " (str name "Fn") " " 'this.ident " " (list 'sqeave/getOwner))))
+                       #_(list 'sqeave/onMount (list 'fn []
+                                                     (list 'sqeave/debug "I was mounted: " (list 'this.data) ": " (str name "Fn") " " 'this.ident)
+                                                     (list 'sqeave/debug "owner1:" (list 'sqeave/getOwner))))
+                       #_(list 'sqeave/onCleanup (list 'fn []
+                                                       #_(list 'setRegistry (list 'update 'registry (str name "Class") 'dissoc (list 'second 'this.ident)))
+                                                       (list 'sqeave/debug "I was cleaned up: " (str name "Fn") " " 'this.ident " " (list 'sqeave/getOwner))))
                        body]))
 
           (list 'defclass (symbol (str name "Class"))
@@ -72,7 +72,7 @@
                 (list (with-meta 'new-data {:static true}) ['_ 'data] (list 'merge or-map 'data))
 
                 (list 'first-render ['this# 'props]
-                      (list 'let [;(first bindings) 'this#
+                      (list 'let [(first bindings) 'this#
                                   '_ (list 'sqeave/debug "render: " ntmp " props: " 'props)
                                   'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
 
@@ -86,8 +86,8 @@
                                                                        query))
 
                                   '_ (list 'when (list 'empty? 'data)
-                                                          (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
-                                                                                                              {(list 'first 'this#.ident) (list 'second 'this#.ident)}))))
+                                           (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
+                                                                                               {(list 'first 'this#.ident) (list 'second 'this#.ident)}))))
 
                                   'data (list 'if-not (list 'empty? query)
                                               (list 'let ['data (list 'sqeave/createMemo (list 'fn []
@@ -98,15 +98,15 @@
                                                                                                      (list 'sqeave/debug "memo: " ntmp " ident: " 'this#.ident "data: " 'data)
                                                                                                      'data)))]
 
-
-
                                                     #_(list 'sqeave/debug "nn:" (list 'data) ":" (list 'sqeave/remove-nil (list 'data)))
 
                                                     'data)
                                               (list 'fn [] 'props))
                                   'val-v (list 'mapv (list 'fn ['x] (list 'sqeave/createMemo (list 'fn [] (list 'get (list 'data) 'x)))) (mapv keywordify val-vec))
                                   val-vec 'val-v
-                                  ['local 'setLocal] (list 'sqeave/createSignal local-map)]
+                                  ['local 'setLocal] (list 'sqeave/createSignal local-map)
+                                  'local-map-k (vec (keys local-map))
+                                  'local-map-k (mapv #(list 'fn [] (list % (list 'this#.local))) (keys local-map))]
 
                             (list 'set! 'this#.ctx 'ctx)
                             #_(list 'set! 'this#.force 'force)
@@ -114,7 +114,25 @@
                             (list 'set! 'this#.local 'local)
                             (list 'set! 'this#.data 'data)
                             (list 'set! 'this#.val-vec 'val-v)
-                            (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))))
+                            (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))
+                            (list 'sqeave/debug "thiss: " 'this#  "ctc: " 'ctx " m: " (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj val-vec 'this# 'props 'ctx)))
+
+                            #_(list 'squint-compiler-jsx
+                                    ['sqeave/ErrorBoundary {:fallback (list 'fn ['err 'reset]
+                                                                            (list 'sqeave/warn 'err)
+                                                                            (list 'sqeave/onMount (list 'fn []
+                                                                                                        #_`(when (some? (.-hot js/import.meta))
+                                                                                                             (.accept (.-hot js/import.meta)
+                                                                                                                      (fn []
+                                                                                                                        ~(list 'reset)
+                                                                                                                        (sqeave/debug "🔄 Hot Reload detected!"))))))
+                                                                            (list 'squint-compiler-jsx
+                                                                                  [:div {:onClick (list 'fn ['e] (list 'reset))}
+                                                                                   (list :message 'err)]))}
+                                     body])
+
+                            (list 'squint-compiler-jsx
+                                  (list (symbol (str name "Fn")) (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj val-vec 'this# 'props 'ctx))))))
 
                 (list 'render ['this# 'body 'props]
                       #_(list 'this#.setForce (list 'not (list 'this#.force)))
@@ -140,7 +158,7 @@
                             #_(list 'set! 'this#.owner 'owner)
                             #_(list 'setRegistry (list 'fn [] (list 'assoc-in 'registry [(str name "Class") (list 'second 'ident)] 'c)))
                             (list '.first-render 'c 'props)
-                            (list '.render 'c (symbol (str name "Fn")) 'props)
+                            #_(list '.render 'c (symbol (str name "Fn")) 'props)
                             #_(list 'let ['c (list 'get-in 'registry #_(list 'deref 'sqeave/ComponentRegistry) [(list 'str name "Class") (list 'second 'ident)])]
                                     (list '.render 'c (symbol (str name "Fn")) 'props)))))
 
