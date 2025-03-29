@@ -67,7 +67,9 @@
 
 (defn pull [store entity query]
   (cond
-    (ident? entity) (pull store (get-in store entity) query)
+    (or (nil? entity) (empty? entity)) entity
+
+    (or (ident? entity) (ident? [(first entity) (second entity)])) (pull store (get-in store entity) query)
 
     (and (> (count entity) 0)
          (vector? entity)) (mapv (fn [x] (if (ident? x)

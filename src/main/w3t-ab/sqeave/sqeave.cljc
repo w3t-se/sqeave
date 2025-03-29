@@ -76,33 +76,43 @@
                                   '_ (list 'sqeave/debug "render: " ntmp " props: " 'props)
                                   'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
 
-                                  '_ (list 'sqeave/debug ntmp ": p " 'props " i: " 'this#.ident " q: " query " ctx:" 'ctx)
+                                  '_ (list 'sqeave/debug ntmp ": p " 'props " i: " 'this#.ident " q: " query " ctx:" 'ctx " exists:" (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident)))
                                   ;['force 'setForce] (list 'sqeave/createSignal false)
                                         ;'_ (list 'set! 'this#.ident 'ident)
                                   {:keys ['store 'setStore]} 'ctx
 
-                                  'data (list 'sqeave/remove-nil (list 'sqeave/pull (list 'get 'ctx :store) (list 'if (list 'empty? 'this#.ident)
-                                                                                                                  (list 'get 'ctx :store) 'this#.ident)
-                                                                       query))
+                                  #_'data #_(list 'sqeave/remove-nil (list 'sqeave/pull (list 'get 'ctx :store) (list 'if (list 'empty? 'this#.ident)
+                                                                                                                      (list 'get 'ctx :store) 'this#.ident)
+                                                                           query))
 
-                                  '_ (list 'when (list 'empty? 'data)
+                                  '_ (list 'if-not (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident))
                                            (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
-                                                                                               {(list 'first 'this#.ident) (list 'second 'this#.ident)}))))
+                                                                                               {(list 'first 'this#.ident) (list 'second 'this#.ident)})))
+                                           (list 'if-not (list 'js/Reflect.has (list 'get-in 'ctx [:store (list 'first 'this#.ident)]) (list 'second 'this#.ident))
+                                                 (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
+                                                                                                     {(list 'first 'this#.ident) (list 'second 'this#.ident)})))))
 
-                                  'data (list 'if-not (list 'empty? query)
-                                              (list 'let ['data (list 'sqeave/createMemo (list 'fn []
-                                                                                               #_(list 'force)
-                                                                                               (list 'sqeave/debug "memo: " ntmp " ident: " 'this#.ident " query: " query)
-                                                                                               (list 'let ['data (list 'sqeave/pull (list 'get 'ctx :store) (list 'if (list 'empty? 'this#.ident)
-                                                                                                                                                                  (list 'get 'ctx :store) 'this#.ident) query)]
-                                                                                                     (list 'sqeave/debug "memo: " ntmp " ident: " 'this#.ident "data: " 'data)
-                                                                                                     'data)))]
+                                  #_'data #_(list 'if-not (list 'empty? query)
+                                                  (list 'let ['data (list 'sqeave/createMemo (list 'fn []
+                                                                                                   #_(list 'force)
+                                                                                                   (list 'sqeave/debug "memo: " ntmp " ident: " 'this#.ident " query: " query)
+                                                                                                   (list 'let ['data (list 'sqeave/pull (list 'get 'ctx :store) (list 'if (list 'empty? 'this#.ident)
+                                                                                                                                                                      (list 'get 'ctx :store) 'this#.ident) query)]
+                                                                                                         (list 'sqeave/debug "memo: " ntmp " ident: " 'this#.ident "data: " 'data)
+                                                                                                         'data)))]
 
-                                                    #_(list 'sqeave/debug "nn:" (list 'data) ":" (list 'sqeave/remove-nil (list 'data)))
+                                                        #_(list 'sqeave/debug "nn:" (list 'data) ":" (list 'sqeave/remove-nil (list 'data)))
 
-                                                    'data)
-                                              (list 'fn [] 'props))
-                                  'val-v (list 'mapv (list 'fn ['x] (list 'sqeave/createMemo (list 'fn [] (list 'get (list 'data) 'x)))) (mapv keywordify val-vec))
+                                                        'data)
+                                                  (list 'fn [] 'props))
+                                  'val-v (list 'mapv (list 'fn ['x]
+                                                           (list 'if-not (list 'map? 'x)
+                                                                 (list 'sqeave/createMemo (list 'fn [] (list 'get-in 'ctx [:store (list 'first 'this#.ident) (list 'second 'this#.ident) 'x])))
+                                                                 (list 'sqeave/createMemo (list 'fn []
+                                                                                                (list 'sqeave/pull (list 'get 'ctx :store)
+                                                                                                      [(list 'first 'this#.ident) (list 'second 'this#.ident) (list 'first (list 'keys 'x))]
+                                                                                                      (list 'first (list 'vals  'x)))))))
+                                               query #_(mapv keywordify val-vec))
                                   val-vec 'val-v
                                   ['local 'setLocal] (list 'sqeave/createSignal local-map)
                                   'local-map-k (vec (keys local-map))
@@ -112,7 +122,7 @@
                             #_(list 'set! 'this#.force 'force)
                             #_(list 'set! 'this#.setForce 'setForce)
                             (list 'set! 'this#.local 'local)
-                            (list 'set! 'this#.data 'data)
+                            #_(list 'set! 'this#.data 'data)
                             (list 'set! 'this#.val-vec 'val-v)
                             (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))
                             (list 'sqeave/debug "thiss: " 'this#  "ctc: " 'ctx " m: " (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj val-vec 'this# 'props 'ctx)))

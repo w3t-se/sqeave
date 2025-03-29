@@ -99,13 +99,25 @@ return self__25070__auto__15.cljs$core$IFn$_invoke$arity$variadic(G__1113, seq10
 return f7
 })();
 var pull = function (store, entity, query) {
-if (squint_core.truth_(ident_QMARK_(entity))) {
+if (squint_core.truth_((() => {
+const or__24252__auto__1 = (entity == null);
+if (or__24252__auto__1) {
+return or__24252__auto__1} else {
+return squint_core.empty_QMARK_(entity)}
+})())) {
+return entity} else {
+if (squint_core.truth_((() => {
+const or__24252__auto__2 = ident_QMARK_(entity);
+if (squint_core.truth_(or__24252__auto__2)) {
+return or__24252__auto__2} else {
+return ident_QMARK_([squint_core.first(entity), squint_core.second(entity)])}
+})())) {
 return pull(store, squint_core.get_in(store, entity), query)} else {
 if (squint_core.truth_((() => {
-const and__24283__auto__1 = (squint_core.count(entity)) > (0);
-if (and__24283__auto__1) {
+const and__24283__auto__3 = (squint_core.count(entity)) > (0);
+if (and__24283__auto__3) {
 return squint_core.vector_QMARK_(entity)} else {
-return and__24283__auto__1}
+return and__24283__auto__3}
 })())) {
 return squint_core.mapv((function (x) {
 if (squint_core.truth_(ident_QMARK_(x))) {
@@ -113,41 +125,41 @@ return pull(store, x, query)} else {
 return x}
 }), entity)} else {
 if (squint_core.truth_((() => {
-const and__24283__auto__2 = (squint_core.count(query)) > (1);
-if (and__24283__auto__2) {
+const and__24283__auto__4 = (squint_core.count(query)) > (1);
+if (and__24283__auto__4) {
 return squint_core.vector_QMARK_(query)} else {
-return and__24283__auto__2}
+return and__24283__auto__4}
 })())) {
-const simple_keys3 = squint_core.filterv(squint_core.string_QMARK_, query);
-const not_simple4 = squint_core.filterv((function (_PERCENT_1) {
+const simple_keys5 = squint_core.filterv(squint_core.string_QMARK_, query);
+const not_simple6 = squint_core.filterv((function (_PERCENT_1) {
 return squint_core.not(squint_core.string_QMARK_(_PERCENT_1))
 }), query);
-return squint_core.into(squint_core.zipmap(simple_keys3, squint_core.mapv((function (_PERCENT_1) {
+return squint_core.into(squint_core.zipmap(simple_keys5, squint_core.mapv((function (_PERCENT_1) {
 return pull(store, entity, _PERCENT_1)
-}), simple_keys3)), squint_core.mapv((function (_PERCENT_1) {
+}), simple_keys5)), squint_core.mapv((function (_PERCENT_1) {
 return pull(store, entity, _PERCENT_1)
-}), not_simple4))} else {
+}), not_simple6))} else {
 if (squint_core.truth_((() => {
-const and__24283__auto__5 = (squint_core.count(query)) === (1);
-if (and__24283__auto__5) {
+const and__24283__auto__7 = (squint_core.count(query)) === (1);
+if (and__24283__auto__7) {
 return squint_core.vector_QMARK_(query)} else {
-return and__24283__auto__5}
+return and__24283__auto__7}
 })())) {
 return pull(store, entity, squint_core.first(query))} else {
 if (squint_core.truth_(squint_core.map_QMARK_(query))) {
-const nk6 = squint_core.first(squint_core.keys(query));
-const sub_query7 = squint_core.get(query, nk6);
-const temp__23847__auto__8 = squint_core.get(entity, nk6);
-if (squint_core.truth_(temp__23847__auto__8)) {
-const data9 = temp__23847__auto__8;
-const G__1310 = ({  });
-(G__1310[nk6] = ((squint_core.truth_(ident_QMARK_(data9))) ? (pull(store, data9, sub_query7)) : (squint_core.mapv((function (_PERCENT_1) {
-return pull(store, _PERCENT_1, sub_query7)
-}), data9))));
-return G__1310}} else {
+const nk8 = squint_core.first(squint_core.keys(query));
+const sub_query9 = squint_core.get(query, nk8);
+const temp__23847__auto__10 = squint_core.get(entity, nk8);
+if (squint_core.truth_(temp__23847__auto__10)) {
+const data11 = temp__23847__auto__10;
+const G__1312 = ({  });
+(G__1312[nk8] = ((squint_core.truth_(ident_QMARK_(data11))) ? (pull(store, data11, sub_query9)) : (squint_core.mapv((function (_PERCENT_1) {
+return pull(store, _PERCENT_1, sub_query9)
+}), data11))));
+return G__1312}} else {
 if ("else") {
 return squint_core.get(entity, query)} else {
-return null}}}}}}
+return null}}}}}}}
 };
 var update_uuid_in_coll = function (coll, old_uuid, new_uuid) {
 return squint_core.mapv((function (item) {
