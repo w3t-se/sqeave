@@ -1,0 +1,177 @@
+{
+    "comp/id": {
+        "main": {
+            "comp/id": "main",
+            "user": [
+                "user/id",
+                "google-apps|daniel@w3t.se"
+            ],
+            "selected": [
+                "datasource/id",
+                "78f8f587-d849-498d-b37e-4290254a0ef4"
+            ]
+        },
+        "header": {
+            "comp/id": "header",
+            "dashboards": [],
+            "recent": [
+                [
+                    "file/id",
+                    "fe9094bd-438d-4fe6-80d4-04f4e61c9baa"
+                ]
+            ],
+            "user": [
+                "user/id",
+                "google-apps|daniel@w3t.se"
+            ],
+            "files": [
+                [
+                    "file/id",
+                    "64c81bc9-5836-4186-9c0e-3a5a76762782"
+                ]
+            ]
+        },
+        "modal": {
+            "comp/id": "modal",
+            "node": {
+                "node/x": 0,
+                "node/y": 0
+            },
+            "selected": "none"
+        }
+    },
+    "component/id": {
+        "alert": {
+            "component/id": "alert",
+            "type": "default",
+            "message": "",
+            "interval": 3000,
+            "title": "Info",
+            "visible?": false
+        }
+    },
+    "dashboard/id": {
+        "2d49757f-3386-4457-99d6-831cd2f46395": {
+            "description": "An interactive Dashboard with callable API endpoints, Data Transformations and Visualizations!",
+            "dashboard/id": "2d49757f-3386-4457-99d6-831cd2f46395",
+            "datas": [],
+            "buttons": [],
+            "color": {
+                "r": 29,
+                "g": 32,
+                "b": 38,
+                "a": 1
+            },
+            "transformations": [],
+            "texts": [],
+            "name": "New Dashboard",
+            "type": "dashboard",
+            "tables": [],
+            "timers": [],
+            "locations": [],
+            "datasources": [],
+            "graphs": [],
+            "visualizations": [],
+            "grids": [],
+            "queries": [],
+            "parameters": []
+        },
+        "2e9aa426-9da3-4d1b-9e62-c8a46ada88ed": {
+            "description": "",
+            "dashboard/id": "2e9aa426-9da3-4d1b-9e62-c8a46ada88ed",
+            "datas": [],
+            "transformations": [],
+            "texts": [],
+            "name": "Dashboard",
+            "tables": [],
+            "timers": [],
+            "datasources": [],
+            "graphs": [],
+            "visualizations": [],
+            "grids": [],
+            "queries": []
+        },
+        "64c81bc9-5836-4186-9c0e-3a5a76762782": {
+            "description": "An interactive Dashboard with callable API endpoints, Data Transformations and Visualizations!",
+            "dashboard/id": "64c81bc9-5836-4186-9c0e-3a5a76762782",
+            "datas": [],
+            "buttons": [],
+            "color": {
+                "r": 29,
+                "g": 32,
+                "b": 38,
+                "a": 1
+            },
+            "transformations": [],
+            "texts": [],
+            "name": "New Dashboard",
+            "type": "dashboard",
+            "tables": [],
+            "timers": [],
+            "locations": [],
+            "datasources": [
+                [
+                    "datasource/id",
+                    "78f8f587-d849-498d-b37e-4290254a0ef4"
+                ]
+            ],
+            "graphs": [],
+            "visualizations": [],
+            "grids": [],
+            "queries": [],
+            "parameters": []
+        }
+    },
+    "file/id": {
+        "64c81bc9-5836-4186-9c0e-3a5a76762782": {
+            "file/id": "64c81bc9-5836-4186-9c0e-3a5a76762782",
+            "file/type": "init",
+            "file/path": "",
+            "file/name": "dashboard.see",
+            "file/dashboard": [
+                "dashboard/id",
+                "64c81bc9-5836-4186-9c0e-3a5a76762782"
+            ],
+            "file/share": null,
+            "file/owner": [
+                "user/id",
+                "google-apps|daniel@w3t.se"
+            ],
+            "file/location": null
+        },
+        "fe9094bd-438d-4fe6-80d4-04f4e61c9baa": {
+            "file/id": "fe9094bd-438d-4fe6-80d4-04f4e61c9baa",
+            "file/type": "local"
+        }
+    },
+    "user/id": {
+        "google-apps|daniel@w3t.se": {
+            "user/https://seebra.io/subscription": "sub_1RBC5yP7NtL1ENwV0chBNsDi",
+            "user/https://seebra.io/google_access_token": "ya2vlahblahlbah17",
+            "user/https://seebra.io/app_metadata": {},
+            "user/given_name": "Daniel",
+            "user/family_name": "Hermansson",
+            "user/nickname": "daniel",
+            "user/name": "Daniel Hermansson",
+            "user/picture": "https://lh3.googleusercontent.com/a/ACg8ocKjM4zNS8SJI3l2dbSfNGiE_TgZMvqEDr0IOyUFL3QPcuM3Mg=s96-c",
+            "user/updated_at": "2025-09-06T15:48:58.066Z",
+            "user/email": "daniel@w3t.se",
+            "user/email_verified": true,
+            "user/sub": "google-apps|daniel@w3t.se",
+            "user/id": "google-apps|daniel@w3t.se",
+            "user/session": true
+        }
+    },
+    "datasource/id": {
+        "78f8f587-d849-498d-b37e-4290254a0ef4": {
+            "datasource/id": "78f8f587-d849-498d-b37e-4290254a0ef4",
+            "datasource/type": "openapi",
+            "datasource/headers": "{}",
+            "datasource/name": "Data source",
+            "datasource/node": {
+                "node/x": 644,
+                "node/y": 375
+            }
+        }
+    }
+}
