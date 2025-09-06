@@ -19,7 +19,8 @@
   (let [[store setStore] (createStore {})
         [registry setRegistry] (createStore {})]
     (set! AppContext ctx)
-    (when js/import.meta.env.DEV
+    (when (and (.-env js/import.meta)
+               (.-DEV js/import.meta.env))
       (set! (.-store js/window) store)
       (set! (.-comps js/window) registry)
       (set! (.-level cb/consola) 4))

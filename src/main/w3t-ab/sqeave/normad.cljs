@@ -4,7 +4,7 @@
             ["solid-js/store" :refer [reconcile]]
             ["solid-js" :refer [batch]]))
 
-(defn ident? [data]
+#_(defn ident? [data]
   (if (vector? data)
     (if (string? (first data))
       (and
@@ -13,6 +13,17 @@
        (or (number? (second data)) (string? (second data)) (undefined? (second data))))
       false)
     false))
+
+(def ^:private id-suffix "/id")
+
+(defn ident? [x]
+  (and (vector? x)
+       (= (count x) 2)
+       (let [k (first x) v (second x)]
+         (and (string? k)
+              (.endsWith k id-suffix)
+              (or (number? v) (string? v) (undefined? v))))))
+
 
 (defn traverse-and-transform [item setStore]
   (cond
@@ -28,9 +39,79 @@
 
     :else item))
 
+;; stable, per-table accumulator
+(defn- normalize* [x]
+  (let [acc (js-obj)]
+    (letfn [(put! [table id m]
+              (let [id    (str id)             ;; **coerce id to string** to avoid 1 vs "1"
+                    tbl   (or (aget acc table) (js-obj))
+                    prev  (aget tbl id)
+                    row   (js/Object.assign (js-obj) prev m)]
+                (aset tbl id row)
+                (aset acc table tbl)))
+            (walk [v]
+              (cond
+                (vector? v) (mapv walk v)
+                (map? v)
+                (let [ident (u/get-ident v)    ;; returns [:comp/id 1] etc.
+                      m     (reduce-kv (fn [o k val] (assoc o k (walk val))) {} v)]
+                  (if (and (vector? ident) (= 2 (count ident)))
+                    (do (put! (first ident) (second ident) m) ident)
+                    m))
+                :else v))]
+      (let [root* (walk x)]
+        [acc root*]))))
+
+(defn add [{:keys [setStore store] :as ctx} & data]
+  (when-let [input (first data)]
+    (let [[acc root*] (normalize* input)]
+      (batch
+        (fn []
+          (doseq [t (js/Object.keys acc)]
+            (let [rows (aget acc t)]
+              ;; 1) ensure table exists once (no copy of big table)
+              (setStore t (fn [tbl] (or tbl #js {})))
+              ;; 2) merge each id only (tiny copy of that row)
+              (doseq [id (js/Object.keys rows)]
+                (let [row (aget rows id)]
+                  ;; either Object.assign:
+                  #_(setStore t id (fn [prev] (js/Object.assign #js {} prev row)))
+                  ;; or, if you prefer Solid's reconciler per row:
+                  (setStore t id (reconcile row #js {:merge true}))))))))
+      root*)))
+
+#_(defn add [{:keys [setStore] :as ctx} & data]
+  (when-let [input (first data)]
+    (let [[acc root*] (normalize* input)]
+      (batch
+        (fn []
+          (doseq [t (js/Object.keys acc)
+                  :let [rows (aget acc t)]]
+            ;; create-or-merge the whole table atomically
+            (setStore t (reconcile rows #js {:merge true})))))
+      root*)))
+
+#_(defn add [{:keys [store setStore] :as ctx} & data]
+  (let [input (or (first data) store)
+        [acc root*] (normalize* input)]
+    (batch
+      (fn []
+        (let [tables (js/Object.keys acc)]
+          
+          ;; Commit table by table
+          (doseq [t tables
+                  :let [rows (aget acc t)]]
+            ;; commit each id for finer invalidation; or merge the whole table at once
+            (doseq [id (js/Object.keys rows)]
+              (let [row (aget rows id)]
+                (setStore t id (fn [prev] (js/Object.assign (js-obj) prev row))))))))
+      )
+    root*))
+
+
 (def acc (atom {}))
 
-(defn add [{:keys [store setStore] :as ctx} & data]
+#_(defn add [{:keys [store setStore] :as ctx} & data]
   (let [res (batch #(traverse-and-transform (or (first data) store) acc))]
     (consola.debug "rr: " res)
     (consola.debug "rr:acc " @acc)
@@ -65,7 +146,7 @@
     #_(consola.debug "store" store)
     res))
 
-(defn pull [store entity query]
+#_(defn pull [store entity query]
   (cond
     (or (nil? entity) (not entity)  (empty? entity)) entity
 
@@ -95,6 +176,150 @@
 
     :else (get entity query)))
 
+
+(defn- resolve-ident [st ident]
+  (if (ident? ident) (get-in st ident) ident))
+
+(defn- pull-one [st entity query]
+  (cond
+    (nil? entity) nil
+
+    (ident? entity)
+    (pull-one st (get-in st entity) query)
+
+    (vector? entity)
+    (mapv #(if (ident? %) (pull-one st % query) %) entity)
+
+    (vector? query)
+    (let [simple (filterv string? query)
+          nested (filterv #(map? %) query)
+          base   (into {} (map (fn [k] [k (pull-one st entity k)]) simple))]
+      (reduce
+        (fn [m mquery]
+          (let [k (first (keys mquery))
+                subq (get mquery k)
+                v (get entity k)]
+            (if (nil? v)
+              m
+              (assoc m k (if (ident? v)
+                           (pull-one st v subq)
+                           (mapv #(pull-one st % subq) v))))))
+        base nested))
+
+
+    (map? query)
+    (let [nk (first (keys query))
+          subq (get query nk)]
+      (when-let [data (get entity nk)]
+        {nk (cond
+              (ident? data)  ;; follow ident
+              (pull store (get-in store data) subq)
+
+              (vector? data) ;; maybe a collection of idents
+              (mapv #(if (ident? %)
+                       (pull store (get-in store %) subq)
+                       (pull store % subq))
+                    data)
+
+          :else
+          (pull store data subq))}))
+
+    (string? query)
+    (get entity query)
+
+    :else entity))
+
+#_(defn pull [store entity query]
+  (pull-one store entity query))
+
+
+;; helpers
+(def ^:private id-suffix "/id")
+(defn ident? [x]
+  (and (vector? x) (= (count x) 2)
+       (let [k (aget x 0)] (and (string? k) (.endsWith k id-suffix)))))
+
+(defn- resolve-entity [store entity]
+  ;; Accepts:
+  ;; - map (already resolved)
+  ;; - ident [:foo/id "1"] -> get-in store
+  ;; - path [:foo/id "1" :foo/bar ...] -> get-in from resolved base
+  ;; - vector of idents -> leave as-is (handled later)
+  (cond
+    (nil? entity) nil
+
+    ;; path: first 2 look like ident, rest are nested fields
+    (and (vector? entity)
+         (>= (count entity) 2)
+         (let [k (aget entity 0)] (and (string? k) (.endsWith k id-suffix))))
+    (let [tbl  (aget entity 0)
+          id   (aget entity 1)
+          base (get-in store [tbl id])
+          rest (when (> (.-length entity) 2)
+                 (.slice entity 2))]
+      (if (and rest (> (.-length rest) 0))
+        (get-in base rest)
+        base))
+
+    ;; ident of length 2
+    (ident? entity)
+    (get-in store entity)
+
+    :else entity))
+
+(defn pull [store entity query]
+  (let [e (resolve-entity store entity)]
+    (cond
+      (nil? e) nil
+
+      ;; NEW: if the resolved value is an ident vector, follow it first
+      (ident? e)
+      (pull store (get-in store e) query)
+
+      ;; If the resolved value is a vector of idents/maps, map with same query
+      (and (vector? e) (pos? (.-length e)))
+      (mapv (fn [it] (if (ident? it) (pull store it query) (pull store it query))) e)
+
+      ;; Vector query: [:a :b {:c [:d]}]
+      (vector? query)
+      (let [simple (vec (filter string? query))
+            nested (vec (filter (fn [x] (not (string? x))) query))
+            out    (reduce (fn [m k] (assoc m k (get e k))) {} simple)]
+        (reduce
+          (fn [m mquery]
+            (let [k   (first (js/Object.keys mquery))
+                  sub (aget mquery k)
+                  v   (get e k)]
+              (if (nil? v)
+                m
+                (assoc m k
+                       (cond
+                         (ident? v)   (pull store v sub)
+                         (vector? v)  (mapv (fn [vv]
+                                              (if (ident? vv)
+                                                (pull store vv sub)
+                                                (pull store vv sub))) v)
+                         :else        (pull store v sub))))))
+          out nested))
+
+      ;; Map query: {:k subquery} -> return wrapped {k ...}
+      (and (map? query) (pos? (.-length (js/Object.keys query))))
+      (let [k   (first (js/Object.keys query))
+            sub (aget query k)
+            v   (get e k)]
+        (when (some? v)
+          {k (cond
+               (ident? v)   (pull store v sub)
+               (vector? v)  (mapv (fn [vv]
+                                    (if (ident? vv)
+                                      (pull store vv sub)
+                                      (pull store vv sub))) v)
+               :else        (pull store v sub))}))
+
+      ;; Scalar key
+      (string? query) (get e query)
+
+      :else e)))
 
 (declare update-uuid-in-map)
 

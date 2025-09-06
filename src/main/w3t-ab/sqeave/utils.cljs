@@ -7,9 +7,22 @@
 (defn object? [o]
   (= (js/typeof o) "object"))
 
-(defn get-ident [data]
+#_(defn get-ident [data]
   (when-let [ident-key (first (filter #(re-find #"/id$" %) (keys data)))]
     [ident-key (get data ident-key)]))
+
+(def ^:private id-suffix "/id")
+
+(defn get-ident [data]
+  (when (some? data)
+    (let [ks  (js/Object.keys data)
+          len (.-length ks)]
+      (loop [i 0]
+        (when (< i len)
+          (let [k (aget ks i)]
+            (if (.endsWith k id-suffix)
+              #js [k (aget data k)]            ;; return first matching ident
+              (recur (inc i)))))))))
 
 (defn get-ns [k]
   (trim (first (string/split (first k) "/"))))
