@@ -18,10 +18,10 @@
     "transact.js",
     "normad.js"
   ],
-    "scripts": {
-	"build": "squint compile src/main/**/**/*{.cljs,.cljc} --extension mjs",
-	"test": "pnpm build && pnpm test:build && vitest --run",
-	"test:build": "squint compile src/test/**/**/*.cljs --extension mjs  && cp -r src/test/w3t-ab/sqeave/data dist/src/test/w3t-ab/sqeave"
+  "scripts": {
+    "build": "squint compile src/main/**/**/*{.cljs,.cljc} --extension mjs",
+    "test": "pnpm build && pnpm test:build && vitest --run",
+    "test:build": "squint compile src/test/**/**/*.cljs --extension mjs  && cp -r src/test/w3t-ab/sqeave/data dist/src/test/w3t-ab/sqeave"
   },
   "dependencies": {
     "consola": "^3.4.2",
@@ -29,9 +29,12 @@
     "solid-js": "^1.9.10"
   },
   "devDependencies": {
+    "@solidjs/testing-library": "^0.8.10",
+    "@testing-library/jest-dom": "^6.9.1",
     "jsdom": "^27.3.0",
     "squint-cljs": "^0.9.182",
     "vite": "^7.3.0",
+    "vite-plugin-solid": "^2.11.10",
     "vitest": "^4.0.16"
   },
   "keywords": [
@@ -42,13 +45,25 @@
     "squint-cljs"
   ],
   "exports": {
-	".": { "import": "./index.mjs" },
-	"./solid": { "import": "./index.mjs" },
-	"./comp": { "import": "./comp.js" },
-	"./normad": { "import": "./normad.js" },
-	"./utils": { "import": "./utils.js" },
-	"./transact": { "import": "./transact.js" }
+    ".": {
+      "import": "./index.mjs"
     },
+    "./solid": {
+      "import": "./index.mjs"
+    },
+    "./comp": {
+      "import": "./comp.js"
+    },
+    "./normad": {
+      "import": "./normad.js"
+    },
+    "./utils": {
+      "import": "./utils.js"
+    },
+    "./transact": {
+      "import": "./transact.js"
+    }
+  },
   "bugs": {
     "url": "https://github.com/w3t_ab/sqeave/issues"
   },
