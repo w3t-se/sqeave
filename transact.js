@@ -1,1 +1,1 @@
-export * from './dist/transact.mjs'
+export * from './dist/w3t-ab/sqeave/transact.mjs'

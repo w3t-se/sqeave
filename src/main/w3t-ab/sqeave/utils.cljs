@@ -7,10 +7,6 @@
 (defn object? [o]
   (= (js/typeof o) "object"))
 
-#_(defn get-ident [data]
-  (when-let [ident-key (first (filter #(re-find #"/id$" %) (keys data)))]
-    [ident-key (get data ident-key)]))
-
 (def ^:private id-suffix "/id")
 
 (defn get-ident [data]
@@ -31,7 +27,7 @@
   (filterv (fn [y] (not (= (second y)
                            (second ident)))) v))
 
-(defn ident?
+#_(defn ident?
   "Check if x is a EQL ident."
   [x]
   (and (vector? x)
@@ -58,6 +54,10 @@
 
 (def camel-case l/camelCase)
 (def kebab-case l/kebabCase)
+
+(defn ident? [x]
+  (and (vector? x) (= (count x) 2)
+       (let [k (aget x 0)] (and (string? k) (.endsWith k id-suffix)))))
 
 (defn pascal-case [s]
   (l/startCase (l/camelCase s)))
@@ -150,6 +150,14 @@
 
 (defn is-uuid? [val]
   (re-matches #"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" val))
+
+(defn unwrap-proxy [data]
+  (cond
+    (array? data) (vec (map unwrap-proxy data))
+    (vector? data) (mapv unwrap-proxy data)
+    (map? data) (into {} (map (fn [[k v]] [k (unwrap-proxy v)]) data))
+    (object? data) (into {} (map (fn [[k v]] [k (unwrap-proxy v)]) data))
+    :else data))
 
 ;; const timeZone = 'America/New_York';
 ;; const zonedDate = utcToZonedTime(now, timeZone);

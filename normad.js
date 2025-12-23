@@ -1,1 +1,1 @@
-export * from './dist/normad.mjs'
+export * from './dist/w3t-ab/sqeave/normad.mjs'

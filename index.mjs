@@ -1,3 +1,3 @@
-export * from './dist/comp.mjs';
-export * from './dist/transact.mjs';
-export * from './dist/utils.mjs';
+export * from './dist/w3t-ab/sqeave/comp.mjs';
+export * from './dist/w3t-ab/sqeave/transact.mjs';
+export * from './dist/w3t-ab/sqeave/utils.mjs';

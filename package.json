@@ -1,6 +1,6 @@
 {
   "name": "@w3t-ab/sqeave",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "description": "A squint-cljs based solid-js framework for building SPAs borrowing ideas from Fulcro.",
   "author": "W3T AB",
   "license": "EPL",
@@ -12,22 +12,27 @@
   "module": "index.mjs",
   "files": [
     "dist",
-    "src/main/w3t-ab/sqeave/sqeave.cljc",
     "index.mjs",
     "comp.js",
     "utils.js",
     "transact.js",
     "normad.js"
   ],
-  "scripts": {},
+    "scripts": {
+	"build": "squint compile src/main/**/**/*{.cljs,.cljc} --extension mjs",
+	"test": "pnpm build && pnpm test:build && vitest --run",
+	"test:build": "squint compile src/test/**/**/*.cljs --extension mjs  && cp -r src/test/w3t-ab/sqeave/data dist/src/test/w3t-ab/sqeave"
+  },
   "dependencies": {
-    "consola": "^3.4.0",
-    "lodash-es": "^4.17.21",
-    "solid-js": "^1.9.5"
+    "consola": "^3.4.2",
+    "lodash-es": "^4.17.22",
+    "solid-js": "^1.9.10"
   },
   "devDependencies": {
-    "squint-cljs": "^0.8.141",
-    "vite": "^6.2.1"
+    "jsdom": "^27.3.0",
+    "squint-cljs": "^0.9.182",
+    "vite": "^7.3.0",
+    "vitest": "^4.0.16"
   },
   "keywords": [
     "vite",
@@ -37,15 +42,13 @@
     "squint-cljs"
   ],
   "exports": {
-    "solid": {
-      "import": "./index.mjs"
+	".": { "import": "./index.mjs" },
+	"./solid": { "import": "./index.mjs" },
+	"./comp": { "import": "./comp.js" },
+	"./normad": { "import": "./normad.js" },
+	"./utils": { "import": "./utils.js" },
+	"./transact": { "import": "./transact.js" }
     },
-    ".": "./index.mjs",
-    "./comp": "./comp.js",
-    "./normad": "./normad.js",
-    "./utils": "./utils.js",
-    "./transact": "./transact.js"
-  },
   "bugs": {
     "url": "https://github.com/w3t_ab/sqeave/issues"
   },

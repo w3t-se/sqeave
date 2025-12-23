@@ -70,14 +70,14 @@
           (doseq [t (js/Object.keys acc)]
             (let [rows (aget acc t)]
               ;; 1) ensure table exists once (no copy of big table)
-              (setStore t (fn [tbl] (or tbl #js {})))
+              (setStore t (fn [tbl] (or tbl  {})))
               ;; 2) merge each id only (tiny copy of that row)
               (doseq [id (js/Object.keys rows)]
                 (let [row (aget rows id)]
                   ;; either Object.assign:
-                  #_(setStore t id (fn [prev] (js/Object.assign #js {} prev row)))
+                  (setStore t id row)
                   ;; or, if you prefer Solid's reconciler per row:
-                  (setStore t id (reconcile row #js {:merge true}))))))))
+                  #_(setStore t id (reconcile row  {:merge true}))))))))
       root*)))
 
 #_(defn add [{:keys [setStore] :as ctx} & data]
@@ -88,7 +88,7 @@
           (doseq [t (js/Object.keys acc)
                   :let [rows (aget acc t)]]
             ;; create-or-merge the whole table atomically
-            (setStore t (reconcile rows #js {:merge true})))))
+            (setStore t (reconcile rows  {:merge true})))))
       root*)))
 
 #_(defn add [{:keys [store setStore] :as ctx} & data]
@@ -196,7 +196,7 @@
           base   (into {} (map (fn [k] [k (pull-one st entity k)]) simple))]
       (reduce
         (fn [m mquery]
-          (let [k (first (keys mquery))
+          (let [k (first (js/Object.keys mquery))
                 subq (get mquery k)
                 v (get entity k)]
             (if (nil? v)
@@ -208,7 +208,7 @@
 
 
     (map? query)
-    (let [nk (first (keys query))
+    (let [nk (first (js/Object.keys query))
           subq (get query nk)]
       (when-let [data (get entity nk)]
         {nk (cond
@@ -234,10 +234,6 @@
 
 
 ;; helpers
-(def ^:private id-suffix "/id")
-(defn ident? [x]
-  (and (vector? x) (= (count x) 2)
-       (let [k (aget x 0)] (and (string? k) (.endsWith k id-suffix)))))
 
 (defn- resolve-entity [store entity]
   ;; Accepts:
