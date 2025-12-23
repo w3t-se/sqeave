@@ -11,7 +11,7 @@
   "type": "module",
   "module": "index.mjs",
   "files": [
-    "dist",
+      "dist",
     "index.mjs",
     "comp.js",
     "utils.js",
@@ -19,7 +19,7 @@
     "normad.js"
   ],
   "scripts": {
-    "build": "squint compile src/main/**/**/*{.cljs,.cljc} --extension mjs",
+    "build": "squint compile src/main/**/**/*.cljs --extension mjs && cp src/main/w3t-ab/sqeave/*.cljc dist/w3t-ab/sqeave/",
     "test": "pnpm build && pnpm test:build && vitest --run",
     "test:build": "squint compile src/test/**/**/*.cljs --extension mjs  && cp -r src/test/w3t-ab/sqeave/data dist/src/test/w3t-ab/sqeave"
   },

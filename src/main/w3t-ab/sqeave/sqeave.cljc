@@ -73,32 +73,37 @@
 
                 (list 'first-render ['this# 'props]
                       (list 'let [(first bindings) 'this#
+                                  'ident$ (list 'sqeave/createMemo
+                                           (list 'fn []
+                                             (list 'let ['i (list 'get 'props :ident)]
+                                               (list 'if (list 'fn? 'i) (list 'i) 'i))))
+                                  '_ (list 'set! 'this#.ident 'ident$)
                                   '_ (list 'sqeave/debug "render: " ntmp " props: " 'props)
                                   'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
 
-                                  '_ (list 'sqeave/debug ntmp ": p " 'props " i: " 'this#.ident " q: " query " ctx:" 'ctx " exists:" (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident)))
+                                  '_ (list 'sqeave/debug ntmp ": p " 'props " i: " (list 'this#.ident) " q: " query " ctx:" 'ctx " exists:" (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first (list 'this#.ident))))
                                   ;['force 'setForce] (list 'sqeave/createSignal false)
-                                        ;'_ (list 'set! 'this#.ident 'ident)
+                                        ;'_ (list 'set! (list 'this#.ident) 'ident)
                                   {:keys ['store 'setStore]} 'ctx
 
-                                  #_'data #_(list 'sqeave/remove-nil (list 'sqeave/pull (list 'get 'ctx :store) (list 'if (list 'empty? 'this#.ident)
-                                                                                                                      (list 'get 'ctx :store) 'this#.ident)
+                                  #_'data #_(list 'sqeave/remove-nil (list 'sqeave/pull (list 'get 'ctx :store) (list 'if (list 'empty? (list 'this#.ident))
+                                                                                                                      (list 'get 'ctx :store) (list 'this#.ident))
                                                                            query))
 
-                                  '_ (list 'if-not (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident))
-                                           (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
-                                                                                               {(list 'first 'this#.ident) (list 'second 'this#.ident)})))
-                                           (list 'if-not (list 'js/Reflect.has (list 'get-in 'ctx [:store (list 'first 'this#.ident)]) (list 'second 'this#.ident))
-                                                 (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
-                                                                                                     {(list 'first 'this#.ident) (list 'second 'this#.ident)})))))
+                                  '_ (list 'if-not (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first (list 'this#.ident)))
+                                           (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second (list 'this#.ident)))
+                                                                                               {(list 'first (list 'this#.ident)) (list 'second (list 'this#.ident))})))
+                                           (list 'if-not (list 'js/Reflect.has (list 'get-in 'ctx [:store (list 'first (list 'this#.ident))]) (list 'second (list 'this#.ident)))
+                                                 (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second (list 'this#.ident)))
+                                                                                                     {(list 'first (list 'this#.ident)) (list 'second (list 'this#.ident))})))))
 
                                   #_'data #_(list 'if-not (list 'empty? query)
                                                   (list 'let ['data (list 'sqeave/createMemo (list 'fn []
                                                                                                    #_(list 'force)
-                                                                                                   (list 'sqeave/debug "memo: " ntmp " ident: " 'this#.ident " query: " query)
-                                                                                                   (list 'let ['data (list 'sqeave/pull (list 'get 'ctx :store) (list 'if (list 'empty? 'this#.ident)
-                                                                                                                                                                      (list 'get 'ctx :store) 'this#.ident) query)]
-                                                                                                         (list 'sqeave/debug "memo: " ntmp " ident: " 'this#.ident "data: " 'data)
+                                                                                                   (list 'sqeave/debug "memo: " ntmp " ident: " (list 'this#.ident) " query: " query)
+                                                                                                   (list 'let ['data (list 'sqeave/pull (list 'get 'ctx :store) (list 'if (list 'empty? (list 'this#.ident))
+                                                                                                                                                                      (list 'get 'ctx :store) (list 'this#.ident)) query)]
+                                                                                                         (list 'sqeave/debug "memo: " ntmp " ident: " (list 'this#.ident) "data: " 'data)
                                                                                                          'data)))]
 
                                                         #_(list 'sqeave/debug "nn:" (list 'data) ":" (list 'sqeave/remove-nil (list 'data)))
@@ -107,10 +112,10 @@
                                                   (list 'fn [] 'props))
                                   'val-v (list 'mapv (list 'fn ['x]
                                                            (list 'if-not (list 'map? 'x)
-                                                                 (list 'sqeave/createMemo (list 'fn [] (list 'get-in 'ctx [:store (list 'first 'this#.ident) (list 'second 'this#.ident) 'x])))
+                                                                 (list 'sqeave/createMemo (list 'fn [] (list 'get-in 'ctx [:store (list 'first (list 'this#.ident)) (list 'second (list 'this#.ident)) 'x])))
                                                                  (list 'sqeave/createMemo (list 'fn []
                                                                                                 (list 'sqeave/pull (list 'get 'ctx :store)
-                                                                                                      [(list 'first 'this#.ident) (list 'second 'this#.ident) (list 'first (list 'keys 'x))]
+                                                                                                      [(list 'first (list 'this#.ident)) (list 'second (list 'this#.ident)) (list 'first (list 'keys 'x))]
                                                                                                       (list 'first (list 'vals  'x)))))))
                                                query #_(mapv keywordify val-vec))
                                   val-vec 'val-v
