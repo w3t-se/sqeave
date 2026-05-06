@@ -14,7 +14,7 @@ Why squint-cljs and not ClojureScript? The main plus is that we want to have mor
 
 ## Template Quickstart
 ``` shell
-mkdir sqeave-app && cd sqeave-app && pnpm create @w3t-ab/sqeave && pnpm i && pnpm vite
+pnpm create @w3t-ab/sqeave && cd sqeave-app && pnpm i && pnpm vite
 ```
 
 ## Non-template Quickstart
