@@ -31,9 +31,9 @@
   "devDependencies": {
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.9.1",
-    "jsdom": "^27.4.0",
-    "squint-cljs": "^0.9.184",
-    "vite": "^7.3.2",
+    "jsdom": "^29.1.1",
+    "squint-cljs": "^0.11.189",
+    "vite": "^8.0.10",
     "vite-plugin-solid": "^2.11.12",
     "vitest": "^4.1.5"
   },
