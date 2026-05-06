@@ -4,57 +4,32 @@
             ["solid-js" :as s :refer [Switch Match]])
   (:require-macros [sqeave :refer [defc]]))
 
-#_(when (.-hot js/import.meta)
-  (.accept (.-hot js/import.meta) (fn []
-                                    (set! js/window.hot true))))
-
-(defc Main2 [this {:main/keys [id count] :or {id (sqeave/uuid) count 0}}]
-  #_(s/onMount (fn [] (println "asda")))
-  #jsx [:div {} "Hello Sqeave Main2: " (id)
-        [:button {:onClick #(do (println "asd:" this) (sqeave/set! this :main/count (inc (count))))} "Plus"]
-        [:p {} "Count: " (count)]])
-
-(defc Main4 [this {:main/keys [id count] :or {id (sqeave/uuid) count 0}}]
-  #_(s/onMount (fn [] (println "asda")))
-  #jsx [:div {} "Hello Sqeave Mai4: "
+(defc Main1 [this {:main/keys [id count] :or {id 1 count 0}}]
+  #jsx [:div {} "Hello Sqeave Main " (id)
         [:button {:onClick #(sqeave/set! this :main/count (inc (count)))} "Plus"]
-        [:p {} "Count: " (count)]])
+        [:p {} "Main 1 Count: " (count)]])
 
-(defc Main3 [this {:dido/keys [id count] :or {id (sqeave/uuid) count 0}}]
-  (let [[type setType] (s/createSignal :local-store)
-        cid2c {:local-store (fn [props] #jsx [Main2 {:& {:ident [:main/id 123]}}])
-               :openapi (fn [props]
-                          #jsx [Main4 {:& {:ident [:main/id 321]}}])}]
-    #jsx [:div {} "Hello Sqeave Main3: " (second this.ident)
-          [:button {:onClick #(do
-                                (setType :openapi)
-                                (sqeave/set! this :dido/count (inc (count))))} "Plus"]
-          [:button {:onClick #(do
-                                (setType :local-store))} "local-store"]
-          [:p {} "Count: " (count)]
-          #_[Dynamic {:& {:component (get cid2c (type))
-                          :ident this.ident}}]
+(defc Main2 [this {:main/keys [id count] :or {id 2 count 0}}]
+  #jsx [:div {} "Hello Sqeave Main " (id)
+        [:button {:onClick #(sqeave/set! this :main/count (inc (count)))} "Plus"]
+        [:p {} "Main 2 Count: " (count)]])
 
-          [Switch {:fallback (fn [] #jsx [:div {} "NFaa"])}
-           [Match {:when (= (type) :local-store)}
-            #jsx [Main2 {:& {:ident [:main/id 123]}}]]
-           [Match {:when (= (type) :local-store)}
-            #jsx [Main4 {:& {:ident [:main/id 321]}}]]]]))
+(defc Main3 [this {:main/keys [id count] :or {id (sqeave/uuid) count 0}}]
+  (let [[type setType] (s/createSignal :main1)
+        cid2c {:main1 {:comp Main1 :ident [:main/id 1]}
+               :main2 {:comp Main2 :ident [:main/id 2]}}]
+    #jsx [:div {} "Hello Sqeave Main " (id)
+          [:button {:onClick #(setType :main1)} "Show Main1"]
+          [:button {:onClick #(setType :main2)} "Show Main2"]
+          [:button {:onClick #(sqeave/set! this :main/count (inc (count)))} "Plus"]
+          [:p {} "Main 3 Count: " (count)]
+
+          [Dynamic {:& {:component (get-in cid2c [(type) :comp])
+                        :ident (get-in cid2c [(type) :ident])}}]]))
 
 (defc Main [this {:main/keys [id count] :or {id (sqeave/uuid) count 0}}]
-  (let [[mains setMains] (s/createSignal [])
-        onClick (fn [e] (do
-                          #_(println "st: " this)
-                          (setMains (conj (mains) [:main/id 123]))
-                          #_(this.ctx.setStore (assoc-in this.ctx.store [:main/id 0 :main/count] (sqeave/uuid)))
-                          #_(sqeave/set! this :main/count (inc (count)))))]
-
-    #jsx [:div {} "Hello Sqeave Mainaa: " this.ident
-          [:button {:onClick onClick} "Plus"]
-          [:p {} "Count: " (count)]
-          [s/For {:each (mains)}
-           (fn [node _]
-             #jsx [Main2 {:ident node}])]
-          [Main3 {:ident [:dido/id :main]}]
-          [Main3 {:ident [:dido/id 2]}]
-          [Main3 {:ident [:dido/id 2]}]]))
+  #jsx [:div {}
+        [:h1 "Hello Sqeave Main " (id)]
+        [Main3 {:ident [:main/id "abc"]}]
+        [:h2 {} "Store"]
+        (js/JSON.stringify (get-in this [:ctx :store]) nil 1)])

@@ -14,13 +14,13 @@ Why squint-cljs and not ClojureScript? The main plus is that we want to have mor
 
 ## Template Quickstart
 ``` shell
-mkdir sqeave-app && cd sqeave-app && pnpm create @w3t-ab/sqeave
+mkdir sqeave-app && cd sqeave-app && pnpm create @w3t-ab/sqeave && pnpm i && pnpm vite
 ```
 
 ## Non-template Quickstart
 ``` shell
 mkdir -p sqeave-app/src/main && cd sqeave-app
-pnpm init esnext -y
+pnpm create esnext
 pnpm install @w3t-ab/sqeave @w3t-ab/vite-plugin-squint vite vite-plugin-solid
 ```
 
@@ -36,7 +36,7 @@ add a src/main/index.cljs file with a basic root component:
 (def AppContext (createContext))
 
 (defc Root [this {:keys [] :or {} :ctx (sqeave/init-ctx! AppContext)}]
-  #jsx [AppContext.Provider {:value this.-ctx}
+  #jsx [AppContext.Provider {:value this.ctx}
         [Main {:ident [:main/id 0]}]])
 
 (let [e (js/document.getElementById "root")]
@@ -92,7 +92,7 @@ export default defineConfig({
 and finally a squint.edn file:
 
 ```clojure
-{:paths ["src/main" "node_modules/@w3t-ab/sqeave/src/main/w3t-ab/sqeave" "resources"]
+{:paths ["src/main" "node_modules/@w3t-ab/sqeave/dist/w3t-ab/sqeave" "resources"]
  :output-dir "dist"}
 ```
 Now run:

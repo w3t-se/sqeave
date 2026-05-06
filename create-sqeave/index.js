@@ -40,4 +40,4 @@ console.log("Installing dependencies...");
 execSync("pnpm install", { stdio: "inherit" });
 
 console.log("Project created successfully!");
-console.log("Run 'pnpx vite' to start the dev server at http://localhost:5173!");
+console.log("Run 'pnpm vite' to start the dev server at http://localhost:5173!");

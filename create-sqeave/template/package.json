@@ -12,11 +12,11 @@
   "devDependencies": {
     "@w3t-ab/sqeave": "file:../..",
     "@w3t-ab/vite-plugin-squint": "^0.0.5",
-    "squint-cljs": "^0.8.137",
-    "vite": "^6.2.0",
-    "vite-plugin-solid": "^2.11.6"
+    "squint-cljs": "^0.11.189",
+    "vite": "^8.0.10",
+    "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "solid-js": "^1.9.5"
+    "solid-js": "^1.9.12"
   }
 }

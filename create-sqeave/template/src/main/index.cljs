@@ -7,20 +7,10 @@
 
 (def AppContext (createContext))
 
-(sqeave/init-ctx! AppContext)
-
 (defc Root [this {:keys [] :or {} :ctx (sqeave/init-ctx! AppContext)}]
   #jsx [AppContext.Provider {:value this.ctx}
         [Main {:ident [:main/id 0]}]])
 
-#_(let [e (js/document.getElementById "root")]
-  (render Root e))
-
-
-(let [e (js/document.getElementById "root")
-      #_ri #_(app/RootClass. (sqeave/init-ctx! sqeave/AppContext))]
+(let [e (js/document.getElementById "root")]
   (set! (aget e :innerHTML) "")
-  #_(println "ctx: " ri.-ctx)
-  #_(render (.render ri app/RootFn) e)
-  (render (fn [] #jsx [:div {:class "w-full h-full"}
-                       [Root {}]]) e))
+  (render Root e))
