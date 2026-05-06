@@ -1,6 +1,6 @@
 {
   "name": "@w3t-ab/sqeave",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A squint-cljs based solid-js framework for building SPAs borrowing ideas from Fulcro.",
   "author": "W3T AB",
   "license": "EPL",
@@ -11,7 +11,7 @@
   "type": "module",
   "module": "index.mjs",
   "files": [
-      "dist",
+    "dist/w3t-ab/sqeave",
     "index.mjs",
     "comp.js",
     "utils.js",
@@ -25,17 +25,17 @@
   },
   "dependencies": {
     "consola": "^3.4.2",
-    "lodash-es": "^4.17.22",
-    "solid-js": "^1.9.10"
+    "lodash-es": "^4.18.1",
+    "solid-js": "^1.9.12"
   },
   "devDependencies": {
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.9.1",
-    "jsdom": "^27.3.0",
-    "squint-cljs": "^0.9.182",
-    "vite": "^7.3.0",
-    "vite-plugin-solid": "^2.11.10",
-    "vitest": "^4.0.16"
+    "jsdom": "^27.4.0",
+    "squint-cljs": "^0.9.184",
+    "vite": "^7.3.2",
+    "vite-plugin-solid": "^2.11.12",
+    "vitest": "^4.1.5"
   },
   "keywords": [
     "vite",

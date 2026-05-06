@@ -1,4 +1,4 @@
-!["LIGHTWEIGHT, baby!!! -- Ronnie Coleman"](https://bafkreics5ptu5524ld2wxc2bfjt2vuzmovpmgcheo2fihned2rz5rtgm2q.ipfs.flk-ipfs.xyz/)
+"To Sqeave is to Sweave with a squinting squeal." -- Highly enlightened asquaragus
 
 # Sqeave - SolidJS meets Squint-cljs
 This is a fullstack framework heavily inspired by the great Fulcro (and it's predecessor OM) trying to bring Clojure(Script)-syntax into the SolidJS-world (or maybe vice-versa). 
