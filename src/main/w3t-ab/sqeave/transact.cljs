@@ -1,7 +1,7 @@
 (ns transact
   (:require ["./normad.mjs" :as n]
             ["./utils.mjs" :as u]
-            ["consola/browser" :refer [consola]]))
+            ["./log.mjs" :as log]))
 
 #_(defn rec-add [path value]
   (loop [p (first path)
@@ -39,7 +39,7 @@
     (f)
     (catch js/Error e
       (alert-error ctx e)
-      (consola.error e))))
+      (log/error e))))
 
 (defn set-field! [{:keys [store setStore] :as ctx} value {:keys [append replace check-session?] :or {append false replace false check-session? false}  :as param}]
   (wrap-session ctx check-session?
@@ -52,7 +52,7 @@
                                  #(identity value))]
                     (apply setStore (conj path (fn [x] (action x))))
                     #_(when (u/uuid? (second ident))
-                        (consola.debug "uuid:" ident)
+                        (log/debug "uuid:" ident)
                         (setStore (first ident) (second ident)
                                   (fn [x]
                                     (let [p (or (:uuid/paths x) [])]
@@ -67,7 +67,7 @@
                   (apply setStore (conj path (fn [x] (try
                                                        (u/remove-ident ident x)
                                                        (catch js/Error e
-                                                         (consola.error e)
+                                                         (log/error e)
                                                          x))))))))
 
 (defn add! [{:keys [store setStore] :as ctx} value {:keys [append replace after check-session?] :or {append false replace false after
@@ -79,7 +79,12 @@
                    (if after
                      (after)))))
 
-(defn remove-entity! [])
+(defn remove-entity! [{:keys [store setStore] :as ctx} ident {:keys [append replace after check-session?]
+                                                              :or {append false replace false after
+                                                                   false check-session? false} :as params}]
+  (wrap-session ctx check-session?
+                (fn []
+                  (apply setStore (dissoc ident)))))
 
 (defn swap-uuids! [{:keys [store setStore] :as ctx} ident stream-id]
   (let [n1 (first ident)
@@ -89,7 +94,7 @@
         paths (get obj :uuid/paths)]
     (setStore (first ident) (fn [x]
                               (assoc x stream-id new-obj)))
-    (consola.debug "path: " paths)
+    (log/debug "path: " paths)
     (mapv #(apply setStore (conj % (fn [x]
                                      (if (u/ident? x)
                                        new-ident

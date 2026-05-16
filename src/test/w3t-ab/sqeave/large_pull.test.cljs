@@ -37,14 +37,16 @@
       (let [{:keys [store]} (make-ctx-from-json JSON_PATH)
 
             ;; start from FILE and jump to its dashboard entity
-            entity  #js [:file/id "64c81bc9-5836-4186-9c0e-3a5a76762782" :file/dashboard]
+            entity   [:file/id "64c81bc9-5836-4186-9c0e-3a5a76762782"]
 
             ;; Nested pull: dashboard -> queries -> each query's datasource (resolve ident!)
-            query   #js [:dashboard/id
-                         :dashboard/name
-                         #js {:queries #js [:query/id
-                                           :query/name
-                                           #js {:query/datasource #js [:datasource/id :datasource/name]}]}]
+            query    [:file/id
+                           {:file/dashboard
+                            [:dashboard/id
+                             :dashboard/name
+                              {:queries  [:query/id
+                                                :query/name
+                                                 {:query/datasource  [:datasource/id :datasource/name]}]}]}]
 
             res     (n/pull store entity query)]
 
@@ -78,12 +80,14 @@
     (fn []
       (when RUN_BENCH
         (let [{:keys [store]} (make-ctx-from-json JSON_PATH)
-              entity  #js [:file/id "64c81bc9-5836-4186-9c0e-3a5a76762782" :file/dashboard]
-              query   #js [:dashboard/id
-                           :dashboard/name
-                           #js {:queries #js [:query/id
-                                             :query/name
-                                             #js {:query/datasource #js [:datasource/id :datasource/name]}]}]
+              entity   [:file/id "64c81bc9-5836-4186-9c0e-3a5a76762782"]
+              query    [:file/id
+                           {:file/dashboard
+                            [:dashboard/id
+                             :dashboard/name
+                              {:queries  [:query/id
+                                                :query/name
+                                                 {:query/datasource  [:datasource/id :datasource/name]}]}]}]
               reps    2000
               t0      (now-ms)]
           (dotimes [tmp reps]
@@ -91,7 +95,7 @@
           (let [t1  (now-ms)
                 dt  (- t1 t0)
                 per (/ dt reps)]
-            (consola.info
+            (println
               (str "⏱  pull x" reps " took " (js/Math.round dt) " ms ("
                    (.toFixed per 3) " ms/call)"))
             ;; keep Vitest happy that the test actually ran

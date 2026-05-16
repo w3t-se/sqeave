@@ -5,7 +5,7 @@
             ["./normad.mjs" :as n]
             ["./transact.mjs" :as t]
             ["./utils.mjs" :as u]
-            ["consola/browser" :as cb]
+            ["./log.mjs" :as log]
             [squint.core :refer [defclass]]))
 
 (def remotes (atom {}))
@@ -15,15 +15,13 @@
 #_(def ComponentRegistry (atom {}))
 
 (defn init-ctx! [ctx]
-  #_(set! consola.level "info")
   (let [[store setStore] (createStore {})
         [registry setRegistry] (createStore {})]
     (set! AppContext ctx)
     (when (and (.-env js/import.meta)
                (.-DEV js/import.meta.env))
       (set! (.-store js/window) store)
-      (set! (.-comps js/window) registry)
-      (set! (.-level cb/consola) 4))
+      (set! (.-comps js/window) registry))
     {:store store :setStore setStore :registry registry :setRegistry setRegistry}))
 
 (defn viewer-ident [this]
@@ -69,19 +67,19 @@
       (if (:query remote)
         (cu/execute-gql-query (:query remote) (:vals remote))))
     (when add
-      (cb/consola.debug "running add with data: " (this.new-data))
+      (log/debug "running add with data: " (this.new-data))
       (t/add! this.ctx (if (= add :new) (this.new-data) add) opts))
     (when remove
       (t/remove-ident! this.ctx (:from mutate-map) remove))))
 
 (defn set!
   ([this ident field event]
-   (cb/consola.debug "this: " this)
+   (log/debug "this: " this)
    (t/set-field! this.ctx (or (u/e->v event) event) {:replace (conj ident field)}))
   ([this field event]
-   (cb/consola.debug "this: " this)
-   (cb/consola.debug "event: "  (or (u/e->v event) event))
-   (cb/consola.debug "replace: " (conj this.ident field))
+   (log/debug "this: " this)
+   (log/debug "event: "  (or (u/e->v event) event))
+   (log/debug "replace: " (conj this.ident field))
    (t/set-field! this.ctx (or (u/e->v event) event) {:replace (conj this.ident field)})))
 
 (defn remove-nil [my-map]
@@ -93,12 +91,11 @@
 (def createMemo solid/createMemo)
 (def createSignal solid/createSignal)
 (def onMount solid/onMount)
-(def debug cb/consola.debug)
+(def debug log/debug)
 (def ErrorBoundary solid/ErrorBoundary)
 (def createComponent solid-web/createComponent)
 (def onCleanup solid/onCleanup)
-(def warn cb/consola.warn)
-(def consola cb/consola)
+(def warn log/warn)
 (def getOwner solid/getOwner)
 (def runWithOwner solid/runWithOwner)
 (def remove-nil remove-nil)

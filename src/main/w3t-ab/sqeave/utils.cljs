@@ -2,7 +2,7 @@
   (:require [squint.string :as string]
             ["solid-js" :as solid]
             ["lodash-es" :as l :refer [trim camelCase kebabCase startCase]]
-            ["consola/browser" :refer [consola]]))
+            ["./log.mjs" :as log]))
 
 (defn object? [o]
   (= (js/typeof o) "object"))
@@ -83,7 +83,7 @@
   (.substring s (- (aget s :length) 8)))
 
 (defn distribute [f m]
-  #_(consola.debug "this is a map...:" (map? m) " " m)
+  #_(log/debug "this is a map...:" (map? m) " " m)
   (cond (vector? m) (f (mapv #(distribute f %) m))
         (or (map? m) (object? m)) (f (zipmap (keys m) (mapv #(distribute f %) (vals m))))
 
@@ -95,7 +95,7 @@
 
 (defn add-ns [data]
   (distribute (fn [e]
-                #_(consola.debug "edges:1: " e (contains? e :edges))
+                #_(log/debug "edges:1: " e (contains? e :edges))
                 (cond
                   (contains? e :edges) (add-ns (vals (get e :edges)))
                   (contains? e :node) (add-ns (get e :node))
@@ -115,7 +115,7 @@
   [key]
   (try
     (js/JSON.parse (.getItem (.-localStorage js/window) key))
-    (catch js/Error e (consola.error (str "could net get item: " key " ") e) nil)))
+    (catch js/Error e (log/error (str "could net get item: " key " ") e) nil)))
 
 (defn remove-item!
   "Remove the browser's localStorage value for the given `key`"
@@ -132,7 +132,7 @@
   [key]
   (try
     (js/JSON.parse (.getItem (.-sessionStorage js/window) key))
-    (catch js/Error e (consola.error (str "could net get item: " key " ") e) nil)))
+    (catch js/Error e (log/error (str "could net get item: " key " ") e) nil)))
 
 (defn remove-session-item!
   "Remove the browser's localStorage value for the given `key`"

@@ -19,7 +19,8 @@
 
         val-keys (mapv keyword val-vec)
 
-        or-map (let [m (-> bindings second :or)]
+        or-map (let [m (-> bindings second :or)
+                     m (if (fn? m) (m) m)]
                  (zipmap (mapv keywordify (keys m)) (vals m)))
 
         local-map (let [m (-> bindings second :local)]
@@ -76,7 +77,7 @@
                                   '_ (list 'sqeave/debug "render: " ntmp " props: " 'props)
                                   'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
 
-                                  '_ (list 'sqeave/debug ntmp ": p " 'props " i: " 'this#.ident " q: " query " ctx:" 'ctx " exists:" (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident)))
+                                  ;'_ (list 'sqeave/debug ntmp ": p " 'props " i: " 'this#.ident " q: " query " ctx:" 'ctx " exists:" (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident)))
                                   ;['force 'setForce] (list 'sqeave/createSignal false)
                                         ;'_ (list 'set! 'this#.ident 'ident)
                                   {:keys ['store 'setStore]} 'ctx
@@ -125,7 +126,7 @@
                             #_(list 'set! 'this#.data 'data)
                             (list 'set! 'this#.val-vec 'val-v)
                             (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))
-                            (list 'sqeave/debug "thiss: " 'this#  "ctc: " 'ctx " m: " (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj val-vec 'this# 'props 'ctx)))
+                            ;(list 'sqeave/debug "thiss: " 'this#  "ctc: " 'ctx " m: " (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj val-vec 'this# 'props 'ctx)))
 
                             #_(list 'squint-compiler-jsx
                                     ['sqeave/ErrorBoundary {:fallback (list 'fn ['err 'reset]
@@ -147,7 +148,7 @@
                 (list 'render ['this# 'body 'props]
                       #_(list 'this#.setForce (list 'not (list 'this#.force)))
                       #_(list  'this#.val-vec val-keys)
-                      (list 'sqeave/debug "this:d" (list 'this#.data))
+                      (list 'sqeave/debug "this:data" (list 'this#.data))
                       (list 'let ['local-map-k (vec (keys local-map))
                                   'local-map-k (mapv #(list 'fn [] (list % (list 'this#.local))) (keys local-map))]
                             (list 'body (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj 'this#.val-vec 'this# 'props 'this#.ctx))))))

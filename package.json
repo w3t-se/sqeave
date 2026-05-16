@@ -24,7 +24,6 @@
     "test:build": "squint compile src/test/**/**/*.cljs --extension mjs  && cp -r src/test/w3t-ab/sqeave/data dist/src/test/w3t-ab/sqeave"
   },
   "dependencies": {
-    "consola": "^3.4.2",
     "lodash-es": "^4.18.1",
     "solid-js": "^1.9.12"
   },
