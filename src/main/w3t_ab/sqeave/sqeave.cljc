@@ -137,21 +137,6 @@
                             #_(list 'set! 'this#.data 'data)
                             (list 'set! 'this#.val-vec 'val-v)
                             (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))
-                            ;(list 'sqeave/debug "thiss: " 'this#  "ctc: " 'ctx " m: " (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj val-vec 'this# 'props 'ctx)))
-
-                            #_(list 'squint-compiler-jsx
-                                    ['sqeave/ErrorBoundary {:fallback (list 'fn ['err 'reset]
-                                                                            (list 'sqeave/warn 'err)
-                                                                            (list 'sqeave/onMount (list 'fn []
-                                                                                                        #_`(when (some? (.-hot js/import.meta))
-                                                                                                             (.accept (.-hot js/import.meta)
-                                                                                                                      (fn []
-                                                                                                                        ~(list 'reset)
-                                                                                                                        (sqeave/debug "🔄 Hot Reload detected!"))))))
-                                                                            (list 'squint-compiler-jsx
-                                                                                  [:div {:onClick (list 'fn ['e] (list 'reset))}
-                                                                                   (list :message 'err)]))}
-                                     body])
 
                             (list 'squint-compiler-jsx
                                   (list (symbol (str name "Fn")) (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj val-vec 'this# 'props 'ctx))))))

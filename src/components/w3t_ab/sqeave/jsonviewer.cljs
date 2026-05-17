@@ -3,7 +3,9 @@
             ["solid-icons/ai" :refer [AiOutlineCopy]]
             ["../main/export/index.mjs" :as sqeave]
             ["../main/utils.mjs" :as utils]
-            ["solid-transition-group" :refer [TransitionGroup]])
+            ["solid-transition-group" :refer [TransitionGroup]]
+            ;["./styles.module.css" :refer [styles]]
+            )
   (:require-macros [sqeave :refer [defc]]))
 
 (defn object-like? [x]
@@ -233,12 +235,12 @@
         #jsx
         [:div {:class "ml-4 border-l border-zinc-200 dark:border-zinc-800 pl-2"}
          [TransitionGroup {:name "json-node"}
-          [Index {:each (keys-memo)}
+          [For {:each (keys-memo)}
            (fn [child-key _]
              #jsx
              [:div {:class "json-node-item"}
-              [JsonNode {:k (child-key)
-                         :path (child-path path (child-key))
+              [JsonNode {:k child-key
+                         :path (child-path path child-key)
                          :root root
                          :kind kind
                          :expanded-map expanded-map

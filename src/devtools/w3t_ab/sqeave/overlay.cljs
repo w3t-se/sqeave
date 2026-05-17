@@ -2,13 +2,18 @@
   (:require ["solid-js" :refer [createSignal createMemo Show createEffect onMount]]
             ["solid-js/store" :refer [unwrap createStore]]
             ["@corvu/resizable" :as cr]
-            ["@solid-primitives/deep" :refer [captureStoreUpdates]]
+            ["@solid-primitives/deep" :refer [captureStoreUpdates trackStore]]
+            ["../../../../assets/images/sqeave_logo.png" :as sqeaveUrl]
             ["../components/jsonviewer.jsx" :as jsonviewer]
-            ["../main/utils.mjs" :as utils]))
+            ["../main/export/index.mjs" :as sqeave]
+            ["../main/utils.mjs" :as utils]
+            ["../main/log.mjs" :as log])
+  (:require-macros [sqeave :refer [defc]]))
 
 (def Resizable (:default cr))
+(def sqeaveImg (:default sqeaveUrl))
 
-(defn DevOverlay [{:keys [ctx]}]
+(defc DevOverlay [this {:keys []}]
   (let [[open? setOpen!] (createSignal (:open? (utils/get-item "sqeave-overlay-state")))
         [dock setDock!] (createSignal :right)
         [version setVersion] (createSignal 1)
@@ -22,10 +27,12 @@
                                              :store (utils/unwrap-proxy (:store ctx))}])]
 
     (createEffect (fn []
+                    (log/debug "update " (history))
                     (setDelta (:delta (nth (history) (- (selectedVersion) 1))))
                     (setStoreClone (:store (nth (history) (- (selectedVersion) 1))))))
     (createEffect
      (fn []
+       #_(trackStore (:store ctx))
        (setHistory (fn [x]
                      (conj x {:delta (delta)
                               :store (utils/unwrap-proxy (:store ctx))})))
@@ -35,15 +42,44 @@
     #jsx
     [:<>
      [:button
-      {:class "fixed bottom-4 right-20 z-[2147483647] rounded-full shadow-lg bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 px-3 py-2 text-sm font-medium hover:scale-105 transition-transform"
-       :onPointerDown (fn [e] (.stopPropagation e))
+      {:class (str
+               "fixed bottom-4 right-20 z-[2147483647] "
+
+               ;; round floating button
+               "w-14 h-14 rounded-full "
+
+               ;; centering
+               "flex items-center justify-center "
+
+               ;; styling
+               "bg-zinc-900 dark:bg-zinc-100 "
+               "text-white dark:text-zinc-900 "
+
+               ;; effects
+               "shadow-2xl ring-1 ring-black/10 dark:ring-white/10 "
+               "hover:scale-105 active:scale-95 "
+               "transition-all duration-200 "
+
+               ;; glow
+               "hover:shadow-cyan-400/30 ")
+
+       ;:title (if (open?) "Close State" "Open State")
+
+       :onPointerDown (fn [e]
+                        (.stopPropagation e))
+
        :onClick (fn [e]
                   (let [st (not (open?))]
                     (.preventDefault e)
                     (.stopPropagation e)
                     (setOpen! st)
-                    (utils/set-item! "sqeave-overlay-state" {:open? st})))}
-      (if (open?) "Close State" "State")]
+                    (sqeave/set-item! "sqeave-overlay-state"
+                                      {:open? st})))}
+
+      [:img
+       {:src sqeaveImg
+        :class "w-8 h-8 object-contain pointer-events-none select-none"
+        :draggable false}]]
 
      [Show {:when (open?)}
       [:div {:class "fixed inset-0 z-[2147483646] pointer-events-none"}

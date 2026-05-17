@@ -1,7 +1,17 @@
+<p align="center">
+  <img src="./assets/sqeave_logo.png" width="220" />
+</p>
+
+<h1 align="center">Sqeave</h1>
+
+<p align="center">
+  SolidJS + squint-cljs state framework inspired by Fulcro.
+</p>
+
 "To Sqeave is to Sweave with a squinting squeal." -- Highly enlightened asquaragus
 
 # Sqeave - SolidJS meets Squint-cljs
-This is a fullstack framework heavily inspired by the great Fulcro (and it's predecessor OM) trying to bring Clojure(Script)-syntax into the SolidJS-world (or maybe vice-versa). 
+This is a frontend (and fullstac) framework heavily inspired by the great Fulcro (and it's predecessor OM) trying to bring Clojure(Script)-syntax into the SolidJS-world (or maybe vice-versa). 
 
 The philosophy of Sqeave is to be as lightweight as possible and to not overdo features. The main focus is on Components and State management.
 

@@ -1,11 +1,12 @@
 (ns sqeave.provider
-  (:require ["solid-js" :refer [createContext]]
+  (:require ["solid-js" :refer [createContext children]]
+            ["solid-js/web" :refer [createComponent]]
             ["./comp.mjs" :as comp]))
 
-(def AppContext (createContext))
+(def AppContext (createContext nil))
 
-(defn SqeaveProvider [{:keys [children]}]
-  (let [AppContext (createContext)
-        ctx (comp/init-ctx! AppContext)]
-    #jsx [AppContext.Provider {:value ctx}
-          children]))
+(defn SqeaveProvider [props]
+  (let [ctx (comp/init-ctx! AppContext)]
+    #jsx
+    [AppContext.Provider {:value ctx}
+     (.-children props)]))

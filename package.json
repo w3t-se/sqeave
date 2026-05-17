@@ -37,7 +37,7 @@
     "build:main": "cd src/main && squint compile **/**/*.cljs && cp -R w3t_ab/sqeave/export ../../dist/main/",
     "build:devtools": "cd src/devtools && squint compile **/**/*.cljs",
     "build:components": "cd src/components && squint compile **/**/*.cljs",
-    "build:cljc": "mkdir -p dist/main && cp src/main/w3t_ab/sqeave/*.cljc dist/bundle",
+      "build:cljc": "mkdir -p dist/bundle && cp src/main/w3t_ab/sqeave/*.cljc dist/bundle/",
       "build:squint": "pnpm clean && pnpm build:main && pnpm build:devtools && pnpm build:components && pnpm build:cljc",
     "watch:main": "cd src/main && squint watch **/**/*.cljs",
     "watch:devtools": "cd src/devtools && squint watch **/**/*.cljs",
@@ -75,14 +75,22 @@
     "vitest": "^4.1.5"
   },
   "keywords": [
-    "solid-js",
-    "cljs",
-    "clojurescript",
-    "squint-cljs",
-    "fulcro",
-    "reactive",
-    "spa",
-    "solid",
-    "signals"
-  ]
+      "solidjs",
+			"solid-js",
+      "clojurescript",
+      "cljs",
+  "squint",
+  "squint-cljs",
+  "state-management",
+  "normalized-cache",
+  "fulcro",
+  "reactive-graph",
+  "signals",
+  "frontend-framework",
+  "wasm",
+  "rust",
+      "data-driven-ui",
+      "spa",
+      "reactive"
+]
 }
