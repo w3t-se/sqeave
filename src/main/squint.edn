@@ -1,0 +1,2 @@
+{:paths ["w3t_ab/sqeave"]
+ :output-dir "../../dist/main"}

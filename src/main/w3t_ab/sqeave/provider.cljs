@@ -1,6 +1,6 @@
 (ns sqeave.provider
   (:require ["solid-js" :refer [createContext]]
-            ["./comp.cljs" :as comp]))
+            ["./comp.mjs" :as comp]))
 
 (def AppContext (createContext))
 

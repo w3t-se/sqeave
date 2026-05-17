@@ -1,8 +1,8 @@
 (ns normad.vitest-test
   (:require ["vitest" :refer [describe test expect]]
             ["solid-js" :as solid]
-            ["@w3t-ab/sqeave/comp" :as comp]
-            ["@w3t-ab/sqeave/normad" :as n]))
+            ["../../../main/w3t_ab/sqeave/comp.cljs" :as comp]
+            ["../../../main/w3t_ab/sqeave/normad.cljs" :as n]))
 
 #_(set! (.-env js/import.meta)  {:DEV true})
 

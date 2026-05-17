@@ -1,7 +1,5 @@
 (ns utils
   (:require [squint.string :as string]
-            ["solid-js" :as solid]
-            ["lodash-es" :as l :refer [trim camelCase kebabCase startCase]]
             ["./log.mjs" :as log]))
 
 (defn object? [o]
@@ -21,7 +19,7 @@
               (recur (inc i)))))))))
 
 (defn get-ns [k]
-  (trim (first (string/split (first k) "/"))))
+  (first (string/split (first k) "/")))
 
 (defn remove-ident [ident v]
   (filterv (fn [y] (not (= (second y)
@@ -44,23 +42,14 @@
 (defn stream-id? [s]
   (re-matches #"^kjz[a-zA-Z0-9]{43,}$" s))
 
-(defn template [s]
-  (l/template s))
-
 (defn remove-item [v item]
   (vec (filter #(not= % item) v)))
 
-(defn uuid [] (js/crypto.randomUUID) #_(solid/createUniqueId))
-
-(def camel-case l/camelCase)
-(def kebab-case l/kebabCase)
+(defn uuid [] (js/crypto.randomUUID))
 
 (defn ident? [x]
   (and (vector? x) (= (count x) 2)
        (let [k (aget x 0)] (and (string? k) (.endsWith k id-suffix)))))
-
-(defn pascal-case [s]
-  (l/startCase (l/camelCase s)))
 
 (defn e->v [e]
   (-> e :target :value))
@@ -92,16 +81,6 @@
 (defn nsd [data ns]
   (zipmap (mapv (fn [x] (str ns "/" x)) (keys data)) (vals data))
   #_(into {} (mapv (fn [[k v]] [(str ns "/" k) v]) data)))
-
-(defn add-ns [data]
-  (distribute (fn [e]
-                #_(log/debug "edges:1: " e (contains? e :edges))
-                (cond
-                  (contains? e :edges) (add-ns (vals (get e :edges)))
-                  (contains? e :node) (add-ns (get e :node))
-                  (contains? e :__typename) (let [n (kebab-case (:__typename e))]
-                                              (nsd (dissoc e :__typename) n))
-                  :else e)) data))
 
 ;; local storage
 

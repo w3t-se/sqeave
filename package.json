@@ -1,31 +1,68 @@
 {
   "name": "@w3t-ab/sqeave",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "A squint-cljs based solid-js framework for building SPAs borrowing ideas from Fulcro.",
   "author": "W3T AB",
   "license": "EPL",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/w3t_ab/sqeave.git"
   },
-  "type": "module",
-  "module": "index.mjs",
+  "homepage": "https://github.com/w3t_ab/sqeave#readme",
+  "bugs": {
+    "url": "https://github.com/w3t_ab/sqeave/issues"
+  },
+  "module": "./dist/main/index.mjs",
   "files": [
-    "dist/w3t-ab/sqeave",
-    "index.mjs",
-    "comp.js",
-    "utils.js",
-    "transact.js",
-    "normad.js"
+    "dist"
   ],
+  "exports": {
+    ".": {
+      "import": "./dist/main/export/index.mjs"
+    },
+    "./comp": {
+      "import": "./dist/main/export/comp.mjs"
+    },
+    "./utils": {
+      "import": "./dist/main/export/utils.mjs"
+    },
+    "./transact": {
+      "import": "./dist/main/export/transact.mjs"
+    },
+    "./normad": {
+      "import": "./dist/main/export/normad.mjs"
+    },
+    "./devtools": {
+      "import": "./dist/devtools/w3t_ab/sqeave/index.mjs"
+    },
+    "./components": {
+      "import": "./dist/components/w3t_ab/sqeave/index.mjs"
+    },
+    "./components/jsonviewer": {
+      "import": "./dist/components/w3t_ab/sqeave/jsonviewer.jsx"
+    }
+  },
   "scripts": {
-    "build": "squint compile src/main/**/**/*.cljs --extension mjs && cp src/main/w3t-ab/sqeave/*.cljc dist/w3t-ab/sqeave/",
+    "clean": "rm -rf dist",
+    "build:main": "cd src/main && squint compile **/**/*.cljs && cp -R w3t_ab/sqeave/export ../../dist/main/",
+    "build:devtools": "cd src/devtools && squint compile **/**/*.cljs",
+    "build:components": "cd src/components && squint compile **/**/*.cljs",
+    "build:cljc": "mkdir -p dist/main/w3t_ab/sqeave && cp src/main/w3t_ab/sqeave/*.cljc dist/main/",
+    "build": "pnpm clean && pnpm build:main && pnpm build:devtools && pnpm build:components && pnpm build:cljc",
     "test": "pnpm build && pnpm test:build && vitest --run",
-    "test:build": "squint compile src/test/**/**/*.cljs --extension mjs  && cp -r src/test/w3t-ab/sqeave/data dist/src/test/w3t-ab/sqeave"
+    "test:build": "cd src/test && squint compile **/**/*.cljs && cp -r w3t_ab/sqeave/data dist/test/w3t_ab/sqeave",
+    "check:exports": "node scripts/check-exports.cjs",
+    "prepack": "pnpm build",
+    "prepublishOnly": "pnpm test"
   },
   "dependencies": {
-    "lodash-es": "^4.18.1",
     "solid-js": "^1.9.12"
+  },
+  "optionalDependencies": {
+    "@corvu/resizable": "^0.2.0",
+      "solid-transition-group": "^0.3.0",
+      "solid-icons": "^1.2.0"
   },
   "devDependencies": {
     "@solidjs/testing-library": "^0.8.10",
@@ -37,34 +74,14 @@
     "vitest": "^4.1.5"
   },
   "keywords": [
-    "vite",
-    "vite-plugin",
+    "solid-js",
     "cljs",
     "clojurescript",
-    "squint-cljs"
-  ],
-  "exports": {
-    ".": {
-      "import": "./index.mjs"
-    },
-    "./solid": {
-      "import": "./index.mjs"
-    },
-    "./comp": {
-      "import": "./comp.js"
-    },
-    "./normad": {
-      "import": "./normad.js"
-    },
-    "./utils": {
-      "import": "./utils.js"
-    },
-    "./transact": {
-      "import": "./transact.js"
-    }
-  },
-  "bugs": {
-    "url": "https://github.com/w3t_ab/sqeave/issues"
-  },
-  "homepage": "https://github.com/w3t_ab/sqeave#readme"
+    "squint-cljs",
+    "fulcro",
+    "reactive",
+    "spa",
+    "solid",
+    "signals"
+  ]
 }
