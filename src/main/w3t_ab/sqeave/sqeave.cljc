@@ -86,25 +86,12 @@
                                                                                                                       (list 'get 'ctx :store) 'this#.ident)
                                                                            query))
 
-                                  #_'_ #_(list 'if-not (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident))
+                                  '_ (list 'if-not (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident))
                                            (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
                                                                                                {(list 'first 'this#.ident) (list 'second 'this#.ident)})))
                                            (list 'if-not (list 'js/Reflect.has (list 'get-in 'ctx [:store (list 'first 'this#.ident)]) (list 'second 'this#.ident))
                                                  (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
                                                                                                      {(list 'first 'this#.ident) (list 'second 'this#.ident)})))))
-
-
-                                  'newd (list 'this#.new-data
-                                              (list 'if-not (list 'nil? (list 'second 'this#.ident))
-                                                    {(list 'first 'this#.ident) (list 'second 'this#.ident)}))
-                                  '_ (list 'sqeave/debug "new-data: " ntmp " ""data: " 'newd)
-                                  '_ (list 'if-not (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident))
-                                           (list 'sqeave/add! 'ctx 'newd)
-                                           (list 'if-not (list 'js/Reflect.has (list 'get-in 'ctx [:store (list 'first 'this#.ident)]) (list 'second 'this#.ident))
-                                                 (list 'sqeave/add! 'ctx 'newd)
-                                                 (list 'let ['existing (list 'get-in (list :store 'ctx) 'this#.ident)]
-                                                       (list 'sqeave/debug "existing-data: " ntmp " " "data: " 'newd " merged: " (list 'merge 'newd 'existing))
-                                                       (list 'sqeave/add! 'ctx (list 'merge 'newd 'existing)))))
 
 
                                   #_'data #_(list 'if-not (list 'empty? query)

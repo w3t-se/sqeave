@@ -13,60 +13,61 @@
   "bugs": {
     "url": "https://github.com/w3t_ab/sqeave/issues"
   },
-  "module": "./dist/main/index.mjs",
+    "module": "./dist/bundle/main.mjs",
   "files": [
-    "dist"
+      "dist",
+      "sqeave.cljc"
   ],
-  "exports": {
-    ".": {
-      "import": "./dist/main/export/index.mjs"
+    "exports": {
+	".": {
+	    "import": "./dist/bundle/main.mjs"
+	},
+	"./devtools": {
+	    "import": "./dist/bundle/devtools.mjs"
+	},
+	"./components": {
+	    "import": "./dist/bundle/components.mjs"
+	},
+	"./components/jsonviewer": {
+	    "import": "./dist/bundle/components.mjs"
+	}
     },
-    "./comp": {
-      "import": "./dist/main/export/comp.mjs"
-    },
-    "./utils": {
-      "import": "./dist/main/export/utils.mjs"
-    },
-    "./transact": {
-      "import": "./dist/main/export/transact.mjs"
-    },
-    "./normad": {
-      "import": "./dist/main/export/normad.mjs"
-    },
-    "./devtools": {
-      "import": "./dist/devtools/w3t_ab/sqeave/index.mjs"
-    },
-    "./components": {
-      "import": "./dist/components/w3t_ab/sqeave/index.mjs"
-    },
-    "./components/jsonviewer": {
-      "import": "./dist/components/w3t_ab/sqeave/jsonviewer.jsx"
-    }
-  },
   "scripts": {
     "clean": "rm -rf dist",
     "build:main": "cd src/main && squint compile **/**/*.cljs && cp -R w3t_ab/sqeave/export ../../dist/main/",
     "build:devtools": "cd src/devtools && squint compile **/**/*.cljs",
     "build:components": "cd src/components && squint compile **/**/*.cljs",
-    "build:cljc": "mkdir -p dist/main/w3t_ab/sqeave && cp src/main/w3t_ab/sqeave/*.cljc dist/main/",
-    "build": "pnpm clean && pnpm build:main && pnpm build:devtools && pnpm build:components && pnpm build:cljc",
+    "build:cljc": "mkdir -p dist/main && cp src/main/w3t_ab/sqeave/*.cljc dist/bundle",
+      "build:squint": "pnpm clean && pnpm build:main && pnpm build:devtools && pnpm build:components && pnpm build:cljc",
+    "watch:main": "cd src/main && squint watch **/**/*.cljs",
+    "watch:devtools": "cd src/devtools && squint watch **/**/*.cljs",
+    "watch:components": "cd src/components && squint watch **/**/*.cljs",
+    "watch:cljc": "chokidar 'src/main/w3t_ab/sqeave/*.cljc' -c 'pnpm build:cljc' --initial",
+    "watch:exports": "chokidar 'src/main/w3t_ab/sqeave/export/*' -c 'cp -r src/main/w3t_ab/sqeave/export ./dist/main/' --initial",
+      "watch:squint": "pnpm clean && pnpm build:cljc && concurrently -k -n main,devtools,components,cljc -c blue,magenta,green,yellow \"pnpm watch:main\" \"pnpm watch:devtools\" \"pnpm watch:components\" \"pnpm watch:cljc\" \"pnpm watch:exports\"",
+      "watch": "concurrently -k \"pnpm watch:squint\" \"vite build -c vite.lib.config.js --watch\"",
     "test": "pnpm build && pnpm test:build && vitest --run",
     "test:build": "cd src/test && squint compile **/**/*.cljs && cp -r w3t_ab/sqeave/data dist/test/w3t_ab/sqeave",
     "check:exports": "node scripts/check-exports.cjs",
     "prepack": "pnpm build",
-    "prepublishOnly": "pnpm test"
+      "prepublishOnly": "pnpm test",
+      "build:bundle": "vite build -c vite.lib.config.js",
+      "build": "pnpm clean && pnpm build:squint && pnpm build:bundle && cp src/main/w3t_ab/sqeave/sqeave.cljc dist/bundle/"
   },
   "dependencies": {
     "solid-js": "^1.9.12"
   },
   "optionalDependencies": {
-    "@corvu/resizable": "^0.2.0",
-      "solid-transition-group": "^0.3.0",
-      "solid-icons": "^1.2.0"
+      "@corvu/resizable": "^0.2.0",
+      "@solid-primitives/deep": "^0.3.5",
+    "solid-icons": "^1.2.0",
+    "solid-transition-group": "^0.3.0"
   },
   "devDependencies": {
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.9.1",
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^9.2.1",
     "jsdom": "^29.1.1",
     "squint-cljs": "^0.11.189",
     "vite": "^8.0.10",

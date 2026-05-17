@@ -3,8 +3,8 @@
             ["solid-js/store" :refer [unwrap createStore]]
             ["@corvu/resizable" :as cr]
             ["@solid-primitives/deep" :refer [captureStoreUpdates]]
-            ["./jsonviewer.jsx" :as jsonviewer]
-            ["../../../main/w3t_ab/sqeave/utils.mjs" :as utils]))
+            ["../components/jsonviewer.jsx" :as jsonviewer]
+            ["../main/utils.mjs" :as utils]))
 
 (def Resizable (:default cr))
 

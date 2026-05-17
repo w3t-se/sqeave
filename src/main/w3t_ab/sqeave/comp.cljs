@@ -8,9 +8,12 @@
             ["./log.mjs" :as log]
             [squint.core :refer [defclass]]))
 
+(def AppContext nil)
+
 (defn init-ctx! [ctx]
   (let [[store setStore] (createStore {})
         [registry setRegistry] (createStore {})]
+    (set! AppContext ctx)
     (when (and (.-env js/import.meta)
                (.-DEV js/import.meta.env))
       (set! (.-store js/window) store)

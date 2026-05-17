@@ -1,7 +1,8 @@
 (ns jsonviewer
   (:require ["solid-js" :refer [For Index Show createSignal createMemo Switch Match createEffect]]
             ["solid-icons/ai" :refer [AiOutlineCopy]]
-            ["../../../main/w3t_ab/sqeave/utils.mjs" :as utils]
+            ["../main/export/index.mjs" :as sqeave]
+            ["../main/utils.mjs" :as utils]
             ["solid-transition-group" :refer [TransitionGroup]])
   (:require-macros [sqeave :refer [defc]]))
 
