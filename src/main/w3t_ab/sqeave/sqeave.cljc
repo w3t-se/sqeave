@@ -19,8 +19,7 @@
 
         val-keys (mapv keyword val-vec)
 
-        or-map (let [m (-> bindings second :or)
-                     m (if (fn? m) (m) m)]
+        or-map (let [m (-> bindings second :or)]
                  (zipmap (mapv keywordify (keys m)) (vals m)))
 
         local-map (let [m (-> bindings second :local)]
@@ -75,7 +74,13 @@
                 (list 'first-render ['this# 'props]
                       (list 'let [(first bindings) 'this#
                                   '_ (list 'sqeave/debug "render: " ntmp " props: " 'props)
-                                  'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
+                                  'ctx (list 'or
+                                                  binding-ctx
+                                                  (list 'if 'this#.-ctx
+                                                        (list `useContext 'this#.-ctx)
+                                                        (list 'throw
+                                                              (list 'js/Error.
+                                                                    (str ntmp " has nil AppContext")))))
 
                                   ;'_ (list 'sqeave/debug ntmp ": p " 'props " i: " 'this#.ident " q: " query " ctx:" 'ctx " exists:" (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident)))
                                   ;['force 'setForce] (list 'sqeave/createSignal false)
@@ -86,7 +91,12 @@
                                                                                                                       (list 'get 'ctx :store) 'this#.ident)
                                                                            query))
 
-                                  '_ (list 'if-not (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident))
+                                  '_ (list 'sqeave/debug "store: " ntmp " " (list 'get 'ctx :store))
+                                  '_ (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
+                                                                                               {(list 'first 'this#.ident) (list 'second 'this#.ident)}
+                                                                                               {})))
+                                  
+                                  #_'_ #_(list 'if-not (list 'js/Reflect.has (list 'get 'ct :store) (list 'first 'this#.ident))
                                            (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
                                                                                                {(list 'first 'this#.ident) (list 'second 'this#.ident)})))
                                            (list 'if-not (list 'js/Reflect.has (list 'get-in 'ctx [:store (list 'first 'this#.ident)]) (list 'second 'this#.ident))

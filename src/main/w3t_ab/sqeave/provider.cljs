@@ -4,8 +4,8 @@
 
 (def AppContext (createContext))
 
-(defn SqeaveProvider [{:keys [children devtools?]}]
-  (let [ctx (comp/init-ctx! AppContext)]
-    #jsx
-    [AppContext.Provider {:value ctx}
-     children]))
+(defn SqeaveProvider [{:keys [children]}]
+  (let [AppContext (createContext)
+        ctx (comp/init-ctx! AppContext)]
+    #jsx [AppContext.Provider {:value ctx}
+          children]))

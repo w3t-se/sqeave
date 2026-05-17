@@ -1,4 +1,5 @@
-(ns main.utils.log)
+(ns main.utils.log
+  (:require ["solid-js" :refer [DEV]]))
 
 (def ^:dynamic *scope* "sqeave")
 
@@ -10,7 +11,7 @@
          (str "[" *scope* "]") xs))
 
 (defn debug [& xs]
-  (when (.-DEV js/import.meta.env)
+  (when DEV
     (apply js/console.debug
            (str "[" *scope* "]") xs)))
 

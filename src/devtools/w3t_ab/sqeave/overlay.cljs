@@ -8,7 +8,7 @@
 
 (def Resizable (:default cr))
 
-(defn DevOverlay [this {:keys [ctx]}]
+(defn DevOverlay [{:keys [ctx]}]
   (let [[open? setOpen!] (createSignal (:open? (utils/get-item "sqeave-overlay-state")))
         [dock setDock!] (createSignal :right)
         [version setVersion] (createSignal 1)
