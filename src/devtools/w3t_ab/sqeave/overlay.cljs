@@ -3,7 +3,7 @@
             ["solid-js/store" :refer [unwrap createStore]]
             ["@corvu/resizable" :as cr]
             ["@solid-primitives/deep" :refer [captureStoreUpdates trackStore]]
-            ["../../../../assets/images/sqeave_logo.png" :as sqeaveUrl]
+            ["../assets/sqeave_logo.webp" :as sqeaveUrl]
             ["../components/jsonviewer.jsx" :as jsonviewer]
             ["../main/export/index.mjs" :as sqeave]
             ["../main/utils.mjs" :as utils]
@@ -29,15 +29,15 @@
     (createEffect (fn []
                     (log/debug "update " (history))
                     (setDelta (:delta (nth (history) (- (selectedVersion) 1))))
-                    (setStoreClone (:store (nth (history) (- (selectedVersion) 1))))))
+                    (setStoreClone (:store (nth (history) (- (selectedVersion) 1))))
+                    (setSelectedVersion (version))))
     (createEffect
      (fn []
        #_(trackStore (:store ctx))
        (setHistory (fn [x]
                      (conj x {:delta (delta)
                               :store (utils/unwrap-proxy (:store ctx))})))
-       (setVersion inc)
-       (setSelectedVersion (version))))
+       (setVersion inc)))
 
     #jsx
     [:<>
@@ -65,7 +65,7 @@
 
        ;:title (if (open?) "Close State" "Open State")
 
-       :onPointerDown (fn [e]
+       #_:onPointerDown #_(fn [e]
                         (.stopPropagation e))
 
        :onClick (fn [e]
@@ -78,11 +78,11 @@
 
       [:img
        {:src sqeaveImg
-        :class "w-8 h-8 object-contain pointer-events-none select-none"
+        :class "w-11 h-11 object-contain"
         :draggable false}]]
 
      [Show {:when (open?)}
-      [:div {:class "fixed inset-0 z-[2147483646] pointer-events-none"}
+      [:div {:class "fixed inset-0 z-[2147483646]"}
 
        [Resizable {:class "size-full pointer-events-none"
                    :orientation (if (= (dock) :bottom) :vertical :horizontal)}
@@ -93,7 +93,7 @@
 
         [Resizable.Handle
          {:aria-label "Resize Handle"
-          :class "group basis-3 px-0.75 pointer-events-auto cursor-col-resize"}
+          :class "group basis-3 px-0.75 cursor-col-resize pointer-events-auto"}
          [:div {:class "size-full rounded-sm transition-colors group-data-active:bg-sky-400/60 group-data-dragging:bg-sky-400/40"}]]
 
         [Resizable.Panel

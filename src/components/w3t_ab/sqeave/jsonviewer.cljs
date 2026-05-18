@@ -4,8 +4,7 @@
             ["../main/export/index.mjs" :as sqeave]
             ["../main/utils.mjs" :as utils]
             ["solid-transition-group" :refer [TransitionGroup]]
-            ;["./styles.module.css" :refer [styles]]
-            )
+            ["../assets/styles.module.css" :default styles])
   (:require-macros [sqeave :refer [defc]]))
 
 (defn object-like? [x]
@@ -238,7 +237,7 @@
           [For {:each (keys-memo)}
            (fn [child-key _]
              #jsx
-             [:div {:class "json-node-item"}
+             [:div {:class (aget styles "json-node-item")}
               [JsonNode {:k child-key
                          :path (child-path path child-key)
                          :root root

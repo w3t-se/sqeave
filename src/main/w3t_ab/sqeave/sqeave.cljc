@@ -83,7 +83,8 @@
 
         val-keys (mapv keyword val-vec)
 
-        or-map (let [m (-> bindings second :or)]
+        or-map (let [m (-> bindings second :or)
+                     m (if (fn? m) (m) m)]
                  (zipmap (mapv keywordify (keys m)) (vals m)))
 
         local-map (let [m (-> bindings second :local)]

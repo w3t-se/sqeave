@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/sqeave_logo.png" width="220" />
+  <img src="./sqeave_logo.png" width="220" />
 </p>
 
 <h1 align="center">Sqeave</h1>
