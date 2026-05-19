@@ -5,7 +5,7 @@
             ["solid-js" :as s :refer [Switch Match]])
   (:require-macros [sqeave :refer [defc]]))
 
-(defc Main1 [this {:main/keys [id count] :or {id 1 count 0}}]
+(defc Main1 [this {:main/keys [id count] :or (fn [] {:main/id 1 :main/count 20})}]
   #jsx [:div {} "Hello Sqeave Main " (id)
         [:button {:onClick #(sqeave/set! this :main/count (inc (count)))} "Plus"]
         [:p {} "Main 1 Count: " (count)]])
@@ -28,8 +28,7 @@
           [Dynamic {:& {:component (get-in cid2c [(type) :comp])
                         :ident (get-in cid2c [(type) :ident])}}]]))
 
-(defc Main [this {:main/keys [id count] :or {id (sqeave/uuid) count 0}}]
+(defc Main [this {:main/keys [id count] :or (fn [] {:main/id (sqeave/uuid) :main/count 3})}]
   #jsx [:div {}
         [:h1 "Hello Sqeave Main " (id)]
-        [Main3 {:ident [:main/id "abc"]}]
-        [:h2 {} "Store"]])
+        [Main3 {:ident [:main/id "abc"]}]])

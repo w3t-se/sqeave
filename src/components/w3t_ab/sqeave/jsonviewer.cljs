@@ -257,14 +257,7 @@
                       max-depth 16}}]
   (let [[expanded-map setExpandedMap] (createSignal {})
         [hover-key setHoverKey] (createSignal nil)
-        [cursor-path setCursorPath] (createSignal "")
-        _ (println "mount")]
-    (onMount
- (fn []
-   (println "JsonView real mount")
-   (onCleanup
-    (fn []
-      (println "JsonView real cleanup")))))
+        [cursor-path setCursorPath] (createSignal "")]
     (createEffect
      (fn []
        (when on-cursor-change

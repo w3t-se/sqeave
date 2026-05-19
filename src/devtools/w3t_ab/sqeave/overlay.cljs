@@ -13,7 +13,7 @@
 (def Resizable (:default cr))
 (def sqeaveImg (:default sqeaveUrl))
 
-(defc DevOverlay [this {:keys []}]
+(defn DevOverlay [{:keys [ctx]}]
   (let [[open? setOpen!] (createSignal (:open? (utils/get-item "sqeave-overlay-state")))
         [dock setDock!] (createSignal :right)
         [version setVersion] (createSignal 1)
@@ -25,38 +25,11 @@
         [deltaStore setDelta] (createStore {})
         [history setHistory] (createSignal [{:delta {}
                                              :store (utils/unwrap-proxy (:store ctx))}])]
-
-      ;; capture store updates
-  #_(createEffect
-   (fn []
-     ;; this makes the effect depend on the store
-     (trackStore (:store ctx))
-
-     (let [entry {:delta (getDelta)
-                  :store (utils/unwrap-proxy (:store ctx))}]
-       (setHistory (fn [xs]
-                     (conj xs entry)))
-
-       ;; only auto-follow latest if user is already at latest
-       (let [latest-idx (dec (count (history)))]
-         (when (= (selectedVersion) latest-idx)
-           (setSelectedVersion (count (history))))))))
-
-  ;; display selected history item
-  #_(createEffect
-   (fn []
-     (let [xs (history)
-           idx (selectedVersion)
-           item (nth xs idx nil)]
-       (when item
-         (setDelta (:delta item))
-         (setStoreClone (:store item))))))
-  
-  (createEffect (fn []
-                  (log/debug "update " (history))
-                  (setDelta (:delta (nth (history) (- (selectedVersion) 1))))
-                  (setStoreClone (:store (nth (history) (- (selectedVersion) 1))))
-                  #_(setSelectedVersion (version))))
+    
+    (createEffect (fn []
+                    (setDelta (:delta (nth (history) (- (selectedVersion) 1))))
+                    (setStoreClone (:store (nth (history) (- (selectedVersion) 1))))
+                    #_(setSelectedVersion (version))))
     (createEffect
      (fn []
        #_(trackStore (:store ctx))
