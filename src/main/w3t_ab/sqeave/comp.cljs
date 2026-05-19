@@ -1,5 +1,5 @@
 (ns comp
-  (:require ["solid-js" :as solid]
+  (:require ["solid-js" :as solid :refer [DEV]]
             ["solid-js/web" :as solid-web]
             ["solid-js/store" :refer [createStore]]
             ["./normad.mjs" :as n]
@@ -8,14 +8,10 @@
             ["./log.mjs" :as log]
             [squint.core :refer [defclass]]))
 
-(def AppContext nil)
-
 (defn init-ctx! [ctx]
   (let [[store setStore] (createStore {})
         [registry setRegistry] (createStore {})]
-    (set! AppContext ctx)
-    (when (and (.-env js/import.meta)
-               (.-DEV js/import.meta.env))
+    (when DEV
       (set! (.-store js/window) store)
       (set! (.-comps js/window) registry))
     {:store store :setStore setStore :registry registry :setRegistry setRegistry}))

@@ -7,6 +7,70 @@
   (list 'defn name ['props] (list 'let ['c (list 'new cla ctx)]
                                   (list '.render 'c body 'props))))
 
+(defn bind-sym-name [x]
+  ;; :file/name -> file-name
+  ;; dashboard/id -> dashboard-id
+  (symbol
+   (-> (str x)
+       (subs 1)              ;; remove leading :
+       (.replace "/" "-"))))
+
+(defn bindable? [x]
+  (symbol? x))
+
+(defn pull-leaf [x]
+  (cond
+    (symbol? x)  (keyword (str x))
+    (keyword? x) x
+    (string? x)  x
+    :else        x))
+
+(defn sym->kw [s]
+  (keyword
+   (if-let [ns (namespace s)]
+     (str ns "/" (name s))
+     (name s))))
+
+(defn sym->binding [s]
+  (symbol
+   (if-let [ns (namespace s)]
+     (str ns "-" (name s))
+     (name s))))
+
+(defn single-entry [m]
+  (let [s (seq m)]
+    (when-not (= 1 (count s))
+      (throw (js/Error. (str ":more map entries must contain exactly one entry: " (pr-str m)))))
+    (first s)))
+
+(defn parse-more-query
+  ([q] (parse-more-query [] q))
+  ([path q]
+   (cond
+     (vector? q)
+     (let [parsed (mapv #(parse-more-query path %) q)]
+       {:query    (mapv :query parsed)
+        :bindings (vec (mapcat :bindings parsed))})
+
+     (map? q)
+     (let [entry   (single-entry q)
+           k       (key entry)
+           v       (val entry)
+           k*      (pull-leaf k)
+           parsed  (parse-more-query (conj path k*) v)]
+       {:query    {k* (:query parsed)}
+        :bindings (:bindings parsed)})
+
+     (symbol? q)
+     (let [kw (sym->kw q)]
+       {:query kw
+        :bindings [{:sym  (sym->binding q)
+                    :path (conj path kw)}]})
+
+     :else
+     {:query q
+      :bindings []})))
+
 (defmacro defc [name bindings body]
   (let [ntmp (str name)
         n (namespace (first (keys (second bindings))))
@@ -19,10 +83,11 @@
 
         val-keys (mapv keyword val-vec)
 
-        or-map (let [m (-> bindings second :or)
-                     m (if (fn? m) (m) m)]
-                 (zipmap (mapv keywordify (keys m)) (vals m)))
-
+        or-form (-> bindings second :or)
+        or-map  (when (and or-form (map? or-form))
+                    (zipmap (mapv keywordify (keys or-form))
+                            (vals or-form)))
+        
         local-map (let [m (-> bindings second :local)]
                     (zipmap (mapv keyword (keys m)) (vals m)))
 
@@ -30,10 +95,18 @@
                        {(keywordify (first (keys %))) (first (vals %))}
                        (keywordify %)) params)
 
-        binding-ctx (:ctx (second bindings))]
+        binding-ctx (:ctx (second bindings))
+
+        more-raw      (-> bindings second :more)
+        more-parsed   (parse-more-query more-raw)
+        more-query    (:query more-parsed)
+        more-bindings (:bindings more-parsed)
+
+        more-syms     (mapv :sym more-bindings)
+        more-keys     (mapv keyword more-syms)]
 
     (list 'do
-          (list 'defn (symbol (str name "Fn")) [{:keys (conj val-vec 'this 'props 'ctx)}]
+          (list 'defn (symbol (str name "Fn")) [{:keys (vec (concat val-vec ['more] more-syms ['this 'props 'ctx]))}]
 
                 (list 'squint-compiler-jsx
                       ['sqeave/ErrorBoundary {:fallback (list 'fn ['err 'reset]
@@ -69,16 +142,38 @@
                       (list 'set! 'this#.render 'this#.constructor.prototype.render)
                       (list 'set! 'this#.new-data 'this#.constructor.new-data))
 
+                #_'Object
+                #_(list (with-meta 'new-data {:static true}) ['_ 'data] (list 'merge or-map 'data))
+
                 'Object
-                (list (with-meta 'new-data {:static true}) ['_ 'data] (list 'merge or-map 'data))
+                (list
+                 (with-meta 'new-data {:static true})
+                 ['_ 'data]
+                 #_(list 'println "orform1: " or-map  "asd:" (list if (list fn? or-form)))
+                 (list 'cond
+
+                       (list 'map? or-map)
+                       (list 'merge or-map 'data)
+
+                       (list 'fn? or-form)
+                       (list 'merge (list or-form) 'data)
+
+                   :else
+                   'data))
 
                 (list 'first-render ['this# 'props]
                       (list 'let [(first bindings) 'this#
                                   '_ (list 'sqeave/debug "render: " ntmp " props: " 'props)
-                                  'ctx (list 'or binding-ctx (list `useContext 'this#.-ctx))
+                                  'ctx (list 'or
+                                             binding-ctx
+                                             (list 'if 'this#.-ctx
+                                                   (list `useContext 'this#.-ctx)
+                                                   (list 'throw
+                                                         (list 'js/Error.
+                                                               (str ntmp " has nil AppContext")))))
 
-                                  ;'_ (list 'sqeave/debug ntmp ": p " 'props " i: " 'this#.ident " q: " query " ctx:" 'ctx " exists:" (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident)))
-                                  ;['force 'setForce] (list 'sqeave/createSignal false)
+                                        ;'_ (list 'sqeave/debug ntmp ": p " 'props " i: " 'this#.ident " q: " query " ctx:" 'ctx " exists:" (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident)))
+                                        ;['force 'setForce] (list 'sqeave/createSignal false)
                                         ;'_ (list 'set! 'this#.ident 'ident)
                                   {:keys ['store 'setStore]} 'ctx
 
@@ -86,12 +181,25 @@
                                                                                                                       (list 'get 'ctx :store) 'this#.ident)
                                                                            query))
 
+                                  'newd (list 'this#.new-data
+                                              (list 'if-not (list 'nil? (list 'second 'this#.ident))
+                                                    {(list 'first 'this#.ident) (list 'second 'this#.ident)}))
+                              
+                                  '_ (list 'sqeave/debug "new-data: " ntmp " ""data: " 'newd)
                                   '_ (list 'if-not (list 'js/Reflect.has (list 'get 'ctx :store) (list 'first 'this#.ident))
-                                           (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
-                                                                                               {(list 'first 'this#.ident) (list 'second 'this#.ident)})))
+                                           (list 'sqeave/add! 'ctx 'newd)
                                            (list 'if-not (list 'js/Reflect.has (list 'get-in 'ctx [:store (list 'first 'this#.ident)]) (list 'second 'this#.ident))
-                                                 (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
-                                                                                                     {(list 'first 'this#.ident) (list 'second 'this#.ident)})))))
+                                                 (list 'sqeave/add! 'ctx 'newd)
+                                                 (list 'let ['existing (list 'get-in (list :store 'ctx) 'this#.ident)]
+                                                       (list 'sqeave/debug "existing-data: " ntmp " " "data: " 'newd " merged: " (list 'merge 'newd 'existing))
+                                                       (list 'sqeave/add! 'ctx (list 'merge 'newd 'existing)))))
+                                  
+                                  #_'_ #_(list 'if-not (list 'js/Reflect.has (list 'get 'ct :store) (list 'first 'this#.ident))
+                                               (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
+                                                                                                   {(list 'first 'this#.ident) (list 'second 'this#.ident)})))
+                                               (list 'if-not (list 'js/Reflect.has (list 'get-in 'ctx [:store (list 'first 'this#.ident)]) (list 'second 'this#.ident))
+                                                     (list 'sqeave/add! 'ctx (list 'this#.new-data (list 'if-not (list 'nil? (list 'second 'this#.ident))
+                                                                                                         {(list 'first 'this#.ident) (list 'second 'this#.ident)})))))
 
 
                                   #_'data #_(list 'if-not (list 'empty? query)
@@ -118,7 +226,25 @@
                                   val-vec 'val-v
                                   ['local 'setLocal] (list 'sqeave/createSignal local-map)
                                   'local-map-k (vec (keys local-map))
-                                  'local-map-k (mapv #(list 'fn [] (list % (list 'this#.local))) (keys local-map))]
+                                  'local-map-k (mapv #(list 'fn [] (list % (list 'this#.local))) (keys local-map))
+
+                                  'more
+                                  (list 'sqeave/createMemo
+                                        (list 'fn []
+                                              (list 'sqeave/pull
+                                                    (list 'get 'ctx :store)
+                                                    (list 'get 'ctx :store)
+                                                    more-query)))
+
+                                  'more-v
+                                  (apply list
+                                         'vector
+                                         (map
+                                          (fn [{:keys [path]}]
+                                            (list 'sqeave/createMemo
+                                                  (list 'fn []
+                                                        (list 'get-in (list 'more) path))))
+                                          more-bindings))]
 
                             (list 'set! 'this#.ctx 'ctx)
                             #_(list 'set! 'this#.force 'force)
@@ -127,24 +253,21 @@
                             #_(list 'set! 'this#.data 'data)
                             (list 'set! 'this#.val-vec 'val-v)
                             (list 'set! 'this#.set-local! (list 'fn ['this# 'data] (list 'setLocal (list 'merge (list 'local) 'data))))
-                            ;(list 'sqeave/debug "thiss: " 'this#  "ctc: " 'ctx " m: " (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj val-vec 'this# 'props 'ctx)))
-
-                            #_(list 'squint-compiler-jsx
-                                    ['sqeave/ErrorBoundary {:fallback (list 'fn ['err 'reset]
-                                                                            (list 'sqeave/warn 'err)
-                                                                            (list 'sqeave/onMount (list 'fn []
-                                                                                                        #_`(when (some? (.-hot js/import.meta))
-                                                                                                             (.accept (.-hot js/import.meta)
-                                                                                                                      (fn []
-                                                                                                                        ~(list 'reset)
-                                                                                                                        (sqeave/debug "🔄 Hot Reload detected!"))))))
-                                                                            (list 'squint-compiler-jsx
-                                                                                  [:div {:onClick (list 'fn ['e] (list 'reset))}
-                                                                                   (list :message 'err)]))}
-                                     body])
 
                             (list 'squint-compiler-jsx
-                                  (list (symbol (str name "Fn")) (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj val-vec 'this# 'props 'ctx))))))
+                                  (list (symbol (str name "Fn"))
+                                        (list 'zipmap
+                                              (vec (concat val-keys [:more] more-keys [:this :props :ctx]))
+                                              (list 'concat
+                                                    (vec (concat val-vec ['more]))
+                                                    'more-v
+                                                    (list 'vector 'this# 'props 'ctx)))
+                                        #_(list 'zipmap
+                                                (list 'concat val-keys [:more] more-keys [:this :props :ctx])
+                                                (list 'concat val-vec (list 'vector 'more) 'more-v (list 'vector 'this# 'props 'ctx)))
+                                        #_(list 'zipmap
+                                                (list 'conj val-keys :this :props :ctx)
+                                                (list 'conj val-vec 'this# 'props 'ctx))))))
 
                 (list 'render ['this# 'body 'props]
                       #_(list 'this#.setForce (list 'not (list 'this#.force)))
@@ -155,10 +278,10 @@
                             (list 'body (list 'zipmap (list 'conj val-keys :this :props :ctx) (list 'conj 'this#.val-vec 'this# 'props 'this#.ctx))))))
 
           (list 'defn (symbol (str name "Factory")) ['ident 'props]
-                (list 'let [;'ctx (list 'or binding-ctx (list `useContext 'sqeave/AppContext))
-                            ;'setRegistry (list 'get 'ctx :setRegistry)
-                            ;'registry (list 'get 'ctx :registry)
-                            ;'owner (list 'if-not binding-ctx (list 'sqeave/getOwner))
+                (list 'let [ ;'ctx (list 'or binding-ctx (list `useContext 'sqeave/AppContext))
+                                        ;'setRegistry (list 'get 'ctx :setRegistry)
+                                        ;'registry (list 'get 'ctx :registry)
+                                        ;'owner (list 'if-not binding-ctx (list 'sqeave/getOwner))
                             ]
                       #_(list 'swap! 'sqeave/ComponentRegistry 'assoc-in [(str name "Class") (list 'second 'ident)] 'c)
 
@@ -194,10 +317,10 @@
           (list 'defn name ['props]
                 (list 'let ['ident (list 'get 'props :ident)
                             'ident (list 'if-not (list 'fn? 'ident) 'ident (list 'ident))
-                            ;'ctx (list 'or binding-ctx (list `useContext 'sqeave/AppContext))
-                            ;'_ (list 'println 'ctx)
-                            ;'registry (list 'get 'ctx :registry)
-                            ;'owner (list 'if-not binding-ctx (list 'sqeave/getOwner))
+                                        ;'ctx (list 'or binding-ctx (list `useContext 'sqeave/AppContext))
+                                        ;'_ (list 'println 'ctx)
+                                        ;'registry (list 'get 'ctx :registry)
+                                        ;'owner (list 'if-not binding-ctx (list 'sqeave/getOwner))
                             ]
                       #_(list 'sqeave/debug "idnet: " 'ident " owner: " 'owner)
 

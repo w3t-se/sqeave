@@ -1,9 +1,12 @@
 import { defineConfig } from "vite";
 import solid from "vite-plugin-solid";
+import squint from "@w3t-ab/vite-plugin-squint";
 import path from "node:path";
+import tailwindcss from "tailwindcss";
 
 export default defineConfig({
-  plugins: [solid()],
+    plugins: [solid(),
+	     squint({ scan: true }),],
 
     test: {
 	globals: true,
@@ -13,7 +16,16 @@ export default defineConfig({
 	},
 	setupFiles: ["./vitest.setup.ts"],
     },
-	
+  server: {
+    watch: {
+      ignored: ['!**/dist/**']
+    }
+  },
+   css: {
+    postcss: {
+      plugins: [tailwindcss({})],
+    },
+  },
   build: {
     emptyOutDir: false,
     target: "esnext",
@@ -29,7 +41,12 @@ export default defineConfig({
       formats: ["es"]
     },
 
-    rollupOptions: {
+      rollupOptions: {
+	  input: {
+	      main: "dist/main/export/index.mjs",
+	      devtools: "dist/devtools/index.mjs",
+	      components: "dist/components/index.mjs"
+	  },
       external: [
         "solid-js",
         "solid-js/web",

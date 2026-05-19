@@ -1,6 +1,6 @@
 {
   "name": "@w3t-ab/sqeave",
-  "version": "0.7.0",
+  "version": "0.7.2",
   "description": "A squint-cljs based solid-js framework for building SPAs borrowing ideas from Fulcro.",
   "author": "W3T AB",
   "license": "EPL",
@@ -13,76 +13,93 @@
   "bugs": {
     "url": "https://github.com/w3t_ab/sqeave/issues"
   },
-    "module": "./dist/bundle/main.mjs",
+  "module": "./dist/bundle/main.mjs",
   "files": [
-      "dist",
-      "sqeave.cljc"
+    "dist/bundle",
+    "dist/assets",
+    "README.md",
+    "LICENSE"
   ],
-    "exports": {
-	".": {
-	    "import": "./dist/bundle/main.mjs"
-	},
-	"./devtools": {
-	    "import": "./dist/bundle/devtools.mjs"
-	},
-	"./components": {
-	    "import": "./dist/bundle/components.mjs"
-	},
-	"./components/jsonviewer": {
-	    "import": "./dist/bundle/components.mjs"
-	}
-    },
+  "exports": {
+    ".": "./dist/bundle/main.mjs",
+    "./devtools": "./dist/bundle/devtools.mjs",
+    "./components": "./dist/bundle/components.mjs",
+    "./components/jsonviewer": "./dist/bundle/components.mjs",
+    "./assets/*": "./dist/assets/*",
+    "./styles.css": "./dist/bundle/sqeave.css"
+  },
+      "sideEffects": [
+    "**/*.css"
+      ],
   "scripts": {
     "clean": "rm -rf dist",
-    "build:main": "cd src/main && squint compile **/**/*.cljs && cp -R w3t_ab/sqeave/export ../../dist/main/",
+    "build:main": "cd src/main && squint compile **/**/*.cljs && mkdir -p ../../dist/main && cp -R w3t_ab/sqeave/export ../../dist/main/",
     "build:devtools": "cd src/devtools && squint compile **/**/*.cljs",
     "build:components": "cd src/components && squint compile **/**/*.cljs",
-    "build:cljc": "mkdir -p dist/main && cp src/main/w3t_ab/sqeave/*.cljc dist/bundle",
-      "build:squint": "pnpm clean && pnpm build:main && pnpm build:devtools && pnpm build:components && pnpm build:cljc",
+    "build:cljc": "mkdir -p dist/bundle && cp src/main/w3t_ab/sqeave/*.cljc dist/bundle/",
+    "build:assets": "mkdir -p dist/assets && cp -r assets dist/",
+    "build:squint": "pnpm build:main && pnpm build:devtools && pnpm build:components && pnpm build:cljc && pnpm build:assets",
     "watch:main": "cd src/main && squint watch **/**/*.cljs",
     "watch:devtools": "cd src/devtools && squint watch **/**/*.cljs",
     "watch:components": "cd src/components && squint watch **/**/*.cljs",
     "watch:cljc": "chokidar 'src/main/w3t_ab/sqeave/*.cljc' -c 'pnpm build:cljc' --initial",
-    "watch:exports": "chokidar 'src/main/w3t_ab/sqeave/export/*' -c 'cp -r src/main/w3t_ab/sqeave/export ./dist/main/' --initial",
-      "watch:squint": "pnpm clean && pnpm build:cljc && concurrently -k -n main,devtools,components,cljc -c blue,magenta,green,yellow \"pnpm watch:main\" \"pnpm watch:devtools\" \"pnpm watch:components\" \"pnpm watch:cljc\" \"pnpm watch:exports\"",
-      "watch": "concurrently -k \"pnpm watch:squint\" \"vite build -c vite.lib.config.js --watch\"",
+    "watch:exports": "chokidar 'src/main/w3t_ab/sqeave/export/*' -c 'mkdir -p ./dist/main && cp -r src/main/w3t_ab/sqeave/export ./dist/main/' --initial",
+    "watch:squint": "concurrently -k -n main,devtools,components,cljc,exports -c blue,magenta,green,yellow,cyan \"pnpm watch:main\" \"pnpm watch:devtools\" \"pnpm watch:components\" \"pnpm watch:cljc\" \"pnpm watch:exports\"",
+    "watch:vite": "vite build --watch",
+    "watch": "pnpm clean && pnpm build:squint && concurrently -k \"pnpm watch:squint\" \"pnpm watch:vite\"",
     "test": "pnpm build && pnpm test:build && vitest --run",
     "test:build": "cd src/test && squint compile **/**/*.cljs && cp -r w3t_ab/sqeave/data dist/test/w3t_ab/sqeave",
     "check:exports": "node scripts/check-exports.cjs",
     "prepack": "pnpm build",
-      "prepublishOnly": "pnpm test",
-      "build:bundle": "vite build -c vite.lib.config.js",
-      "build": "pnpm clean && pnpm build:squint && pnpm build:bundle && cp src/main/w3t_ab/sqeave/sqeave.cljc dist/bundle/"
+    "prepublishOnly": "pnpm test",
+      "build:bundle": "vite build",
+      "postbuild:devtools-css": "mv dist/bundle/devtools.mjs dist/bundle/devtools.raw.mjs && printf 'import \"./sqeave.css\";\\nexport * from \"./devtools.raw.mjs\";\\n' > dist/bundle/devtools.mjs",
+            "postbuild:components-css": "mv dist/bundle/components.mjs dist/bundle/components.raw.mjs && printf 'import \"./sqeave.css\";\\nexport * from \"./components.raw.mjs\";\\n' > dist/bundle/components.mjs",
+     "build": "pnpm build:squint && pnpm build:assets && pnpm build:bundle && pnpm postbuild:devtools-css && pnpm postbuild:components-css && pnpm build:cljc"
   },
   "dependencies": {
     "solid-js": "^1.9.12"
   },
   "optionalDependencies": {
-      "@corvu/resizable": "^0.2.0",
-      "@solid-primitives/deep": "^0.3.5",
+    "@corvu/resizable": "^0.2.0",
+    "@solid-primitives/deep": "^0.3.5",
     "solid-icons": "^1.2.0",
-    "solid-transition-group": "^0.3.0"
+      "solid-transition-group": "^0.3.0",
+      "@kobalte/core": "^0.13.11"
   },
   "devDependencies": {
     "@solidjs/testing-library": "^0.8.10",
     "@testing-library/jest-dom": "^6.9.1",
+    "@w3t-ab/vite-plugin-squint": "^0.0.5",
+    "autoprefixer": "^10.5.0",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^9.2.1",
     "jsdom": "^29.1.1",
+    "postcss": "^8.5.14",
     "squint-cljs": "^0.11.189",
+    "tailwindcss": "3",
+    "tailwindcss-animate": "^1.0.7",
     "vite": "^8.0.10",
     "vite-plugin-solid": "^2.11.12",
     "vitest": "^4.1.5"
   },
   "keywords": [
+    "solidjs",
     "solid-js",
-    "cljs",
     "clojurescript",
+    "cljs",
+    "squint",
     "squint-cljs",
+    "state-management",
+    "normalized-cache",
     "fulcro",
-    "reactive",
+    "reactive-graph",
+    "signals",
+    "frontend-framework",
+    "wasm",
+    "rust",
+    "data-driven-ui",
     "spa",
-    "solid",
-    "signals"
+    "reactive"
   ]
 }

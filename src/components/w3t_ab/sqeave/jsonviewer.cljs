@@ -1,5 +1,5 @@
 (ns jsonviewer
-  (:require ["solid-js" :refer [For Index Show createSignal createMemo Switch Match createEffect]]
+  (:require ["solid-js" :refer [For Index Show createSignal createMemo Switch Match createEffect onMount onCleanup]]
             ["solid-icons/ai" :refer [AiOutlineCopy]]
             ["../main/export/index.mjs" :as sqeave]
             ["../main/utils.mjs" :as utils]
@@ -233,12 +233,12 @@
         #jsx
         [:div {:class "ml-4 border-l border-zinc-200 dark:border-zinc-800 pl-2"}
          [TransitionGroup {:name "json-node"}
-          [Index {:each (keys-memo)}
+          [For {:each (keys-memo)}
            (fn [child-key _]
              #jsx
              [:div {:class "json-node-item"}
-              [JsonNode {:k (child-key)
-                         :path (child-path path (child-key))
+              [JsonNode {:k child-key
+                         :path (child-path path child-key)
                          :root root
                          :kind kind
                          :expanded-map expanded-map
@@ -263,7 +263,7 @@
        (when on-cursor-change
          (on-cursor-change (cursor-path)))))
     #jsx
-    [:div {:class "w-full h-fit overflow-auto rounded border dark:border-zinc-800 bg-white dark:bg-zinc-950 p-2 shadow"}
+    [:div {:class "w-full h-fit overflow-auto rounded border dark:border-zinc-800 dark:bg-zinc-950 p-2 shadow"}
      [JsonNode {:k nil
                 :root data
                 :kind kind

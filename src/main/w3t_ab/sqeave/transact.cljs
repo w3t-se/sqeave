@@ -70,8 +70,9 @@
                                                          (log/error e)
                                                          x))))))))
 
-(defn add! [{:keys [store setStore] :as ctx} value {:keys [append replace after check-session?] :or {append false replace false after
-                                                                                                     false check-session? false} :as params}]
+(defn add! [{:keys [store setStore] :as ctx} value
+            {:keys [append replace after check-session?] :or {append false replace false
+                                                              after false check-session? false} :as params}]
   (wrap-session ctx check-session?
                 #(let [res (n/add ctx value)]
                    (if (or append replace)

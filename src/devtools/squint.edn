@@ -1,2 +1,2 @@
-{:paths ["w3t_ab/sqeave"]
+{:paths ["w3t_ab/sqeave" "../main/w3t_ab/sqeave"]
  :output-dir "../../dist/devtools"}

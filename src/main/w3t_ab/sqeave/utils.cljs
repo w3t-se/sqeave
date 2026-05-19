@@ -14,8 +14,10 @@
       (loop [i 0]
         (when (< i len)
           (let [k (aget ks i)]
-            (if (.endsWith k id-suffix)
-              #js [k (aget data k)]            ;; return first matching ident
+            (if (or (= k "id")
+                    (= k ":id")
+                    (.endsWith k "/id"))
+              [k (aget data k)]
               (recur (inc i)))))))))
 
 (defn get-ns [k]

@@ -1,7 +1,20 @@
-"To Sqeave is to Sweave with a squinting squeal." -- Highly enlightened asquaragus
+<p align="center">
+  <img src="./sqeave_logo.png" width="440" />
+</p>
+
+<h1 align="center">Sqeave</h1>
+
+<p align="center">
+  SolidJS + squint-cljs state framework inspired by Fulcro.
+</p>
+
+<p align="center">
+  "To Sqeave is to Sweave with a squinting squeal." -- Highly enlightened asquaragus
+</p>
+
 
 # Sqeave - SolidJS meets Squint-cljs
-This is a fullstack framework heavily inspired by the great Fulcro (and it's predecessor OM) trying to bring Clojure(Script)-syntax into the SolidJS-world (or maybe vice-versa). 
+This is a frontend (and fullstac) framework heavily inspired by the great Fulcro (and it's predecessor OM) trying to bring Clojure(Script)-syntax into the SolidJS-world (or maybe vice-versa). 
 
 The philosophy of Sqeave is to be as lightweight as possible and to not overdo features. The main focus is on Components and State management.
 
@@ -27,21 +40,23 @@ pnpm install @w3t-ab/sqeave @w3t-ab/vite-plugin-squint vite vite-plugin-solid
 add a src/main/index.cljs file with a basic root component:
 ``` clojure
 (ns index
-  (:require ["solid-js" :refer [createContext]]
+  (:require ["solid-js"]
             ["solid-js/web" :refer [render]]
             ["@w3t-ab/sqeave" :as sqeave]
+            ["@w3t-ab/sqeave/devtools" :as devtools]
             ["./main.cljs" :refer [Main]])
   (:require-macros [sqeave :refer [defc]]))
 
-(def AppContext (createContext))
-
-(defc Root [this {:keys [] :or {} :ctx (sqeave/init-ctx! AppContext)}]
-  #jsx [AppContext.Provider {:value this.ctx}
-        [Main {:ident [:main/id 0]}]])
+(defc Root [this {:keys [] :or {}}]
+  #jsx [:div {}
+        [Main {:ident [:main/id 0]}]
+        [devtools/DevTools {:ctx this.ctx}]])
 
 (let [e (js/document.getElementById "root")]
   (set! (aget e :innerHTML) "")
-  (render Root e))
+  (render (fn []
+            #jsx [sqeave/SqeaveProvider {}
+                  [Root {}]]) e))
 ```
 the Root Component is described below.
 
@@ -92,13 +107,13 @@ export default defineConfig({
 and finally a squint.edn file:
 
 ```clojure
-{:paths ["src/main" "node_modules/@w3t-ab/sqeave/dist/w3t-ab/sqeave" "resources"]
+{:paths ["src/main" "node_modules/@w3t-ab/sqeave/dist/bundle" "resources"]
  :output-dir "dist"}
 ```
 Now run:
 
 ```shell
-pnpx vite
+pnpm vite
 ```
 this opens up a vite dev server at `localhost:5173`. Edit the Root or Main render functions to see hot-reloading in action.
 

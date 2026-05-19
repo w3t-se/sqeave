@@ -4,16 +4,6 @@
             ["solid-js/store" :refer [reconcile]]
             ["solid-js" :refer [batch]]))
 
-#_(defn ident? [data]
-  (if (vector? data)
-    (if (string? (first data))
-      (and
-       (re-find #"/id$" (first data))
-       (= (count data) 2)
-       (or (number? (second data)) (string? (second data)) (undefined? (second data))))
-      false)
-    false))
-
 (def ^:private id-suffix "/id")
 
 (defn ident? [x]
@@ -66,18 +56,18 @@
   (when-let [input (first data)]
     (let [[acc root*] (normalize* input)]
       (batch
-        (fn []
-          (doseq [t (js/Object.keys acc)]
-            (let [rows (aget acc t)]
-              ;; 1) ensure table exists once (no copy of big table)
-              (setStore t (fn [tbl] (or tbl  {})))
-              ;; 2) merge each id only (tiny copy of that row)
-              (doseq [id (js/Object.keys rows)]
-                (let [row (aget rows id)]
-                  ;; either Object.assign:
-                  (setStore t id row)
-                  ;; or, if you prefer Solid's reconciler per row:
-                  #_(setStore t id (reconcile row  {:merge true}))))))))
+       (fn []
+         (doseq [t (js/Object.keys acc)]
+           (let [rows (aget acc t)]
+             ;; 1) ensure table exists once (no copy of big table)
+             (setStore t (fn [tbl] (or tbl  {})))
+             ;; 2) merge each id only (tiny copy of that row)
+             (doseq [id (js/Object.keys rows)]
+               (let [row (aget rows id)]
+                 ;; either Object.assign:
+                 (setStore t id row)
+                 ;; or, if you prefer Solid's reconciler per row:
+                 #_(setStore t id (reconcile row  {:merge true}))))))))
       root*)))
 
 #_(defn add [{:keys [setStore] :as ctx} & data]
