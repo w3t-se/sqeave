@@ -13,8 +13,8 @@ importers:
         version: 1.9.12
     devDependencies:
       '@w3t-ab/sqeave':
-        specifier: file:../..
-        version: file:../..
+        specifier: link:../../.
+        version: link:../..
       '@w3t-ab/vite-plugin-squint':
         specifier: ^0.0.5
         version: 0.0.5(vite@8.0.10)
@@ -258,9 +258,6 @@ packages:
   '@types/babel__traverse@7.28.0':
     resolution: {integrity: sha512-8PvcXf70gTDZBgt9ptxJ8elBeBjcLOAcOtoO/mPJjtji1+CdGbHgm77om1GrsPxsiE+uXIpNSK64UYaIwQXd4Q==}
 
-  '@w3t-ab/sqeave@file:../..':
-    resolution: {directory: ../.., type: directory}
-
   '@w3t-ab/vite-plugin-squint@0.0.5':
     resolution: {integrity: sha512-Yahui0aRkfDvz0eQSnQRiSHwfKXCrE9f22bCC0omzYHQBS7rQt9CtQr+zLkkiUQbjd7T/Rl2vHOv5ZtNGr1cqg==}
     peerDependencies:
@@ -296,10 +293,6 @@ packages:
   chokidar@4.0.3:
     resolution: {integrity: sha512-Qgzu8kfBvo+cA4962jnP1KkS6Dop5NS6g7R5LFYJr4b8Ub94PPQXUksCw9PvXoeXPRRddRNC5C1JQUR2SMGtnA==}
     engines: {node: '>= 14.16.0'}
-
-  consola@3.4.2:
-    resolution: {integrity: sha512-5IKcdX0nnYavi6G7TtOhwkYzyjfJlatbjMjuLSfE2kYT5pMDOilZ4OvMhi637CcDICTmz3wARPoyhqyX1Y+XvA==}
-    engines: {node: ^14.18.0 || >=16.10.0}
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
@@ -442,9 +435,6 @@ packages:
   lightningcss@1.32.0:
     resolution: {integrity: sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==}
     engines: {node: '>= 12.0.0'}
-
-  lodash-es@4.18.1:
-    resolution: {integrity: sha512-J8xewKD/Gk22OZbhpOVSwcs60zhd95ESDwezOFuA3/099925PdHJ7OFHNTGtajL3AlZkykD32HykiMo+BIBI8A==}
 
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
@@ -828,12 +818,6 @@ snapshots:
     dependencies:
       '@babel/types': 7.29.0
 
-  '@w3t-ab/sqeave@file:../..':
-    dependencies:
-      consola: 3.4.2
-      lodash-es: 4.18.1
-      solid-js: 1.9.12
-
   '@w3t-ab/vite-plugin-squint@0.0.5(vite@8.0.10)':
     dependencies:
       vite: 8.0.10
@@ -869,8 +853,6 @@ snapshots:
   chokidar@4.0.3:
     dependencies:
       readdirp: 4.1.2
-
-  consola@3.4.2: {}
 
   convert-source-map@2.0.0: {}
 
@@ -955,8 +937,6 @@ snapshots:
       lightningcss-linux-x64-musl: 1.32.0
       lightningcss-win32-arm64-msvc: 1.32.0
       lightningcss-win32-x64-msvc: 1.32.0
-
-  lodash-es@4.18.1: {}
 
   lru-cache@5.1.1:
     dependencies:

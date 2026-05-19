@@ -1,16 +1,18 @@
 (ns index
-  (:require ["solid-js" :as s :refer [createContext]]
+  (:require ["solid-js"]
             ["solid-js/web" :refer [render]]
             ["@w3t-ab/sqeave" :as sqeave]
+            ["@w3t-ab/sqeave/devtools" :as devtools]
             ["./main.cljs" :refer [Main]])
   (:require-macros [sqeave :refer [defc]]))
 
-(def AppContext (createContext))
-
-(defc Root [this {:keys [] :or {} :ctx (sqeave/init-ctx! AppContext)}]
-  #jsx [AppContext.Provider {:value this.ctx}
-        [Main {:ident [:main/id 0]}]])
+(defc Root [this {:keys [] :or {}}]
+  #jsx [:div {}
+        [Main {:ident [:main/id 0]}]
+        [devtools/DevTools {:ctx this.ctx}]])
 
 (let [e (js/document.getElementById "root")]
   (set! (aget e :innerHTML) "")
-  (render Root e))
+  (render (fn []
+            #jsx [sqeave/SqeaveProvider {}
+                  [Root {}]]) e))

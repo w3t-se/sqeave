@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["variant", [".dark &", '[data-kb-theme="dark"] &']],
-  content: ["./src/**/*.{ts,tsx,js,jsx,cljs,html}","./vite.config.ts"],
+    content: ["./dist/**/*.{ts,tsx,js,jsx,cljs,html}","./src/**/*.{ts,tsx,js,jsx,cljs,html}","./vite.config.ts"],
   prefix: "",
   theme: {
     container: {

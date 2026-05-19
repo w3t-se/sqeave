@@ -1,5 +1,6 @@
 (ns main
   (:require ["@w3t-ab/sqeave" :as sqeave]
+            ["@w3t-ab/sqeave/components/jsonviewer" :as jsonv]
             ["solid-js/web" :refer [Dynamic]]
             ["solid-js" :as s :refer [Switch Match]])
   (:require-macros [sqeave :refer [defc]]))
@@ -31,5 +32,4 @@
   #jsx [:div {}
         [:h1 "Hello Sqeave Main " (id)]
         [Main3 {:ident [:main/id "abc"]}]
-        [:h2 {} "Store"]
-        (js/JSON.stringify (get-in this [:ctx :store]) nil 1)])
+        [:h2 {} "Store"]])

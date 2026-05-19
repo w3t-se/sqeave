@@ -1,4 +1,4 @@
-{:paths ["src/main" "node_modules/@w3t-ab/sqeave/dist/w3t-ab/sqeave"]
+{:paths ["src/main" "node_modules/@w3t-ab/sqeave/dist/bundle"]
  :output-dir "dist"}
 
 

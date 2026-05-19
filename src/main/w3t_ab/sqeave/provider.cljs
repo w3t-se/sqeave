@@ -7,6 +7,5 @@
 
 (defn SqeaveProvider [props]
   (let [ctx (comp/init-ctx! AppContext)]
-    #jsx
-    [AppContext.Provider {:value ctx}
-     (.-children props)]))
+    #jsx [AppContext.Provider {:value ctx}
+          (.-children props)]))
