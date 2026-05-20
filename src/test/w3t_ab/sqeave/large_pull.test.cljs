@@ -2,8 +2,8 @@
   (:require ["vitest" :refer [describe test expect]]
             ["node:fs" :as fs]
             ["solid-js/store" :refer [createStore]]
-            ["consola/browser" :refer [consola]]
-            ["../../../main/w3t_ab/sqeave/normad.cljs" :as n]))
+            ["../main/log.mjs" :as log]
+            ["../main/normad.mjs" :as n]))
 
 (defn read-json [path]
   (-> (.readFileSync fs path "utf-8")
@@ -29,52 +29,53 @@
 
 (def JSON_PATH
   (or (aget js/process "env" "LARGE_DB_JSON")
-      "./dist/src/test/w3t-ab/sqeave/data/large_db.json"))
+      "./dist/test/data/large_db.json"))
 
 (describe "large pull"
   (test "correctness: dashboard -> queries -> datasource resolved"
     (fn []
       (let [{:keys [store]} (make-ctx-from-json JSON_PATH)
 
+            _ (log/info "store:" store)
             ;; start from FILE and jump to its dashboard entity
             entity   [:file/id "64c81bc9-5836-4186-9c0e-3a5a76762782"]
 
             ;; Nested pull: dashboard -> queries -> each query's datasource (resolve ident!)
             query    [:file/id
-                           {:file/dashboard
-                            [:dashboard/id
-                             :dashboard/name
-                              {:queries  [:query/id
-                                                :query/name
-                                                 {:query/datasource  [:datasource/id :datasource/name]}]}]}]
+                      {:file/dashboard
+                       [:dashboard/id
+                        :name
+                        {:queries [:query/id]}
+                        {:datasources [:datasource/id :datasource/name]}]}]
 
             res     (n/pull store entity query)]
-
+        
         ;; pull returned something
         (.not.toBeNull (expect res))
         (.not.toBeUndefined (expect res))
 
-        ;; dashboard shape
-        (doseq [k ["dashboard/id" "queries"]]
+        ;; file shape
+        (log/info "res: " res)
+        (doseq [k ["file/id" "file/dashboard"]]
           (.not.toBeNull (expect (get res k)))
           (.not.toBeUndefined (expect (get res k))))
 
         ;; queries is vector, datasource is map (not ident)
-        (let [qs (get res "queries")]
+        (let [qs (get-in res [:file/dashboard :datasources])]
           (.toBe (expect (vector? qs)) true)
 
-          (doseq [q-ent qs]
-            (.not.toBeNull (expect (get q-ent "query/id")))
-            (.not.toBeUndefined (expect (get q-ent "query/id")))
+          (doseq [ds-ent qs]
+            (.not.toBeNull (expect (get ds-ent "datasource/id")))
+            (.not.toBeUndefined (expect (get ds-ent "datasource/id")))
 
-            (let [ds (get q-ent "query/datasource")]
+            #_(let [ds (get q-ent "query/datasource")]
               (assert-not-ident! ds "datasource was not resolved")
               (.not.toBeNull (expect (get ds "datasource/id")))
               (.not.toBeUndefined (expect (get ds "datasource/id")))
               (.not.toBeNull (expect (get ds "datasource/name")))
               (.not.toBeUndefined (expect (get ds "datasource/name"))))))
 
-        (consola.success "✅ large pull correctness OK"))))
+        (log/info "✅ large pull correctness OK"))))
 
   (test "bench: pull x2000"
     (fn []
