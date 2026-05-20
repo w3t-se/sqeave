@@ -49,6 +49,7 @@
     "watch": "pnpm clean && pnpm build:squint && concurrently -k \"pnpm watch:squint\" \"pnpm watch:vite\"",
     "test": "pnpm build && pnpm test:build && vitest --run",
     "test:build": "cd src/test && squint compile **/**/*.cljs && cp -r w3t_ab/sqeave/data dist/test/w3t_ab/sqeave",
+      "build:rust": "cd src/rust/w3t_ab/sqeave && wasm-pack build --target web --out-dir pkg && mkdir -p ../../../../dist/rust/pkg && cp -r pkg/* ../../../../dist/rust/pkg/ && node ../../../../scripts/write-rust-index.mjs",
     "check:exports": "node scripts/check-exports.cjs",
     "prepack": "pnpm build",
     "prepublishOnly": "pnpm test",
